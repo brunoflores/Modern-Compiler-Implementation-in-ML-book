@@ -1,5 +1,9 @@
 # Dune
 _build
 
+# esy
+_esy
+node_modules
+
 # Tests
 test/*.out
