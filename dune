@@ -2,4 +2,5 @@
  (modules lexer))
 
 (executable
- (name tiger))
+ (name tigerc)
+ (public_name tigerc.exe))
