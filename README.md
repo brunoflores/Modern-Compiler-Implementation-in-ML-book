@@ -3,8 +3,14 @@
 https://www.cs.princeton.edu/~appel/modern/ml/
 
 ```sh
+# Install the package manager
+npm install -g esy
+
+# Build dependencies
+make install-deps
+
 # Build all
-dune build
+make build
 
 # Test all and exit
 make test

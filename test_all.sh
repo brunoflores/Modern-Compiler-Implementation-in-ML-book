@@ -1,9 +1,7 @@
 #!/bin/bash
 
-dune build
-
 for test in test/*.in; do
-  ./_build/default/test/lexer_driver.exe $test > test/$(basename $test ".in").out
+  esy dune exec ./test/lexer_driver.exe $test > test/$(basename $test ".in").out
   if [ $? -ne 0 ]; then
     echo ""
     echo "-------------------------"
