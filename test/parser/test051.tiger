@@ -1,0 +1,14 @@
+/* This is to ensure that adjacent function declarations are put together in
+  a single FunctionDec. They may be mutually recursive.
+  See the book, page 97. */
+
+let
+
+  function one() = (1)
+  function zero() = (0)
+  var N := 1
+  function another() = (0)
+
+in
+  1
+end
