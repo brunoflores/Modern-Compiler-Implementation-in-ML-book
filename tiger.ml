@@ -49,6 +49,7 @@ and dec =
       init : exp;
       pos : pos;
     }
+  (* Why is TypeDec a list? See FunctionDec above. *)
   | TypeDec of tydec list
 
 and ty =
