@@ -1,5 +1,3 @@
-open Core
-
 let print_position outx (lexbuf : Lexing.lexbuf) =
   let pos = lexbuf.lex_curr_p in
   let fname = pos.pos_fname in

@@ -28,5 +28,6 @@
 (executable
  (name parser_driver)
  (libraries core menhirLib)
+ (flags -open Core)
  (preprocess
   (pps ppx_jane ppx_deriving.show)))
