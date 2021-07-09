@@ -71,10 +71,9 @@ expr:
   | x = constant { x }
   | x = lvalue { VarExp x }
   | e = binop { e }
+  | e = arrexp { e }
   | LPAREN; RPAREN { NilExp }
   | LPAREN; seq = exprseq+; RPAREN { SeqExp seq }
-
-  | e = arrexp { e }
 
   | lvalue = lvalue; ASSIGN; e = expr
     { AssignExp {
@@ -128,12 +127,14 @@ openexpr:
         then' = thenbody;
         else' = None;
         pos = (pos_of_lexing_position $startpos) } }
+
   | IF; test = entryexpr; THEN; thenbody = openexpr
     { IfExp {
         test = test;
         then' = thenbody;
         else' = None;
         pos = (pos_of_lexing_position $startpos) } }
+
   | IF; test = entryexpr; THEN; thenbody = closedexpr;
     ELSE; elsebody = openexpr
     { IfExp {
@@ -141,6 +142,7 @@ openexpr:
         then' = thenbody;
         else' = Some elsebody;
         pos = (pos_of_lexing_position $startpos) } }
+
   | FOR; id = ID; ASSIGN; lo = expr; TO; hi = expr; DO; body = entryexpr
     { ForExp {
         var = id;
@@ -234,8 +236,10 @@ exprseq:
 
 lvalue:
   | id = ID { SimpleVar (id, (pos_of_lexing_position $startpos)) }
+
   | var = lvalue; DOT; symbol = lvalue
     { FieldVar (var, symbol, (pos_of_lexing_position $startpos)) }
+
   | var = ID; LBRACK; e = expr; RBRACK
     { SubscriptVar (
         SimpleVar (var, (pos_of_lexing_position ($startpos(var)))),
@@ -269,6 +273,7 @@ vardec:
         typ = Some (tid, (pos_of_lexing_position $startpos(tid)));
         init = e;
         pos = (pos_of_lexing_position $startpos) } }
+
   | VAR; id = ID; ASSIGN; e = expr
     { VarDec {
         name = id;
@@ -284,10 +289,12 @@ tydec:
     { { tydec_name = id;
         ty = NameTy (tid, (pos_of_lexing_position $startpos(tid)));
         tydec_pos = (pos_of_lexing_position $startpos) } }
+
   | id = ID; EQ; ARRAY; OF; tid = ID
     { { tydec_name = id;
         ty = (ArrayTy (tid, (pos_of_lexing_position $startpos(tid))));
         tydec_pos = (pos_of_lexing_position $startpos) } }
+
   | id = ID; EQ; LBRACE; fields = separated_list(COMMA, tyfield); RBRACE;
     { { tydec_name = id;
         ty = (RecordTy fields);
