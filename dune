@@ -1,6 +1,5 @@
-(ocamllex
- (modules lexer))
-
 (executable
  (name tigerc)
- (public_name tigerc.exe))
+ (public_name tigerc.exe)
+ (preprocess
+  (pps ppx_deriving.show)))
