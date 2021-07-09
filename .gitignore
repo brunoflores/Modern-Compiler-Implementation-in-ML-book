@@ -10,3 +10,6 @@ test/**/*.out
 
 # Visual Studio Code
 .vscode
+
+# Menhir
+parser.conflicts

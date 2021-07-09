@@ -22,3 +22,11 @@ make test-watch
 ## Tiger
 
 Tiger is a simple but nontrivial language of the Algol family.
+
+## Development
+
+Generate messages from Menhir:
+
+```sh
+menhir --external-tokens Token --strict --explain --list-errors parser.mly > parser.messages
+```
