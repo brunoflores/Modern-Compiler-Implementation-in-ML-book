@@ -17,32 +17,32 @@ Tiger.LetExp {
                 body =
                 Tiger.IfExp {
                   test =
-                  Tiger.OpExp {
-                    left =
-                    Tiger.OpExp {
-                      left =
+                  Tiger.IfExp {
+                    test =
+                    Tiger.IfExp {
+                      test =
                       Tiger.OpExp {left = (Tiger.IntExp 1);
                         oper = Tiger.GtOp; right = (Tiger.IntExp 0);
                         pos =
                         { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
                           pos_cnum = 60 }};
-                      oper = Tiger.AndOp;
-                      right =
+                      then' =
                       Tiger.OpExp {left = (Tiger.IntExp 1);
                         oper = Tiger.GtOp; right = (Tiger.IntExp 2);
                         pos =
                         { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
                           pos_cnum = 68 }};
+                      else' = (Some (Tiger.IntExp 0));
                       pos =
                       { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
                         pos_cnum = 60 }};
-                    oper = Tiger.AndOp;
-                    right =
+                    then' =
                     Tiger.OpExp {left = (Tiger.IntExp 1); oper = Tiger.GtOp;
                       right = (Tiger.IntExp 3);
                       pos =
                       { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
                         pos_cnum = 76 }};
+                    else' = (Some (Tiger.IntExp 0));
                     pos =
                     { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
                       pos_cnum = 60 }};

@@ -68,7 +68,6 @@ and oper =
   | LeOp
   | GtOp
   | GeOp
-  | AndOp
 
 and tydec = { tydec_name : symbol; ty : ty; tydec_pos : pos }
 

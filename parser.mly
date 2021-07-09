@@ -45,10 +45,11 @@
 %token ELSE
 %token NEQ
 %token AND
+%token OR
 %token EOF
 
 %left before_BINOPS
-%left AND
+%left AND OR
 %left EQ NEQ TIMES MINUS PLUS GT
 %left ID
 %left LPAREN
@@ -208,12 +209,20 @@ binop:
     %prec GT
 
   | left = expr; AND; right = expr
-    { OpExp {
-        left = left;
-        oper = AndOp;
-        right = right;
+    { IfExp {
+        test = left;
+        then' = right;
+        else' = Some (IntExp 0);
         pos = (pos_of_lexing_position $startpos) } }
     %prec AND
+
+  | left = expr; OR; right = expr
+    { IfExp {
+        test = left;
+        then' = IntExp 1;
+        else' = Some right;
+        pos = (pos_of_lexing_position $startpos) } }
+    %prec OR
 
 exprlist:
   | e = entryexpr; { (e, (pos_of_lexing_position $startpos)) }

@@ -57,6 +57,7 @@ rule read =
   | '-'     { MINUS }
   | '>'     { GT }
   | '&'     { AND }
+  | '|'     { OR }
   (* | '/'     { DIVIDE } *)
   | '"'     { read_string (Buffer.create 17) lexbuf }
   | id      { ID (Lexing.lexeme lexbuf) }

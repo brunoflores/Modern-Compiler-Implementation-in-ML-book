@@ -84,7 +84,7 @@ type token =
   (* & *)
   | AND
   (* | *)
-  (* | OR *)
+  | OR
   (* := *)
   | ASSIGN
   (* end of file *)
@@ -134,5 +134,5 @@ let string_of_token token =
   (* | LE -> "LE" *)
   (* | GE -> "GE" *)
   | AND -> "AND"
-  (* | OR -> "OR" *)
+  | OR -> "OR"
   | ASSIGN -> "ASSIGN"
