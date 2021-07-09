@@ -1,12 +1,12 @@
 # Dune
 _build
 
-# esy
+# esy package manager
 _esy
 node_modules
 
-# Tests
-test/*.out
+# Tests output
+test/**/*.out
 
 # Visual Studio Code
 .vscode
