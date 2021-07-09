@@ -4,12 +4,13 @@ Tiger.LetExp {
       [{ Tiger.tydec_name = "rectype1";
          ty =
          (Tiger.RecordTy
-            [{ Tiger.field_name = "name"; typ = "string";
+            [{ Tiger.field_name = "name"; escape = ref (true);
+               typ = "string";
                field_pos =
                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 42;
                  pos_cnum = 60 }
                };
-              { Tiger.field_name = "id"; typ = "int";
+              { Tiger.field_name = "id"; escape = ref (true); typ = "int";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 42;
                   pos_cnum = 74 }
@@ -23,12 +24,13 @@ Tiger.LetExp {
        [{ Tiger.tydec_name = "rectype2";
           ty =
           (Tiger.RecordTy
-             [{ Tiger.field_name = "name"; typ = "string";
+             [{ Tiger.field_name = "name"; escape = ref (true);
+                typ = "string";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 82;
                   pos_cnum = 100 }
                 };
-               { Tiger.field_name = "id"; typ = "int";
+               { Tiger.field_name = "id"; escape = ref (true); typ = "int";
                  field_pos =
                  { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 82;
                    pos_cnum = 114 }
@@ -38,7 +40,7 @@ Tiger.LetExp {
           { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 82; pos_cnum = 88 }
           }
          ]);
-    Tiger.VarDec {name = "rec1";
+    Tiger.VarDec {name = "rec1"; escape = ref (true);
       typ =
       (Some ("rectype1",
              { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 123;

@@ -3,7 +3,7 @@ Tiger.LetExp {
   [(Tiger.FunctionDec
       [{ Tiger.name = "try";
          params =
-         [{ Tiger.field_name = "c"; typ = "int";
+         [{ Tiger.field_name = "c"; escape = ref (true); typ = "int";
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 4; pos_cnum = 19
               }
@@ -12,8 +12,8 @@ Tiger.LetExp {
          result = None;
          body =
          (Tiger.SeqExp
-            [(Tiger.ForExp {var = "r"; lo = (Tiger.IntExp 0);
-                hi = (Tiger.IntExp 10);
+            [(Tiger.ForExp {var = "r"; escape = ref (true);
+                lo = (Tiger.IntExp 0); hi = (Tiger.IntExp 10);
                 body =
                 Tiger.IfExp {
                   test =

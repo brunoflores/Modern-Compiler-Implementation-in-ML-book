@@ -4,12 +4,13 @@ Tiger.LetExp {
       [{ Tiger.tydec_name = "tree";
          ty =
          (Tiger.RecordTy
-            [{ Tiger.field_name = "key"; typ = "int";
+            [{ Tiger.field_name = "key"; escape = ref (true); typ = "int";
                field_pos =
                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84;
                  pos_cnum = 98 }
                };
-              { Tiger.field_name = "children"; typ = "treelist";
+              { Tiger.field_name = "children"; escape = ref (true);
+                typ = "treelist";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84;
                   pos_cnum = 108 }
@@ -19,7 +20,7 @@ Tiger.LetExp {
          { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84; pos_cnum = 91 }
          }
         ]);
-    Tiger.VarDec {name = "d";
+    Tiger.VarDec {name = "d"; escape = ref (true);
       typ =
       (Some ("int",
              { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 128;
@@ -31,12 +32,13 @@ Tiger.LetExp {
        [{ Tiger.tydec_name = "treelist";
           ty =
           (Tiger.RecordTy
-             [{ Tiger.field_name = "hd"; typ = "tree";
+             [{ Tiger.field_name = "hd"; escape = ref (true); typ = "tree";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144;
                   pos_cnum = 163 }
                 };
-               { Tiger.field_name = "tl"; typ = "treelist";
+               { Tiger.field_name = "tl"; escape = ref (true);
+                 typ = "treelist";
                  field_pos =
                  { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144;
                    pos_cnum = 173 }

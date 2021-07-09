@@ -1,9 +1,10 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "a"; typ = None; init = (Tiger.IntExp 0);
+  [Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
+     init = (Tiger.IntExp 0);
      pos =
      { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 143; pos_cnum = 144 }};
-    Tiger.VarDec {name = "a"; typ = None;
+    Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
       init =
       (Tiger.StringExp (" ",
          { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 155; pos_cnum = 167

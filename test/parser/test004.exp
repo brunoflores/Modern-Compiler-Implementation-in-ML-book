@@ -3,7 +3,7 @@ Tiger.LetExp {
   [(Tiger.FunctionDec
       [{ Tiger.name = "nfactor";
          params =
-         [{ Tiger.field_name = "n"; typ = "int";
+         [{ Tiger.field_name = "n"; escape = ref (true); typ = "int";
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 60; pos_cnum = 79
               }

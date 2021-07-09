@@ -26,7 +26,8 @@ Tiger.LetExp {
             }
           }
          ]);
-    Tiger.VarDec {name = "N"; typ = None; init = (Tiger.IntExp 1);
+    Tiger.VarDec {name = "N"; escape = ref (true); typ = None;
+      init = (Tiger.IntExp 1);
       pos =
       { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 214; pos_cnum = 216 }};
     (Tiger.FunctionDec

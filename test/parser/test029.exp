@@ -22,7 +22,7 @@ Tiger.LetExp {
           { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 71; pos_cnum = 77 }
           }
          ]);
-    Tiger.VarDec {name = "arr1";
+    Tiger.VarDec {name = "arr1"; escape = ref (true);
       typ =
       (Some ("arrtype1",
              { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 102;

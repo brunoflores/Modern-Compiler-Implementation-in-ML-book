@@ -4,12 +4,13 @@ Tiger.LetExp {
       [{ Tiger.tydec_name = "intlist";
          ty =
          (Tiger.RecordTy
-            [{ Tiger.field_name = "hd"; typ = "int";
+            [{ Tiger.field_name = "hd"; escape = ref (true); typ = "int";
                field_pos =
                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 61;
                  pos_cnum = 79 }
                };
-              { Tiger.field_name = "tl"; typ = "intlist";
+              { Tiger.field_name = "tl"; escape = ref (true);
+                typ = "intlist";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 61;
                   pos_cnum = 88 }
@@ -23,12 +24,13 @@ Tiger.LetExp {
        [{ Tiger.tydec_name = "tree";
           ty =
           (Tiger.RecordTy
-             [{ Tiger.field_name = "key"; typ = "int";
+             [{ Tiger.field_name = "key"; escape = ref (true); typ = "int";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 124;
                   pos_cnum = 138 }
                 };
-               { Tiger.field_name = "children"; typ = "treelist";
+               { Tiger.field_name = "children"; escape = ref (true);
+                 typ = "treelist";
                  field_pos =
                  { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 124;
                    pos_cnum = 148 }
@@ -43,12 +45,13 @@ Tiger.LetExp {
        [{ Tiger.tydec_name = "treelist";
           ty =
           (Tiger.RecordTy
-             [{ Tiger.field_name = "hd"; typ = "tree";
+             [{ Tiger.field_name = "hd"; escape = ref (true); typ = "tree";
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 168;
                   pos_cnum = 187 }
                 };
-               { Tiger.field_name = "tl"; typ = "treelist";
+               { Tiger.field_name = "tl"; escape = ref (true);
+                 typ = "treelist";
                  field_pos =
                  { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 168;
                    pos_cnum = 197 }
@@ -59,7 +62,7 @@ Tiger.LetExp {
             }
           }
          ]);
-    Tiger.VarDec {name = "lis";
+    Tiger.VarDec {name = "lis"; escape = ref (true);
       typ =
       (Some ("intlist",
              { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212;

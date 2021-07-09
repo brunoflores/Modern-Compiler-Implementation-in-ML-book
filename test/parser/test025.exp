@@ -1,6 +1,7 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "d"; typ = None; init = (Tiger.IntExp 0);
+  [Tiger.VarDec {name = "d"; escape = ref (true); typ = None;
+     init = (Tiger.IntExp 0);
      pos =
      { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 39; pos_cnum = 40 }}
     ];

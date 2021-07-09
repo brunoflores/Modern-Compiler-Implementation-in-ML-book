@@ -1,12 +1,13 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "a"; typ = None; init = (Tiger.IntExp 0);
+  [Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
+     init = (Tiger.IntExp 0);
      pos =
      { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 29; pos_cnum = 30 }}
     ];
   body =
   (Tiger.SeqExp
-     [(Tiger.ForExp {var = "i"; lo = (Tiger.IntExp 0);
+     [(Tiger.ForExp {var = "i"; escape = ref (true); lo = (Tiger.IntExp 0);
          hi = (Tiger.IntExp 100);
          body =
          (Tiger.SeqExp

@@ -3,12 +3,12 @@ Tiger.LetExp {
   [(Tiger.FunctionDec
       [{ Tiger.name = "g";
          params =
-         [{ Tiger.field_name = "a"; typ = "int";
+         [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59; pos_cnum = 72
               }
             };
-           { Tiger.field_name = "b"; typ = "string";
+           { Tiger.field_name = "b"; escape = ref (true); typ = "string";
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
                pos_cnum = 80 }

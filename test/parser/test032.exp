@@ -11,7 +11,7 @@ Tiger.LetExp {
          { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 58; pos_cnum = 64 }
          }
         ]);
-    Tiger.VarDec {name = "a"; typ = None;
+    Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
       init =
       Tiger.ArrayExp {typ = "arrayty"; size = (Tiger.IntExp 10);
         init =

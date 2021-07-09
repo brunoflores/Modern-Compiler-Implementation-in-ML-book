@@ -1,6 +1,7 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "N"; typ = None; init = (Tiger.IntExp 8);
+  [Tiger.VarDec {name = "N"; escape = ref (true); typ = None;
+     init = (Tiger.IntExp 8);
      pos =
      { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 51; pos_cnum = 55 }};
     (Tiger.TypeDec
@@ -14,7 +15,7 @@ Tiger.LetExp {
           { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 67; pos_cnum = 76 }
           }
          ]);
-    Tiger.VarDec {name = "row"; typ = None;
+    Tiger.VarDec {name = "row"; escape = ref (true); typ = None;
       init =
       Tiger.ArrayExp {typ = "intArray";
         size =
@@ -28,7 +29,7 @@ Tiger.LetExp {
         { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 101; pos_cnum = 116 }};
       pos =
       { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 101; pos_cnum = 105 }};
-    Tiger.VarDec {name = "col"; typ = None;
+    Tiger.VarDec {name = "col"; escape = ref (true); typ = None;
       init =
       Tiger.ArrayExp {typ = "intArray";
         size =
@@ -42,7 +43,7 @@ Tiger.LetExp {
         { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 136; pos_cnum = 151 }};
       pos =
       { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 136; pos_cnum = 140 }};
-    Tiger.VarDec {name = "diag1"; typ = None;
+    Tiger.VarDec {name = "diag1"; escape = ref (true); typ = None;
       init =
       Tiger.ArrayExp {typ = "intArray";
         size =
@@ -75,7 +76,7 @@ Tiger.LetExp {
           }};
       pos =
       { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 171; pos_cnum = 175 }};
-    Tiger.VarDec {name = "diag2"; typ = None;
+    Tiger.VarDec {name = "diag2"; escape = ref (true); typ = None;
       init =
       Tiger.ArrayExp {typ = "intArray";
         size =
@@ -112,7 +113,8 @@ Tiger.LetExp {
        [{ Tiger.name = "printboard"; params = []; result = None;
           body =
           (Tiger.SeqExp
-             [(Tiger.ForExp {var = "i"; lo = (Tiger.IntExp 0);
+             [(Tiger.ForExp {var = "i"; escape = ref (true);
+                 lo = (Tiger.IntExp 0);
                  hi =
                  Tiger.OpExp {
                    left =
@@ -127,7 +129,8 @@ Tiger.LetExp {
                      pos_cnum = 300 }};
                  body =
                  (Tiger.SeqExp
-                    [(Tiger.ForExp {var = "j"; lo = (Tiger.IntExp 0);
+                    [(Tiger.ForExp {var = "j"; escape = ref (true);
+                        lo = (Tiger.IntExp 0);
                         hi =
                         Tiger.OpExp {
                           left =
@@ -240,7 +243,7 @@ Tiger.LetExp {
     (Tiger.FunctionDec
        [{ Tiger.name = "try";
           params =
-          [{ Tiger.field_name = "c"; typ = "int";
+          [{ Tiger.field_name = "c"; escape = ref (true); typ = "int";
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 20; pos_bol = 422;
                pos_cnum = 439 }
@@ -274,7 +277,8 @@ Tiger.LetExp {
                    { Tiger.pos_fname = ""; pos_lnum = 23; pos_bol = 521;
                      pos_cnum = 531 }};
                  else' =
-                 (Some Tiger.ForExp {var = "r"; lo = (Tiger.IntExp 0);
+                 (Some Tiger.ForExp {var = "r"; escape = ref (true);
+                         lo = (Tiger.IntExp 0);
                          hi =
                          Tiger.OpExp {
                            left =

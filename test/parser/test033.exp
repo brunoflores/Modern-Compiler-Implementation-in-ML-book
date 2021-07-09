@@ -1,6 +1,6 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "a"; typ = None;
+  [Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
      init =
      Tiger.RecordExp {fields = []; typ = "rectype";
        pos =

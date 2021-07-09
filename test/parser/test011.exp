@@ -1,4 +1,4 @@
-Tiger.ForExp {var = "i"; lo = (Tiger.IntExp 10);
+Tiger.ForExp {var = "i"; escape = ref (true); lo = (Tiger.IntExp 10);
   hi =
   (Tiger.StringExp (" ",
      { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 77; pos_cnum = 92 }));
