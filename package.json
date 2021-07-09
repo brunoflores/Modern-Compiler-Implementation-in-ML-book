@@ -4,6 +4,8 @@
     "@opam/dune": "*",
     "@opam/ppx_jane": "*",
     "@opam/core": "*",
-    "@opam/menhir": "*"
+    "@opam/menhir": "*",
+    "@opam/menhirLib": "*",
+    "@opam/ppx_deriving": "*"
   }
 }
