@@ -1,0 +1,87 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "rectype";
+         ty =
+         (Tiger.RecordTy
+            [{ Tiger.field_name = "name"; typ = "string";
+               field_pos =
+               { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 34;
+                 pos_cnum = 51 }
+               };
+              { Tiger.field_name = "id"; typ = "int";
+                field_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 34;
+                  pos_cnum = 65 }
+                }
+              ]);
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 34; pos_cnum = 40 }
+         }
+        ]);
+    Tiger.VarDec {name = "rec1"; typ = None;
+      init =
+      Tiger.RecordExp {
+        fields =
+        [("name",
+          (Tiger.StringExp ("aname",
+             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 73;
+               pos_cnum = 106 }
+             )),
+          { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 73; pos_cnum = 95 });
+          ("id", (Tiger.IntExp 0),
+           { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 73; pos_cnum = 109
+             })
+          ];
+        typ = "rectype";
+        pos =
+        { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 73; pos_cnum = 86 }};
+      pos =
+      { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 73; pos_cnum = 74 }}
+    ];
+  body =
+  (Tiger.SeqExp
+     [(Tiger.AssignExp {
+         var =
+         (Tiger.FieldVar (
+            (Tiger.SimpleVar ("rec1",
+               { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 118;
+                 pos_cnum = 119 }
+               )),
+            (Tiger.SimpleVar ("name",
+               { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 118;
+                 pos_cnum = 124 }
+               )),
+            { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 118;
+              pos_cnum = 119 }
+            ));
+         exp = (Tiger.IntExp 3);
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 118; pos_cnum = 119
+           }},
+       { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 118; pos_cnum = 119 });
+       (Tiger.AssignExp {
+          var =
+          (Tiger.FieldVar (
+             (Tiger.SimpleVar ("rec1",
+                { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 135;
+                  pos_cnum = 136 }
+                )),
+             (Tiger.SimpleVar ("id",
+                { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 135;
+                  pos_cnum = 141 }
+                )),
+             { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 135;
+               pos_cnum = 136 }
+             ));
+          exp =
+          (Tiger.StringExp ("",
+             { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 135;
+               pos_cnum = 148 }
+             ));
+          pos =
+          { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 135; pos_cnum = 136
+            }},
+        { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 135; pos_cnum = 136 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 29; pos_cnum = 29 }}

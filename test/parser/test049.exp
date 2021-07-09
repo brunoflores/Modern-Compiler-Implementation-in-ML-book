@@ -1,0 +1,80 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.FunctionDec
+      [{ Tiger.name = "try";
+         params =
+         [{ Tiger.field_name = "c"; typ = "int";
+            field_pos =
+            { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 4; pos_cnum = 19
+              }
+            }
+           ];
+         result = None;
+         body =
+         (Tiger.SeqExp
+            [(Tiger.ForExp {var = "r"; lo = (Tiger.IntExp 0);
+                hi = (Tiger.IntExp 10);
+                body =
+                Tiger.IfExp {
+                  test =
+                  Tiger.OpExp {
+                    left =
+                    Tiger.OpExp {
+                      left =
+                      Tiger.OpExp {left = (Tiger.IntExp 1);
+                        oper = Tiger.GtOp; right = (Tiger.IntExp 0);
+                        pos =
+                        { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
+                          pos_cnum = 60 }};
+                      oper = Tiger.AndOp;
+                      right =
+                      Tiger.OpExp {left = (Tiger.IntExp 1);
+                        oper = Tiger.GtOp; right = (Tiger.IntExp 2);
+                        pos =
+                        { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
+                          pos_cnum = 68 }};
+                      pos =
+                      { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
+                        pos_cnum = 60 }};
+                    oper = Tiger.AndOp;
+                    right =
+                    Tiger.OpExp {left = (Tiger.IntExp 1); oper = Tiger.GtOp;
+                      right = (Tiger.IntExp 3);
+                      pos =
+                      { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
+                        pos_cnum = 76 }};
+                    pos =
+                    { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
+                      pos_cnum = 60 }};
+                  then' =
+                  (Tiger.VarExp
+                     (Tiger.SimpleVar ("c",
+                        { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 82;
+                          pos_cnum = 93 }
+                        )));
+                  else' = None;
+                  pos =
+                  { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 53;
+                    pos_cnum = 57 }};
+                pos =
+                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 30;
+                  pos_cnum = 33 }},
+              { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 30;
+                pos_cnum = 33 })
+              ]);
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 4; pos_cnum = 15 } }
+        ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [(Tiger.CallExp {func = "try";
+         args =
+         [((Tiger.IntExp 0),
+           { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 97; pos_cnum = 104
+             })
+           ];
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 97; pos_cnum = 100 }},
+       { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 97; pos_cnum = 100 })]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }}

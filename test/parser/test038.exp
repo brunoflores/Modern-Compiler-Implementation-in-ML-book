@@ -1,0 +1,33 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "a";
+         ty =
+         (Tiger.NameTy ("int",
+            { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 159;
+              pos_cnum = 169 }
+            ));
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 159; pos_cnum = 165
+           }
+         }
+        ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "a";
+          ty =
+          (Tiger.NameTy ("string",
+             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 173;
+               pos_cnum = 183 }
+             ));
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 173; pos_cnum = 179
+            }
+          }
+         ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.IntExp 0),
+       { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 193; pos_cnum = 194 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 155; pos_cnum = 155 }}

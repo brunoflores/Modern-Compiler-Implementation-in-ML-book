@@ -1,0 +1,60 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "tree";
+         ty =
+         (Tiger.RecordTy
+            [{ Tiger.field_name = "key"; typ = "int";
+               field_pos =
+               { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84;
+                 pos_cnum = 98 }
+               };
+              { Tiger.field_name = "children"; typ = "treelist";
+                field_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84;
+                  pos_cnum = 108 }
+                }
+              ]);
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84; pos_cnum = 91 }
+         }
+        ]);
+    Tiger.VarDec {name = "d";
+      typ =
+      (Some ("int",
+             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 128;
+               pos_cnum = 136 }));
+      init = (Tiger.IntExp 0);
+      pos =
+      { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 128; pos_cnum = 130 }};
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "treelist";
+          ty =
+          (Tiger.RecordTy
+             [{ Tiger.field_name = "hd"; typ = "tree";
+                field_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144;
+                  pos_cnum = 163 }
+                };
+               { Tiger.field_name = "tl"; typ = "treelist";
+                 field_pos =
+                 { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144;
+                   pos_cnum = 173 }
+                 }
+               ]);
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144; pos_cnum = 151
+            }
+          }
+         ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.VarExp
+          (Tiger.SimpleVar ("d",
+             { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 193;
+               pos_cnum = 197 }
+             ))),
+       { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 193; pos_cnum = 197 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 58; pos_cnum = 58 }}

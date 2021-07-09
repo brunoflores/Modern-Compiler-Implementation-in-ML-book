@@ -1,0 +1,5 @@
+Tiger.OpExp {left = (Tiger.IntExp 3); oper = Tiger.GtOp;
+  right =
+  (Tiger.StringExp ("df",
+     { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 47; pos_cnum = 54 }));
+  pos = { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 47; pos_cnum = 47 }}

@@ -1,0 +1,83 @@
+(rule
+ (target token.ml)
+ (action
+  (copy ../../token.ml ./token.ml)))
+
+(rule
+ (target lexer.mll)
+ (action
+  (copy ../../lexer.mll ./lexer.mll)))
+
+(rule
+ (target parser.mly)
+ (action
+  (copy ../../parser.mly ./parser.mly)))
+
+(rule
+ (target parser.messages)
+ (action
+  (copy ../../parser.messages ./parser.messages)))
+
+(rule
+ (target tiger.ml)
+ (action
+  (copy ../../tiger.ml ./tiger.ml)))
+
+(ocamllex
+ (modules lexer))
+
+(menhir
+ (modules parser)
+ (flags --table --strict --external-tokens Token))
+
+(executable
+ (name parser_driver_table)
+ (libraries core menhirLib)
+ (preprocess
+  (pps ppx_jane ppx_deriving.show)))
+
+;; -----------------------------------------------------------------------------
+
+;; This section deals with the .messages file.
+
+;; The following rule generates "parserMessages.ml" based on the source file
+;; "parserMessages.messages". It requires the completeness check to have been
+;; performed first. (If desired, this check could be disabled.)
+
+(rule
+ (deps parser.check)
+ (action
+  (with-stdout-to
+   parserMessages.ml
+   (run
+    menhir
+    %{dep:parser.mly}
+    --strict
+    --compile-errors
+    %{dep:parser.messages}))))
+
+;; This rule generates a file "parserMessages.auto.messages" that contains a
+;; list of all error states. It is used by the completeness check.
+
+(rule
+ (with-stdout-to
+  parser.auto.messages
+  (run menhir %{dep:parser.mly} --list-errors)))
+
+;; This rule implements the completeness check. It checks that every error
+;; state listed in the auto-generated file "parserMessages.auto.messages"
+;; is also listed in the file "parserMessages.messages" that is maintained
+;; by the programmer.
+
+(rule
+ (with-stdout-to
+  parser.check
+  (run
+   menhir
+   %{dep:parser.mly}
+   --compare-errors
+   %{dep:parser.auto.messages}
+   --compare-errors
+   %{dep:parser.messages})))
+
+;; -----------------------------------------------------------------------------

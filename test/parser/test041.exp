@@ -1,0 +1,41 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "a";
+         ty =
+         (Tiger.NameTy ("int",
+            { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 34; pos_cnum = 44
+              }
+            ));
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 34; pos_cnum = 40 }
+         }
+        ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [(Tiger.LetExp {
+         decs =
+         [(Tiger.TypeDec
+             [{ Tiger.tydec_name = "a";
+                ty =
+                (Tiger.NameTy ("string",
+                   { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 56;
+                     pos_cnum = 67 }
+                   ));
+                tydec_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 56;
+                  pos_cnum = 63 }
+                }
+               ])
+           ];
+         body =
+         (Tiger.SeqExp
+            [((Tiger.IntExp 0),
+              { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 78;
+                pos_cnum = 80 })
+              ]);
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 51; pos_cnum = 52 }},
+       { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 51; pos_cnum = 52 })]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 30; pos_cnum = 30 }}

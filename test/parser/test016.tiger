@@ -1,0 +1,11 @@
+/* error: mutually recursive types that do not pass through record or array */
+let
+
+  type a=c
+  type b=a
+  type c=d
+  type d=a
+
+  in
+   ""
+  end

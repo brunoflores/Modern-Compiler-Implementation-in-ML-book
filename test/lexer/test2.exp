@@ -2,7 +2,7 @@ LET
 TYPE
 ID(arrtype)
 EQ
-ID(array)
+ARRAY
 OF
 ID(int)
 VAR

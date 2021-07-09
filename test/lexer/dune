@@ -1,12 +1,12 @@
 (rule
  (target token.ml)
  (action
-  (copy ../token.ml ./token.ml)))
+  (copy ../../token.ml ./token.ml)))
 
 (rule
  (target lexer.mll)
  (action
-  (copy ../lexer.mll ./lexer.mll)))
+  (copy ../../lexer.mll ./lexer.mll)))
 
 (ocamllex
  (modules lexer))

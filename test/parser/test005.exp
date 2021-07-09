@@ -1,0 +1,98 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "intlist";
+         ty =
+         (Tiger.RecordTy
+            [{ Tiger.field_name = "hd"; typ = "int";
+               field_pos =
+               { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 61;
+                 pos_cnum = 79 }
+               };
+              { Tiger.field_name = "tl"; typ = "intlist";
+                field_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 61;
+                  pos_cnum = 88 }
+                }
+              ]);
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 61; pos_cnum = 68 }
+         }
+        ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "tree";
+          ty =
+          (Tiger.RecordTy
+             [{ Tiger.field_name = "key"; typ = "int";
+                field_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 124;
+                  pos_cnum = 138 }
+                };
+               { Tiger.field_name = "children"; typ = "treelist";
+                 field_pos =
+                 { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 124;
+                   pos_cnum = 148 }
+                 }
+               ]);
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 124; pos_cnum = 131
+            }
+          }
+         ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "treelist";
+          ty =
+          (Tiger.RecordTy
+             [{ Tiger.field_name = "hd"; typ = "tree";
+                field_pos =
+                { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 168;
+                  pos_cnum = 187 }
+                };
+               { Tiger.field_name = "tl"; typ = "treelist";
+                 field_pos =
+                 { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 168;
+                   pos_cnum = 197 }
+                 }
+               ]);
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 168; pos_cnum = 175
+            }
+          }
+         ]);
+    Tiger.VarDec {name = "lis";
+      typ =
+      (Some ("intlist",
+             { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212;
+               pos_cnum = 222 }));
+      init =
+      Tiger.RecordExp {
+        fields =
+        [("hd", (Tiger.IntExp 0),
+          { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212;
+            pos_cnum = 243 });
+          ("tl",
+           (Tiger.VarExp
+              (Tiger.SimpleVar ("nil",
+                 { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212;
+                   pos_cnum = 253 }
+                 ))),
+           { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212;
+             pos_cnum = 249 })
+          ];
+        typ = "intlist";
+        pos =
+        { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212; pos_cnum = 233
+          }};
+      pos =
+      { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 212; pos_cnum = 214 }}
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.VarExp
+          (Tiger.SimpleVar ("lis",
+             { Tiger.pos_fname = ""; pos_lnum = 13; pos_bol = 265;
+               pos_cnum = 269 }
+             ))),
+       { Tiger.pos_fname = ""; pos_lnum = 13; pos_bol = 265; pos_cnum = 269 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 35; pos_cnum = 35 }}

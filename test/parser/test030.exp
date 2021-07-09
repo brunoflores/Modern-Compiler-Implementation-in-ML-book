@@ -1,0 +1,51 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "a";
+         ty =
+         (Tiger.ArrayTy ("int",
+            { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 30; pos_cnum = 50
+              }
+            ));
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 30; pos_cnum = 37 }
+         }
+        ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "b";
+          ty =
+          (Tiger.NameTy ("a",
+             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 54;
+               pos_cnum = 65 }
+             ));
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 54; pos_cnum = 61 }
+          }
+         ]);
+    Tiger.VarDec {name = "arr1";
+      typ =
+      (Some ("a",
+             { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 68;
+               pos_cnum = 79 }));
+      init =
+      Tiger.ArrayExp {typ = "b"; size = (Tiger.IntExp 10);
+        init = (Tiger.IntExp 0);
+        pos =
+        { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 68; pos_cnum = 84 }};
+      pos =
+      { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 68; pos_cnum = 70 }}
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.VarExp
+          (Tiger.SubscriptVar (
+             (Tiger.SimpleVar ("arr1",
+                { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 99;
+                  pos_cnum = 101 }
+                )),
+             (Tiger.IntExp 2),
+             { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 99;
+               pos_cnum = 101 }
+             ))),
+       { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 99; pos_cnum = 101 })]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 25; pos_cnum = 25 }}

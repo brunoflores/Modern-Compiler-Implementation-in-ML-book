@@ -1,0 +1,14 @@
+Tiger.LetExp {
+  decs =
+  [Tiger.VarDec {name = "x"; typ = None; init = (Tiger.IntExp 42);
+     pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 4; pos_cnum = 6 }}
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.VarExp
+          (Tiger.SimpleVar ("x",
+             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 21;
+               pos_cnum = 23 }
+             ))),
+       { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 21; pos_cnum = 23 })]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }}

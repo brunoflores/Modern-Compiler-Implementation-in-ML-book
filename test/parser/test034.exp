@@ -1,0 +1,54 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.FunctionDec
+      [{ Tiger.name = "g";
+         params =
+         [{ Tiger.field_name = "a"; typ = "int";
+            field_pos =
+            { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59; pos_cnum = 72
+              }
+            };
+           { Tiger.field_name = "b"; typ = "string";
+             field_pos =
+             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
+               pos_cnum = 80 }
+             }
+           ];
+         result =
+         (Some ("int",
+                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
+                  pos_cnum = 89 }));
+         body =
+         (Tiger.VarExp
+            (Tiger.SimpleVar ("a",
+               { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
+                 pos_cnum = 96 }
+               )));
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59; pos_cnum = 69 }
+         }
+        ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [(Tiger.CallExp {func = "g";
+         args =
+         [((Tiger.StringExp ("one",
+              { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101;
+                pos_cnum = 108 }
+              )),
+           { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101;
+             pos_cnum = 108 });
+           ((Tiger.StringExp ("two",
+               { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101;
+                 pos_cnum = 115 }
+               )),
+            { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101;
+              pos_cnum = 115 })
+           ];
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101; pos_cnum = 102
+           }},
+       { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101; pos_cnum = 102 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 55; pos_cnum = 55 }}

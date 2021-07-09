@@ -1,0 +1,97 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.FunctionDec
+      [{ Tiger.name = "do_nothing1";
+         params =
+         [{ Tiger.field_name = "a"; typ = "int";
+            field_pos =
+            { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 54; pos_cnum = 77
+              }
+            };
+           { Tiger.field_name = "b"; typ = "string";
+             field_pos =
+             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 54;
+               pos_cnum = 85 }
+             }
+           ];
+         result = None;
+         body =
+         Tiger.CallExp {func = "do_nothing2";
+           args =
+           [(Tiger.OpExp {
+               left =
+               (Tiger.VarExp
+                  (Tiger.SimpleVar ("a",
+                     { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 97;
+                       pos_cnum = 115 }
+                     )));
+               oper = Tiger.PlusOp; right = (Tiger.IntExp 1);
+               pos =
+               { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 97;
+                 pos_cnum = 115 }},
+             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 97;
+               pos_cnum = 115 })
+             ];
+           pos =
+           { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 97; pos_cnum = 103
+             }};
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 54; pos_cnum = 65 }
+         }
+        ]);
+    (Tiger.FunctionDec
+       [{ Tiger.name = "do_nothing2";
+          params =
+          [{ Tiger.field_name = "d"; typ = "int";
+             field_pos =
+             { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 121;
+               pos_cnum = 144 }
+             }
+            ];
+          result = None;
+          body =
+          Tiger.CallExp {func = "do_nothing1";
+            args =
+            [((Tiger.VarExp
+                 (Tiger.SimpleVar ("d",
+                    { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 154;
+                      pos_cnum = 172 }
+                    ))),
+              { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 154;
+                pos_cnum = 172 });
+              ((Tiger.StringExp ("str",
+                  { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 154;
+                    pos_cnum = 179 }
+                  )),
+               { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 154;
+                 pos_cnum = 179 })
+              ];
+            pos =
+            { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 154;
+              pos_cnum = 160 }};
+          pos =
+          { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 121; pos_cnum = 132
+            }
+          }
+         ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [(Tiger.CallExp {func = "do_nothing1";
+         args =
+         [((Tiger.IntExp 0),
+           { Tiger.pos_fname = ""; pos_lnum = 11; pos_bol = 188;
+             pos_cnum = 204 });
+           ((Tiger.StringExp ("str2",
+               { Tiger.pos_fname = ""; pos_lnum = 11; pos_bol = 188;
+                 pos_cnum = 212 }
+               )),
+            { Tiger.pos_fname = ""; pos_lnum = 11; pos_bol = 188;
+              pos_cnum = 212 })
+           ];
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 11; pos_bol = 188; pos_cnum = 192
+           }},
+       { Tiger.pos_fname = ""; pos_lnum = 11; pos_bol = 188; pos_cnum = 192 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 49; pos_cnum = 49 }}

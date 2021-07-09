@@ -1,0 +1,13 @@
+Tiger.WhileExp {
+  test =
+  (Tiger.SeqExp
+     [(Tiger.OpExp {left = (Tiger.IntExp 10); oper = Tiger.GtOp;
+         right = (Tiger.IntExp 5);
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 37; pos_cnum = 43 }},
+       { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 37; pos_cnum = 43 })]);
+  body =
+  Tiger.OpExp {left = (Tiger.IntExp 5); oper = Tiger.PlusOp;
+    right = (Tiger.IntExp 6);
+    pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 37; pos_cnum = 54 }};
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 37; pos_cnum = 37 }}

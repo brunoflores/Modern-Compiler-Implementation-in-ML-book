@@ -1,0 +1,26 @@
+Tiger.IfExp {
+  test =
+  Tiger.OpExp {
+    left =
+    Tiger.OpExp {
+      left =
+      Tiger.OpExp {left = (Tiger.IntExp 1); oper = Tiger.GtOp;
+        right = (Tiger.IntExp 0);
+        pos =
+        { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 3 }};
+      oper = Tiger.AndOp;
+      right =
+      Tiger.OpExp {left = (Tiger.IntExp 1); oper = Tiger.GtOp;
+        right = (Tiger.IntExp 1);
+        pos =
+        { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 11 }};
+      pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 3 }};
+    oper = Tiger.AndOp;
+    right =
+    Tiger.OpExp {left = (Tiger.IntExp 1); oper = Tiger.GtOp;
+      right = (Tiger.IntExp 2);
+      pos =
+      { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 19 }};
+    pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 3 }};
+  then' = (Tiger.IntExp 1); else' = (Some (Tiger.IntExp 0));
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }}

@@ -1,0 +1,9 @@
+LET
+VAR
+ID(x)
+ASSIGN
+INT(42)
+IN
+ID(x)
+END
+EOF

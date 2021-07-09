@@ -1,6 +1,6 @@
 type id = string
 
-type t =
+type token =
   (* identifier *)
   | ID of id
   (* literal integer *)
@@ -14,7 +14,7 @@ type t =
   (* to *)
   | TO
   (* break *)
-  | BREAK
+  (* | BREAK *)
   (* let *)
   | LET
   (* in *)
@@ -40,7 +40,7 @@ type t =
   (* of *)
   | OF
   (* nil *)
-  | NIL
+  (* | NIL *)
   (* , *)
   | COMMA
   (* : *)
@@ -68,29 +68,29 @@ type t =
   (* * *)
   | TIMES
   (* / *)
-  | DIVIDE
+  (* | DIVIDE *)
   (* = *)
   | EQ
   (* < *)
-  | LT
+  (* | LT *)
   (* > *)
   | GT
   (* <> *)
   | NEQ
   (* <= *)
-  | LE
+  (* | LE *)
   (* >= *)
-  | GE
+  (* | GE *)
   (* & *)
   | AND
   (* | *)
-  | OR
+  (* | OR *)
   (* := *)
   | ASSIGN
   (* end of file *)
   | EOF
 
-let string_of_token (token : t) =
+let string_of_token token =
   match token with
   | INT x -> "INT(" ^ string_of_int x ^ ")"
   | ID x -> "ID(" ^ x ^ ")"
@@ -100,7 +100,7 @@ let string_of_token (token : t) =
   | WHILE -> "WHILE"
   | FOR -> "FOR"
   | TO -> "TO"
-  | BREAK -> "BREAK"
+  (* | BREAK -> "BREAK" *)
   | IN -> "IN"
   | END -> "END"
   | FUNCTION -> "FUNCTION"
@@ -112,7 +112,7 @@ let string_of_token (token : t) =
   | ELSE -> "ELSE"
   | DO -> "DO"
   | OF -> "OF"
-  | NIL -> "NIL"
+  (* | NIL -> "NIL" *)
   | COMMA -> "COMMA"
   | COLON -> "COLON"
   | SEMICOLON -> "SEMICOLON"
@@ -126,13 +126,13 @@ let string_of_token (token : t) =
   | PLUS -> "PLUS"
   | MINUS -> "MINUS"
   | TIMES -> "TIMES"
-  | DIVIDE -> "DIVIDE"
+  (* | DIVIDE -> "DIVIDE" *)
   | EQ -> "EQ"
-  | LT -> "LT"
+  (* | LT -> "LT" *)
   | GT -> "GT"
   | NEQ -> "NEQ"
-  | LE -> "LE"
-  | GE -> "GE"
+  (* | LE -> "LE" *)
+  (* | GE -> "GE" *)
   | AND -> "AND"
-  | OR -> "OR"
+  (* | OR -> "OR" *)
   | ASSIGN -> "ASSIGN"

@@ -1,0 +1,15 @@
+Tiger.LetExp {
+  decs =
+  [Tiger.VarDec {name = "a"; typ = None;
+     init =
+     Tiger.RecordExp {fields = []; typ = "rectype";
+       pos =
+       { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 31; pos_cnum = 40 }};
+     pos =
+     { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 31; pos_cnum = 32 }}
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.IntExp 0),
+       { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 54; pos_cnum = 55 })]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 27; pos_cnum = 27 }}

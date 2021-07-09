@@ -1,0 +1,43 @@
+Tiger.LetExp {
+  decs =
+  [Tiger.VarDec {name = "a"; typ = None; init = (Tiger.IntExp 0);
+     pos =
+     { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 29; pos_cnum = 30 }}
+    ];
+  body =
+  (Tiger.SeqExp
+     [(Tiger.ForExp {var = "i"; lo = (Tiger.IntExp 0);
+         hi = (Tiger.IntExp 100);
+         body =
+         (Tiger.SeqExp
+            [(Tiger.AssignExp {
+                var =
+                (Tiger.SimpleVar ("a",
+                   { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
+                     pos_cnum = 64 }
+                   ));
+                exp =
+                Tiger.OpExp {
+                  left =
+                  (Tiger.VarExp
+                     (Tiger.SimpleVar ("a",
+                        { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
+                          pos_cnum = 67 }
+                        )));
+                  oper = Tiger.PlusOp; right = (Tiger.IntExp 1);
+                  pos =
+                  { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
+                    pos_cnum = 67 }};
+                pos =
+                { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
+                  pos_cnum = 64 }},
+              { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
+                pos_cnum = 64 });
+              (Tiger.NilExp,
+               { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
+                 pos_cnum = 71 })
+              ]);
+         pos =
+         { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43; pos_cnum = 44 }},
+       { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43; pos_cnum = 44 })]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 25; pos_cnum = 25 }}

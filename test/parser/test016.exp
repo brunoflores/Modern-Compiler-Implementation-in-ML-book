@@ -1,0 +1,59 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = "a";
+         ty =
+         (Tiger.NameTy ("c",
+            { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84; pos_cnum = 93
+              }
+            ));
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84; pos_cnum = 91 }
+         }
+        ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "b";
+          ty =
+          (Tiger.NameTy ("a",
+             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 95;
+               pos_cnum = 104 }
+             ));
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 95; pos_cnum = 102
+            }
+          }
+         ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "c";
+          ty =
+          (Tiger.NameTy ("d",
+             { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 106;
+               pos_cnum = 115 }
+             ));
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 106; pos_cnum = 113
+            }
+          }
+         ]);
+    (Tiger.TypeDec
+       [{ Tiger.tydec_name = "d";
+          ty =
+          (Tiger.NameTy ("a",
+             { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 117;
+               pos_cnum = 126 }
+             ));
+          tydec_pos =
+          { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 117; pos_cnum = 124
+            }
+          }
+         ])
+    ];
+  body =
+  (Tiger.SeqExp
+     [((Tiger.StringExp ("",
+          { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 134;
+            pos_cnum = 138 }
+          )),
+       { Tiger.pos_fname = ""; pos_lnum = 10; pos_bol = 134; pos_cnum = 138 })
+       ]);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 2; pos_bol = 79; pos_cnum = 79 }}
