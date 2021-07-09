@@ -149,6 +149,7 @@ openexpr:
         lo = lo;
         hi = hi;
         body = body;
+        escape = ref true;
         pos = (pos_of_lexing_position $startpos) } }
 
 closedexpr:
@@ -272,6 +273,7 @@ vardec:
         name = id;
         typ = Some (tid, (pos_of_lexing_position $startpos(tid)));
         init = e;
+        escape = ref true;
         pos = (pos_of_lexing_position $startpos) } }
 
   | VAR; id = ID; ASSIGN; e = expr
@@ -279,6 +281,7 @@ vardec:
         name = id;
         typ = None;
         init = e;
+        escape = ref true;
         pos = (pos_of_lexing_position $startpos) } }
 
 tydecs:
@@ -304,6 +307,7 @@ tyfield:
   | id = ID; COLON; tid = ID
     { { field_name = id;
         typ = tid;
+        escape = ref true;
         field_pos = (pos_of_lexing_position $startpos) } }
 
 fields:

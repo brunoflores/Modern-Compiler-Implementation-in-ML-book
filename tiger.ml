@@ -17,7 +17,7 @@ type exp =
   | WhileExp of { test : exp; body : exp; pos : pos }
   | ForExp of {
       var : symbol;
-      (* escape : bool ref; *)
+      escape : bool ref;
       lo : exp;
       hi : exp;
       body : exp;
@@ -44,7 +44,7 @@ and dec =
   | FunctionDec of functiondec list
   | VarDec of {
       name : symbol;
-      (* escape : bool ref; *)
+      escape : bool ref;
       typ : (symbol * pos) option;
       init : exp;
       pos : pos;
@@ -73,7 +73,7 @@ and tydec = { tydec_name : symbol; ty : ty; tydec_pos : pos }
 
 and field = {
   field_name : symbol;
-  (* escape : bool ref; *)
+  escape : bool ref;
   typ : symbol;
   field_pos : pos;
 }
