@@ -17,8 +17,8 @@ https://www.cs.princeton.edu/~appel/modern/ml/
   # Test all and exit
   make test
 
-  # Test all and watch
-  make test-watch
+  # Build documentation
+  make doc
 
 Tiger
 ------------
