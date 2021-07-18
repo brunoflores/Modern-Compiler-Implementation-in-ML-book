@@ -1,0 +1,23 @@
+Tiger.LetExp {
+  decs =
+  [(Tiger.TypeDec
+      [{ Tiger.tydec_name = ("arrtype1", 1);
+         ty =
+         (Tiger.ArrayTy (("int", 0),
+            { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 5; pos_cnum = 32
+              }
+            ));
+         tydec_pos =
+         { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 5; pos_cnum = 12 } }
+        ]);
+    Tiger.VarDec {name = ("arr1", 2); escape = ref (true); typ = None;
+      init =
+      Tiger.ArrayExp {typ = ("arrtype1", 1); size = (Tiger.IntExp 10);
+        init = (Tiger.IntExp 0);
+        pos =
+        { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 37; pos_cnum = 51 }};
+      pos =
+      { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 37; pos_cnum = 39 }}
+    ];
+  body = (Tiger.SeqExp []);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }}

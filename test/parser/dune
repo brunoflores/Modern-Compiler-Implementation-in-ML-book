@@ -1,33 +1,6 @@
-(rule
- (target token.ml)
- (action
-  (copy ../../token.ml ./token.ml)))
-
-(rule
- (target lexer.mll)
- (action
-  (copy ../../lexer.mll ./lexer.mll)))
-
-(rule
- (target parser.mly)
- (action
-  (copy ../../parser.mly ./parser.mly)))
-
-(rule
- (target tiger.ml)
- (action
-  (copy ../../tiger.ml ./tiger.ml)))
-
-(ocamllex
- (modules lexer))
-
-(menhir
- (modules parser)
- (flags --strict --external-tokens Token))
-
 (executable
  (name parser_driver)
- (libraries core menhirLib)
+ (libraries core menhirLib tigerlib)
  (flags -open Core)
  (preprocess
   (pps ppx_jane ppx_deriving.show)))

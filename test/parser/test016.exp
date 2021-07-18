@@ -1,9 +1,9 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "a";
+      [{ Tiger.tydec_name = ("a", 1);
          ty =
-         (Tiger.NameTy ("c",
+         (Tiger.NameTy (("c", 0),
             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84; pos_cnum = 93
               }
             ));
@@ -12,9 +12,9 @@ Tiger.LetExp {
          }
         ]);
     (Tiger.TypeDec
-       [{ Tiger.tydec_name = "b";
+       [{ Tiger.tydec_name = ("b", 2);
           ty =
-          (Tiger.NameTy ("a",
+          (Tiger.NameTy (("a", 1),
              { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 95;
                pos_cnum = 104 }
              ));
@@ -24,9 +24,9 @@ Tiger.LetExp {
           }
          ]);
     (Tiger.TypeDec
-       [{ Tiger.tydec_name = "c";
+       [{ Tiger.tydec_name = ("c", 0);
           ty =
-          (Tiger.NameTy ("d",
+          (Tiger.NameTy (("d", 3),
              { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 106;
                pos_cnum = 115 }
              ));
@@ -36,9 +36,9 @@ Tiger.LetExp {
           }
          ]);
     (Tiger.TypeDec
-       [{ Tiger.tydec_name = "d";
+       [{ Tiger.tydec_name = ("d", 3);
           ty =
-          (Tiger.NameTy ("a",
+          (Tiger.NameTy (("a", 1),
              { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 117;
                pos_cnum = 126 }
              ));

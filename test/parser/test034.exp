@@ -1,26 +1,28 @@
 Tiger.LetExp {
   decs =
   [(Tiger.FunctionDec
-      [{ Tiger.name = "g";
+      [{ Tiger.name = ("g", 4);
          params =
-         [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
+         [{ Tiger.field_name = ("a", 1); escape = ref (true);
+            typ = ("int", 0);
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59; pos_cnum = 72
               }
             };
-           { Tiger.field_name = "b"; escape = ref (true); typ = "string";
+           { Tiger.field_name = ("b", 3); escape = ref (true);
+             typ = ("string", 2);
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
                pos_cnum = 80 }
              }
            ];
          result =
-         (Some ("int",
+         (Some (("int", 0),
                 { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
                   pos_cnum = 89 }));
          body =
          (Tiger.VarExp
-            (Tiger.SimpleVar ("a",
+            (Tiger.SimpleVar (("a", 1),
                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 59;
                  pos_cnum = 96 }
                )));
@@ -31,7 +33,7 @@ Tiger.LetExp {
     ];
   body =
   (Tiger.SeqExp
-     [(Tiger.CallExp {func = "g";
+     [(Tiger.CallExp {func = ("g", 4);
          args =
          [((Tiger.StringExp ("one",
               { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 101;

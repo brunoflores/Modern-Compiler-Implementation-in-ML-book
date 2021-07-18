@@ -1,95 +1,60 @@
 type id = string
+(** The value of an identifier. *)
 
 type token =
-  (* identifier *)
-  | ID of id
-  (* literal integer *)
-  | INT of int
-  (* literal string *)
-  | STRING of string
-  (* while *)
-  | WHILE
-  (* for *)
-  | FOR
-  (* to *)
-  | TO
+  | ID of id  (** identifier *)
+  | INT of int  (** literal integer *)
+  | STRING of string  (** literal string *)
+  | WHILE  (** "while" *)
+  | FOR  (** "for" *)
+  | TO  (** "to" *)
   (* break *)
   (* | BREAK *)
-  (* let *)
-  | LET
-  (* in *)
-  | IN
-  (* end *)
-  | END
-  (* function *)
-  | FUNCTION
-  (* var *)
-  | VAR
-  (* type *)
-  | TYPE
-  (* array *)
-  | ARRAY
-  (* if *)
-  | IF
-  (* then *)
-  | THEN
-  (* else *)
-  | ELSE
-  (* do *)
-  | DO
-  (* of *)
-  | OF
+  | LET  (** "let" *)
+  | IN  (** "in" *)
+  | END  (** "end" *)
+  | FUNCTION  (** "function" *)
+  | VAR  (** "var" *)
+  | TYPE  (** "type" *)
+  | ARRAY  (** "array" *)
+  | IF  (** "if" *)
+  | THEN  (** "then" *)
+  | ELSE  (** "else" *)
+  | DO  (** "do" *)
+  | OF  (** "of" *)
   (* nil *)
   (* | NIL *)
-  (* , *)
-  | COMMA
-  (* : *)
-  | COLON
-  (* ; *)
-  | SEMICOLON
-  (* ( *)
-  | LPAREN
-  (* ) *)
-  | RPAREN
-  (* [ *)
-  | LBRACK
-  (* ] *)
-  | RBRACK
-  (* { *)
-  | LBRACE
-  (* } *)
-  | RBRACE
-  (* . *)
-  | DOT
-  (* + *)
-  | PLUS
-  (* - *)
-  | MINUS
-  (* * *)
-  | TIMES
+  | COMMA  (** "," *)
+  | COLON  (** ":" *)
+  | SEMICOLON  (** ";" *)
+  | LPAREN  (** "(" *)
+  | RPAREN  (** ")" *)
+  | LBRACK  (** "\[" *)
+  | RBRACK  (** "\]" *)
+  | LBRACE  (** "\{" *)
+  | RBRACE  (** "\}" *)
+  | DOT  (** "." *)
+  | PLUS  (** "+" *)
+  | MINUS  (** "-" *)
+  | TIMES  (** "*" *)
   (* / *)
   (* | DIVIDE *)
-  (* = *)
-  | EQ
+  | EQ  (** "=" *)
   (* < *)
   (* | LT *)
-  (* > *)
-  | GT
-  (* <> *)
-  | NEQ
+  | GT  (** ">" *)
+  | NEQ  (** "<>" *)
   (* <= *)
   (* | LE *)
   (* >= *)
   (* | GE *)
-  (* & *)
-  | AND
-  (* | *)
-  | OR
-  (* := *)
-  | ASSIGN
-  (* end of file *)
-  | EOF
+  | AND  (** "&" *)
+  | OR  (** "|" *)
+  | ASSIGN  (** ":=" *)
+  | EOF  (** end of file *)
 
+(** Convert a {!token} to string.
+    This is valuable when printing tokens to the screen. *)
 let string_of_token token =
   match token with
   | INT x -> "INT(" ^ string_of_int x ^ ")"

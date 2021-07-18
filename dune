@@ -1,5 +1,7 @@
-(executable
- (name tigerc)
- (public_name tigerc.exe)
- (preprocess
-  (pps ppx_deriving.show)))
+(documentation
+ (mld_files index))
+
+(env
+ (_
+  (odoc
+   (warnings fatal))))

@@ -1,19 +1,19 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
+  [Tiger.VarDec {name = ("a", 0); escape = ref (true); typ = None;
      init = (Tiger.IntExp 0);
      pos =
      { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 29; pos_cnum = 30 }}
     ];
   body =
   (Tiger.SeqExp
-     [(Tiger.ForExp {var = "i"; escape = ref (true); lo = (Tiger.IntExp 0);
-         hi = (Tiger.IntExp 100);
+     [(Tiger.ForExp {var = ("i", 1); escape = ref (true);
+         lo = (Tiger.IntExp 0); hi = (Tiger.IntExp 100);
          body =
          (Tiger.SeqExp
             [(Tiger.AssignExp {
                 var =
-                (Tiger.SimpleVar ("a",
+                (Tiger.SimpleVar (("a", 0),
                    { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
                      pos_cnum = 64 }
                    ));
@@ -21,7 +21,7 @@ Tiger.LetExp {
                 Tiger.OpExp {
                   left =
                   (Tiger.VarExp
-                     (Tiger.SimpleVar ("a",
+                     (Tiger.SimpleVar (("a", 0),
                         { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 43;
                           pos_cnum = 67 }
                         )));

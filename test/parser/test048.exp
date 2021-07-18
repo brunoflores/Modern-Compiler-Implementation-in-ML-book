@@ -1,21 +1,22 @@
 Tiger.LetExp {
   decs =
   [(Tiger.FunctionDec
-      [{ Tiger.name = "g";
+      [{ Tiger.name = ("g", 2);
          params =
-         [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
+         [{ Tiger.field_name = ("a", 1); escape = ref (true);
+            typ = ("int", 0);
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 235;
               pos_cnum = 247 }
             }
            ];
          result =
-         (Some ("int",
+         (Some (("int", 0),
                 { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 235;
                   pos_cnum = 253 }));
          body =
          (Tiger.VarExp
-            (Tiger.SimpleVar ("a",
+            (Tiger.SimpleVar (("a", 1),
                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 235;
                  pos_cnum = 260 }
                )));
@@ -25,9 +26,9 @@ Tiger.LetExp {
          }
         ]);
     (Tiger.TypeDec
-       [{ Tiger.tydec_name = "t";
+       [{ Tiger.tydec_name = ("t", 3);
           ty =
-          (Tiger.NameTy ("int",
+          (Tiger.NameTy (("int", 0),
              { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 262;
                pos_cnum = 272 }
              ));
@@ -37,21 +38,22 @@ Tiger.LetExp {
           }
          ]);
     (Tiger.FunctionDec
-       [{ Tiger.name = "g";
+       [{ Tiger.name = ("g", 2);
           params =
-          [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
+          [{ Tiger.field_name = ("a", 1); escape = ref (true);
+             typ = ("int", 0);
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 276;
                pos_cnum = 288 }
              }
             ];
           result =
-          (Some ("int",
+          (Some (("int", 0),
                  { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 276;
                    pos_cnum = 294 }));
           body =
           (Tiger.VarExp
-             (Tiger.SimpleVar ("a",
+             (Tiger.SimpleVar (("a", 1),
                 { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 276;
                   pos_cnum = 301 }
                 )));

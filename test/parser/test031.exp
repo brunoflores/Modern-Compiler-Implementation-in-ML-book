@@ -1,8 +1,8 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "a"; escape = ref (true);
+  [Tiger.VarDec {name = ("a", 1); escape = ref (true);
      typ =
-     (Some ("int",
+     (Some (("int", 0),
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 57; pos_cnum = 64
               }));
      init =
@@ -14,7 +14,7 @@ Tiger.LetExp {
   body =
   (Tiger.SeqExp
      [((Tiger.VarExp
-          (Tiger.SimpleVar ("a",
+          (Tiger.SimpleVar (("a", 1),
              { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 78;
                pos_cnum = 79 }
              ))),

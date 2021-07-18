@@ -1,0 +1,2467 @@
+State 0:
+## Known stack suffix:
+##
+## LR(1) items:
+prog' -> . prog [ # ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On EOF shift to state 157
+-- On prog shift to state 158
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On expr shift to state 72
+-- On entryexpr shift to state 159
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+
+State 1:
+## Known stack suffix:
+## WHILE
+## LR(1) items:
+expr -> WHILE . expr DO expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 154
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 2:
+## Known stack suffix:
+## STRING
+## LR(1) items:
+constant -> STRING . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production constant -> STRING
+
+State 3:
+## Known stack suffix:
+## LPAREN
+## LR(1) items:
+expr -> LPAREN . RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> LPAREN . nonempty_list(exprseq) RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On RPAREN shift to state 4
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On nonempty_list(exprseq) shift to state 150
+-- On lvalue shift to state 21
+-- On exprseq shift to state 152
+-- On expr shift to state 72
+-- On entryexpr shift to state 145
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+
+State 4:
+## Known stack suffix:
+## LPAREN RPAREN
+## LR(1) items:
+expr -> LPAREN RPAREN . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> LPAREN RPAREN
+
+State 5:
+## Known stack suffix:
+## LET
+## LR(1) items:
+expr -> LET . list(dec) IN list(exprseq) END [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On VAR shift to state 6
+-- On TYPE shift to state 103
+-- On FUNCTION shift to state 123
+-- On vardec shift to state 137
+-- On tydecs shift to state 138
+-- On list(dec) shift to state 139
+-- On fundecs shift to state 147
+-- On dec shift to state 148
+## Reductions:
+-- On IN
+--   reduce production list(dec) ->
+
+State 6:
+## Known stack suffix:
+## VAR
+## LR(1) items:
+vardec -> VAR . ID COLON ID ASSIGN expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR . ID COLON ID ASSIGN ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR . ID ASSIGN expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR . ID ASSIGN ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ID shift to state 7
+## Reductions:
+
+State 7:
+## Known stack suffix:
+## VAR ID
+## LR(1) items:
+vardec -> VAR ID . COLON ID ASSIGN expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID . COLON ID ASSIGN ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID . ASSIGN expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID . ASSIGN ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On COLON shift to state 8
+-- On ASSIGN shift to state 95
+## Reductions:
+
+State 8:
+## Known stack suffix:
+## VAR ID COLON
+## LR(1) items:
+vardec -> VAR ID COLON . ID ASSIGN expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID COLON . ID ASSIGN ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ID shift to state 9
+## Reductions:
+
+State 9:
+## Known stack suffix:
+## VAR ID COLON ID
+## LR(1) items:
+vardec -> VAR ID COLON ID . ASSIGN expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID COLON ID . ASSIGN ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ASSIGN shift to state 10
+## Reductions:
+
+State 10:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN
+## LR(1) items:
+vardec -> VAR ID COLON ID ASSIGN . expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID COLON ID ASSIGN . ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 12
+-- On lvalue shift to state 21
+-- On expr shift to state 94
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 11:
+## Known stack suffix:
+## INT
+## LR(1) items:
+constant -> INT . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production constant -> INT
+
+State 12:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN ID
+## LR(1) items:
+expr -> ID . LBRACE list(fields) RBRACE [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> ID . LPAREN list(exprlist) RPAREN [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+lvalue -> ID . [ VAR TYPE TIMES PLUS OR NEQ MINUS LBRACK IN GT FUNCTION EQ DOT ASSIGN AND ]
+vardec -> VAR ID COLON ID ASSIGN ID . LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On LPAREN shift to state 13
+-- On LBRACK shift to state 89
+-- On LBRACE shift to state 16
+## Reductions:
+-- On VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ DOT ASSIGN AND
+--   reduce production lvalue -> ID
+
+State 13:
+## Known stack suffix:
+## ID LPAREN
+## LR(1) items:
+expr -> ID LPAREN . list(exprlist) RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On list(exprlist) shift to state 83
+-- On exprlist shift to state 85
+-- On expr shift to state 72
+-- On entryexpr shift to state 87
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+-- On RPAREN
+--   reduce production list(exprlist) ->
+
+State 14:
+## Known stack suffix:
+## IF
+## LR(1) items:
+closedexpr -> IF . entryexpr THEN closedexpr ELSE closedexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+openexpr -> IF . entryexpr THEN expr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+openexpr -> IF . entryexpr THEN openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+openexpr -> IF . entryexpr THEN closedexpr ELSE openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On expr shift to state 72
+-- On entryexpr shift to state 75
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+
+State 15:
+## Known stack suffix:
+## ID
+## LR(1) items:
+expr -> ID . LBRACE list(fields) RBRACE [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> ID . LPAREN list(exprlist) RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+lvalue -> ID . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+-- On LPAREN shift to state 13
+-- On LBRACE shift to state 16
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND
+--   reduce production lvalue -> ID
+
+State 16:
+## Known stack suffix:
+## ID LBRACE
+## LR(1) items:
+expr -> ID LBRACE . list(fields) RBRACE [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On ID shift to state 17
+-- On list(fields) shift to state 58
+-- On fields shift to state 60
+-- On field shift to state 62
+## Reductions:
+-- On RBRACE
+--   reduce production list(fields) ->
+
+State 17:
+## Known stack suffix:
+## ID
+## LR(1) items:
+field -> ID . EQ expr [ RBRACE ID COMMA ]
+field -> ID . EQ ID LBRACK expr RBRACK OF expr [ RBRACE ID COMMA ]
+## Transitions:
+-- On EQ shift to state 18
+## Reductions:
+
+State 18:
+## Known stack suffix:
+## ID EQ
+## LR(1) items:
+field -> ID EQ . expr [ RBRACE ID COMMA ]
+field -> ID EQ . ID LBRACK expr RBRACK OF expr [ RBRACE ID COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 19
+-- On lvalue shift to state 21
+-- On expr shift to state 57
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 19:
+## Known stack suffix:
+## ID EQ ID
+## LR(1) items:
+expr -> ID . LBRACE list(fields) RBRACE [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+expr -> ID . LPAREN list(exprlist) RPAREN [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+field -> ID EQ ID . LBRACK expr RBRACK OF expr [ RBRACE ID COMMA ]
+lvalue -> ID . [ TIMES RBRACE PLUS OR NEQ MINUS LBRACK ID GT EQ DOT COMMA ASSIGN AND ]
+## Transitions:
+-- On LPAREN shift to state 13
+-- On LBRACK shift to state 20
+-- On LBRACE shift to state 16
+## Reductions:
+-- On TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ DOT COMMA ASSIGN AND
+--   reduce production lvalue -> ID
+
+State 20:
+## Known stack suffix:
+## ID EQ ID LBRACK
+## LR(1) items:
+field -> ID EQ ID LBRACK . expr RBRACK OF expr [ RBRACE ID COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 53
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 21:
+## Known stack suffix:
+## lvalue
+## LR(1) items:
+expr -> lvalue . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> lvalue . ASSIGN expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> lvalue . ASSIGN ID LBRACK expr RBRACK OF expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+lvalue -> lvalue . DOT ID [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+lvalue -> lvalue . LBRACK expr RBRACK [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+-- On LBRACK shift to state 22
+-- On DOT shift to state 43
+-- On ASSIGN shift to state 45
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> lvalue
+
+State 22:
+## Known stack suffix:
+## lvalue LBRACK
+## LR(1) items:
+lvalue -> lvalue LBRACK . expr RBRACK [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 23
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 23:
+## Known stack suffix:
+## lvalue LBRACK expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . NEQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . TIMES expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . MINUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . PLUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . GT expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . AND expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . OR expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+lvalue -> lvalue LBRACK expr . RBRACK [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On RBRACK shift to state 28
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+
+State 24:
+## Known stack suffix:
+## expr TIMES
+## LR(1) items:
+binop -> expr TIMES . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 25
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 25:
+## Known stack suffix:
+## expr TIMES expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr TIMES expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production binop -> expr TIMES expr
+
+State 26:
+## Known stack suffix:
+## constant
+## LR(1) items:
+expr -> constant . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> constant
+
+State 27:
+## Known stack suffix:
+## binop
+## LR(1) items:
+expr -> binop . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> binop
+
+State 28:
+## Known stack suffix:
+## lvalue LBRACK expr RBRACK
+## LR(1) items:
+lvalue -> lvalue LBRACK expr RBRACK . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND
+--   reduce production lvalue -> lvalue LBRACK expr RBRACK
+
+State 29:
+## Known stack suffix:
+## expr PLUS
+## LR(1) items:
+binop -> expr PLUS . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 30
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 30:
+## Known stack suffix:
+## expr PLUS expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr PLUS expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production binop -> expr PLUS expr
+
+State 31:
+## Known stack suffix:
+## expr OR
+## LR(1) items:
+expr -> expr OR . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 32
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 32:
+## Known stack suffix:
+## expr OR expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr OR expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE OR LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA
+--   reduce production expr -> expr OR expr
+
+State 33:
+## Known stack suffix:
+## expr NEQ
+## LR(1) items:
+binop -> expr NEQ . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 34
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 34:
+## Known stack suffix:
+## expr NEQ expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr NEQ expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On MINUS shift to state 35
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE OR LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA AND
+--   reduce production binop -> expr NEQ expr
+
+State 35:
+## Known stack suffix:
+## expr MINUS
+## LR(1) items:
+binop -> expr MINUS . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 36
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 36:
+## Known stack suffix:
+## expr MINUS expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr MINUS expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production binop -> expr MINUS expr
+
+State 37:
+## Known stack suffix:
+## expr GT
+## LR(1) items:
+binop -> expr GT . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 38
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 38:
+## Known stack suffix:
+## expr GT expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr GT expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On MINUS shift to state 35
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE OR LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA AND
+--   reduce production binop -> expr GT expr
+
+State 39:
+## Known stack suffix:
+## expr EQ
+## LR(1) items:
+binop -> expr EQ . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 40
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 40:
+## Known stack suffix:
+## expr EQ expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr EQ expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On MINUS shift to state 35
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE OR LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA AND
+--   reduce production binop -> expr EQ expr
+
+State 41:
+## Known stack suffix:
+## expr AND
+## LR(1) items:
+expr -> expr AND . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 42
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 42:
+## Known stack suffix:
+## expr AND expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr AND expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE OR LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA AND
+--   reduce production expr -> expr AND expr
+
+State 43:
+## Known stack suffix:
+## lvalue DOT
+## LR(1) items:
+lvalue -> lvalue DOT . ID [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+-- On ID shift to state 44
+## Reductions:
+
+State 44:
+## Known stack suffix:
+## lvalue DOT ID
+## LR(1) items:
+lvalue -> lvalue DOT ID . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND
+--   reduce production lvalue -> lvalue DOT ID
+
+State 45:
+## Known stack suffix:
+## lvalue ASSIGN
+## LR(1) items:
+expr -> lvalue ASSIGN . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> lvalue ASSIGN . ID LBRACK expr RBRACK OF expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 46
+-- On lvalue shift to state 21
+-- On expr shift to state 52
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 46:
+## Known stack suffix:
+## lvalue ASSIGN ID
+## LR(1) items:
+expr -> lvalue ASSIGN ID . LBRACK expr RBRACK OF expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> ID . LBRACE list(fields) RBRACE [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> ID . LPAREN list(exprlist) RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+lvalue -> ID . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET LBRACK INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND ]
+## Transitions:
+-- On LPAREN shift to state 13
+-- On LBRACK shift to state 47
+-- On LBRACE shift to state 16
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DOT DO COMMA ASSIGN AND
+--   reduce production lvalue -> ID
+
+State 47:
+## Known stack suffix:
+## lvalue ASSIGN ID LBRACK
+## LR(1) items:
+expr -> lvalue ASSIGN ID LBRACK . expr RBRACK OF expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 48
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 48:
+## Known stack suffix:
+## lvalue ASSIGN ID LBRACK expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . NEQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . TIMES expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . MINUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . PLUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . GT expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . AND expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . OR expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> lvalue ASSIGN ID LBRACK expr . RBRACK OF expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On RBRACK shift to state 49
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+
+State 49:
+## Known stack suffix:
+## lvalue ASSIGN ID LBRACK expr RBRACK
+## LR(1) items:
+expr -> lvalue ASSIGN ID LBRACK expr RBRACK . OF expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On OF shift to state 50
+## Reductions:
+
+State 50:
+## Known stack suffix:
+## lvalue ASSIGN ID LBRACK expr RBRACK OF
+## LR(1) items:
+expr -> lvalue ASSIGN ID LBRACK expr RBRACK OF . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 51
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 51:
+## Known stack suffix:
+## lvalue ASSIGN ID LBRACK expr RBRACK OF expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> lvalue ASSIGN ID LBRACK expr RBRACK OF expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA
+--   reduce production expr -> lvalue ASSIGN ID LBRACK expr RBRACK OF expr
+
+State 52:
+## Known stack suffix:
+## lvalue ASSIGN expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> lvalue ASSIGN expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA
+--   reduce production expr -> lvalue ASSIGN expr
+
+State 53:
+## Known stack suffix:
+## ID EQ ID LBRACK expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . NEQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . TIMES expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . MINUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . PLUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . GT expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . AND expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . OR expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+field -> ID EQ ID LBRACK expr . RBRACK OF expr [ RBRACE ID COMMA ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On RBRACK shift to state 54
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+
+State 54:
+## Known stack suffix:
+## ID EQ ID LBRACK expr RBRACK
+## LR(1) items:
+field -> ID EQ ID LBRACK expr RBRACK . OF expr [ RBRACE ID COMMA ]
+## Transitions:
+-- On OF shift to state 55
+## Reductions:
+
+State 55:
+## Known stack suffix:
+## ID EQ ID LBRACK expr RBRACK OF
+## LR(1) items:
+field -> ID EQ ID LBRACK expr RBRACK OF . expr [ RBRACE ID COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 56
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 56:
+## Known stack suffix:
+## ID EQ ID LBRACK expr RBRACK OF expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . NEQ expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . TIMES expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . MINUS expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . PLUS expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . GT expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+expr -> expr . AND expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+expr -> expr . OR expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+field -> ID EQ ID LBRACK expr RBRACK OF expr . [ RBRACE ID COMMA ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On RBRACE ID COMMA
+--   reduce production field -> ID EQ ID LBRACK expr RBRACK OF expr
+
+State 57:
+## Known stack suffix:
+## ID EQ expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . NEQ expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . TIMES expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . MINUS expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . PLUS expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+binop -> expr . GT expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+expr -> expr . AND expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+expr -> expr . OR expr [ TIMES RBRACE PLUS OR NEQ MINUS ID GT EQ COMMA AND ]
+field -> ID EQ expr . [ RBRACE ID COMMA ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On RBRACE ID COMMA
+--   reduce production field -> ID EQ expr
+
+State 58:
+## Known stack suffix:
+## ID LBRACE list(fields)
+## LR(1) items:
+expr -> ID LBRACE list(fields) . RBRACE [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On RBRACE shift to state 59
+## Reductions:
+
+State 59:
+## Known stack suffix:
+## ID LBRACE list(fields) RBRACE
+## LR(1) items:
+expr -> ID LBRACE list(fields) RBRACE . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> ID LBRACE list(fields) RBRACE
+
+State 60:
+## Known stack suffix:
+## fields
+## LR(1) items:
+list(fields) -> fields . list(fields) [ RBRACE ]
+## Transitions:
+-- On ID shift to state 17
+-- On list(fields) shift to state 61
+-- On fields shift to state 60
+-- On field shift to state 62
+## Reductions:
+-- On RBRACE
+--   reduce production list(fields) ->
+
+State 61:
+## Known stack suffix:
+## fields list(fields)
+## LR(1) items:
+list(fields) -> fields list(fields) . [ RBRACE ]
+## Transitions:
+## Reductions:
+-- On RBRACE
+--   reduce production list(fields) -> fields list(fields)
+
+State 62:
+## Known stack suffix:
+## field
+## LR(1) items:
+fields -> field . [ RBRACE ID ]
+fields -> field . COMMA [ RBRACE ID ]
+## Transitions:
+-- On COMMA shift to state 63
+## Reductions:
+-- On RBRACE ID
+--   reduce production fields -> field
+
+State 63:
+## Known stack suffix:
+## field COMMA
+## LR(1) items:
+fields -> field COMMA . [ RBRACE ID ]
+## Transitions:
+## Reductions:
+-- On RBRACE ID
+--   reduce production fields -> field COMMA
+
+State 64:
+## Known stack suffix:
+## FOR
+## LR(1) items:
+openexpr -> FOR . ID ASSIGN expr TO expr DO entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On ID shift to state 65
+## Reductions:
+
+State 65:
+## Known stack suffix:
+## FOR ID
+## LR(1) items:
+openexpr -> FOR ID . ASSIGN expr TO expr DO entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On ASSIGN shift to state 66
+## Reductions:
+
+State 66:
+## Known stack suffix:
+## FOR ID ASSIGN
+## LR(1) items:
+openexpr -> FOR ID ASSIGN . expr TO expr DO entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 67
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 67:
+## Known stack suffix:
+## FOR ID ASSIGN expr
+## LR(1) items:
+binop -> expr . EQ expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . NEQ expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . TIMES expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . MINUS expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . PLUS expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . GT expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . AND expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . OR expr [ TO TIMES PLUS OR NEQ MINUS GT EQ AND ]
+openexpr -> FOR ID ASSIGN expr . TO expr DO entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On TO shift to state 68
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+
+State 68:
+## Known stack suffix:
+## FOR ID ASSIGN expr TO
+## LR(1) items:
+openexpr -> FOR ID ASSIGN expr TO . expr DO entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 69
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 69:
+## Known stack suffix:
+## FOR ID ASSIGN expr TO expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . NEQ expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . TIMES expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . MINUS expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . PLUS expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . GT expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+expr -> expr . AND expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+expr -> expr . OR expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+openexpr -> FOR ID ASSIGN expr TO expr . DO entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On DO shift to state 70
+-- On AND shift to state 41
+## Reductions:
+
+State 70:
+## Known stack suffix:
+## FOR ID ASSIGN expr TO expr DO
+## LR(1) items:
+openexpr -> FOR ID ASSIGN expr TO expr DO . entryexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On expr shift to state 72
+-- On entryexpr shift to state 73
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+
+State 71:
+## Known stack suffix:
+## openexpr
+## LR(1) items:
+entryexpr -> openexpr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA
+--   reduce production entryexpr -> openexpr
+
+State 72:
+## Known stack suffix:
+## expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+closedexpr -> expr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+expr -> expr . AND expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA
+--   reduce production closedexpr -> expr
+
+State 73:
+## Known stack suffix:
+## FOR ID ASSIGN expr TO expr DO entryexpr
+## LR(1) items:
+openexpr -> FOR ID ASSIGN expr TO expr DO entryexpr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA
+--   reduce production openexpr -> FOR ID ASSIGN expr TO expr DO entryexpr
+
+State 74:
+## Known stack suffix:
+## closedexpr
+## LR(1) items:
+entryexpr -> closedexpr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA
+--   reduce production entryexpr -> closedexpr
+
+State 75:
+## Known stack suffix:
+## IF entryexpr
+## LR(1) items:
+closedexpr -> IF entryexpr . THEN closedexpr ELSE closedexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+openexpr -> IF entryexpr . THEN expr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+openexpr -> IF entryexpr . THEN openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+openexpr -> IF entryexpr . THEN closedexpr ELSE openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On THEN shift to state 76
+## Reductions:
+
+State 76:
+## Known stack suffix:
+## IF entryexpr THEN
+## LR(1) items:
+closedexpr -> IF entryexpr THEN . closedexpr ELSE closedexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+openexpr -> IF entryexpr THEN . expr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+openexpr -> IF entryexpr THEN . openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+openexpr -> IF entryexpr THEN . closedexpr ELSE openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 77
+-- On lvalue shift to state 21
+-- On expr shift to state 78
+-- On constant shift to state 26
+-- On closedexpr shift to state 79
+-- On binop shift to state 27
+## Reductions:
+
+State 77:
+## Known stack suffix:
+## IF entryexpr THEN openexpr
+## LR(1) items:
+openexpr -> IF entryexpr THEN openexpr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA
+--   reduce production openexpr -> IF entryexpr THEN openexpr
+
+State 78:
+## Known stack suffix:
+## IF entryexpr THEN expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+closedexpr -> expr . [ ELSE ]
+expr -> expr . AND expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TIMES THEN STRING SEMICOLON RPAREN PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE COMMA AND ]
+openexpr -> IF entryexpr THEN expr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On ELSE
+--   reduce production closedexpr -> expr
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA
+--   reduce production openexpr -> IF entryexpr THEN expr
+
+State 79:
+## Known stack suffix:
+## IF entryexpr THEN closedexpr
+## LR(1) items:
+closedexpr -> IF entryexpr THEN closedexpr . ELSE closedexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+openexpr -> IF entryexpr THEN closedexpr . ELSE openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On ELSE shift to state 80
+## Reductions:
+
+State 80:
+## Known stack suffix:
+## IF entryexpr THEN closedexpr ELSE
+## LR(1) items:
+closedexpr -> IF entryexpr THEN closedexpr ELSE . closedexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+openexpr -> IF entryexpr THEN closedexpr ELSE . openexpr [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 81
+-- On lvalue shift to state 21
+-- On expr shift to state 72
+-- On constant shift to state 26
+-- On closedexpr shift to state 82
+-- On binop shift to state 27
+## Reductions:
+
+State 81:
+## Known stack suffix:
+## IF entryexpr THEN closedexpr ELSE openexpr
+## LR(1) items:
+openexpr -> IF entryexpr THEN closedexpr ELSE openexpr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END COMMA
+--   reduce production openexpr -> IF entryexpr THEN closedexpr ELSE openexpr
+
+State 82:
+## Known stack suffix:
+## IF entryexpr THEN closedexpr ELSE closedexpr
+## LR(1) items:
+closedexpr -> IF entryexpr THEN closedexpr ELSE closedexpr . [ WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE THEN STRING SEMICOLON RPAREN LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE COMMA
+--   reduce production closedexpr -> IF entryexpr THEN closedexpr ELSE closedexpr
+
+State 83:
+## Known stack suffix:
+## ID LPAREN list(exprlist)
+## LR(1) items:
+expr -> ID LPAREN list(exprlist) . RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On RPAREN shift to state 84
+## Reductions:
+
+State 84:
+## Known stack suffix:
+## ID LPAREN list(exprlist) RPAREN
+## LR(1) items:
+expr -> ID LPAREN list(exprlist) RPAREN . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> ID LPAREN list(exprlist) RPAREN
+
+State 85:
+## Known stack suffix:
+## exprlist
+## LR(1) items:
+list(exprlist) -> exprlist . list(exprlist) [ RPAREN ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On list(exprlist) shift to state 86
+-- On exprlist shift to state 85
+-- On expr shift to state 72
+-- On entryexpr shift to state 87
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+-- On RPAREN
+--   reduce production list(exprlist) ->
+
+State 86:
+## Known stack suffix:
+## exprlist list(exprlist)
+## LR(1) items:
+list(exprlist) -> exprlist list(exprlist) . [ RPAREN ]
+## Transitions:
+## Reductions:
+-- On RPAREN
+--   reduce production list(exprlist) -> exprlist list(exprlist)
+
+State 87:
+## Known stack suffix:
+## entryexpr
+## LR(1) items:
+exprlist -> entryexpr . [ WHILE STRING RPAREN LPAREN LET INT IF ID FOR ]
+exprlist -> entryexpr . COMMA [ WHILE STRING RPAREN LPAREN LET INT IF ID FOR ]
+## Transitions:
+-- On COMMA shift to state 88
+## Reductions:
+-- On WHILE STRING RPAREN LPAREN LET INT IF ID FOR
+--   reduce production exprlist -> entryexpr
+
+State 88:
+## Known stack suffix:
+## entryexpr COMMA
+## LR(1) items:
+exprlist -> entryexpr COMMA . [ WHILE STRING RPAREN LPAREN LET INT IF ID FOR ]
+## Transitions:
+## Reductions:
+-- On WHILE STRING RPAREN LPAREN LET INT IF ID FOR
+--   reduce production exprlist -> entryexpr COMMA
+
+State 89:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN ID LBRACK
+## LR(1) items:
+vardec -> VAR ID COLON ID ASSIGN ID LBRACK . expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 90
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 90:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN ID LBRACK expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . NEQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . TIMES expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . MINUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . PLUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . GT expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . AND expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . OR expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+vardec -> VAR ID COLON ID ASSIGN ID LBRACK expr . RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On RBRACK shift to state 91
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+
+State 91:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK
+## LR(1) items:
+vardec -> VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK . OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On OF shift to state 92
+## Reductions:
+
+State 92:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK OF
+## LR(1) items:
+vardec -> VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK OF . expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 93
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 93:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK OF expr
+## LR(1) items:
+binop -> expr . EQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . NEQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . TIMES expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . MINUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . PLUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . GT expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . AND expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . OR expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+vardec -> VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK OF expr . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production vardec -> VAR ID COLON ID ASSIGN ID LBRACK expr RBRACK OF expr
+
+State 94:
+## Known stack suffix:
+## VAR ID COLON ID ASSIGN expr
+## LR(1) items:
+binop -> expr . EQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . NEQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . TIMES expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . MINUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . PLUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . GT expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . AND expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . OR expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+vardec -> VAR ID COLON ID ASSIGN expr . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production vardec -> VAR ID COLON ID ASSIGN expr
+
+State 95:
+## Known stack suffix:
+## VAR ID ASSIGN
+## LR(1) items:
+vardec -> VAR ID ASSIGN . expr [ VAR TYPE IN FUNCTION ]
+vardec -> VAR ID ASSIGN . ID LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 96
+-- On lvalue shift to state 21
+-- On expr shift to state 102
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 96:
+## Known stack suffix:
+## VAR ID ASSIGN ID
+## LR(1) items:
+expr -> ID . LBRACE list(fields) RBRACE [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> ID . LPAREN list(exprlist) RPAREN [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+lvalue -> ID . [ VAR TYPE TIMES PLUS OR NEQ MINUS LBRACK IN GT FUNCTION EQ DOT ASSIGN AND ]
+vardec -> VAR ID ASSIGN ID . LBRACK expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On LPAREN shift to state 13
+-- On LBRACK shift to state 97
+-- On LBRACE shift to state 16
+## Reductions:
+-- On VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ DOT ASSIGN AND
+--   reduce production lvalue -> ID
+
+State 97:
+## Known stack suffix:
+## VAR ID ASSIGN ID LBRACK
+## LR(1) items:
+vardec -> VAR ID ASSIGN ID LBRACK . expr RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 98
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 98:
+## Known stack suffix:
+## VAR ID ASSIGN ID LBRACK expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . NEQ expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . TIMES expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . MINUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . PLUS expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+binop -> expr . GT expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . AND expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+expr -> expr . OR expr [ TIMES RBRACK PLUS OR NEQ MINUS GT EQ AND ]
+vardec -> VAR ID ASSIGN ID LBRACK expr . RBRACK OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On RBRACK shift to state 99
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+
+State 99:
+## Known stack suffix:
+## VAR ID ASSIGN ID LBRACK expr RBRACK
+## LR(1) items:
+vardec -> VAR ID ASSIGN ID LBRACK expr RBRACK . OF expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On OF shift to state 100
+## Reductions:
+
+State 100:
+## Known stack suffix:
+## VAR ID ASSIGN ID LBRACK expr RBRACK OF
+## LR(1) items:
+vardec -> VAR ID ASSIGN ID LBRACK expr RBRACK OF . expr [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 101
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 101:
+## Known stack suffix:
+## VAR ID ASSIGN ID LBRACK expr RBRACK OF expr
+## LR(1) items:
+binop -> expr . EQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . NEQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . TIMES expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . MINUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . PLUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . GT expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . AND expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . OR expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+vardec -> VAR ID ASSIGN ID LBRACK expr RBRACK OF expr . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production vardec -> VAR ID ASSIGN ID LBRACK expr RBRACK OF expr
+
+State 102:
+## Known stack suffix:
+## VAR ID ASSIGN expr
+## LR(1) items:
+binop -> expr . EQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . NEQ expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . TIMES expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . MINUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . PLUS expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+binop -> expr . GT expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . AND expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+expr -> expr . OR expr [ VAR TYPE TIMES PLUS OR NEQ MINUS IN GT FUNCTION EQ AND ]
+vardec -> VAR ID ASSIGN expr . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production vardec -> VAR ID ASSIGN expr
+
+State 103:
+## Known stack suffix:
+## TYPE
+## LR(1) items:
+tydecs -> TYPE . nonempty_list(tydec) [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ID shift to state 104
+-- On tydec shift to state 120
+-- On nonempty_list(tydec) shift to state 122
+## Reductions:
+
+State 104:
+## Known stack suffix:
+## ID
+## LR(1) items:
+tydec -> ID . EQ ID [ VAR TYPE IN ID FUNCTION ]
+tydec -> ID . EQ ARRAY OF ID [ VAR TYPE IN ID FUNCTION ]
+tydec -> ID . EQ LBRACE loption(separated_nonempty_list(COMMA,tyfield)) RBRACE [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On EQ shift to state 105
+## Reductions:
+
+State 105:
+## Known stack suffix:
+## ID EQ
+## LR(1) items:
+tydec -> ID EQ . ID [ VAR TYPE IN ID FUNCTION ]
+tydec -> ID EQ . ARRAY OF ID [ VAR TYPE IN ID FUNCTION ]
+tydec -> ID EQ . LBRACE loption(separated_nonempty_list(COMMA,tyfield)) RBRACE [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On LBRACE shift to state 106
+-- On ID shift to state 116
+-- On ARRAY shift to state 117
+## Reductions:
+
+State 106:
+## Known stack suffix:
+## ID EQ LBRACE
+## LR(1) items:
+tydec -> ID EQ LBRACE . loption(separated_nonempty_list(COMMA,tyfield)) RBRACE [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On ID shift to state 107
+-- On tyfield shift to state 110
+-- On separated_nonempty_list(COMMA,tyfield) shift to state 113
+-- On loption(separated_nonempty_list(COMMA,tyfield)) shift to state 114
+## Reductions:
+-- On RBRACE
+--   reduce production loption(separated_nonempty_list(COMMA,tyfield)) ->
+
+State 107:
+## Known stack suffix:
+## ID
+## LR(1) items:
+tyfield -> ID . COLON ID [ RPAREN RBRACE COMMA ]
+## Transitions:
+-- On COLON shift to state 108
+## Reductions:
+
+State 108:
+## Known stack suffix:
+## ID COLON
+## LR(1) items:
+tyfield -> ID COLON . ID [ RPAREN RBRACE COMMA ]
+## Transitions:
+-- On ID shift to state 109
+## Reductions:
+
+State 109:
+## Known stack suffix:
+## ID COLON ID
+## LR(1) items:
+tyfield -> ID COLON ID . [ RPAREN RBRACE COMMA ]
+## Transitions:
+## Reductions:
+-- On RPAREN RBRACE COMMA
+--   reduce production tyfield -> ID COLON ID
+
+State 110:
+## Known stack suffix:
+## tyfield
+## LR(1) items:
+separated_nonempty_list(COMMA,tyfield) -> tyfield . [ RPAREN RBRACE ]
+separated_nonempty_list(COMMA,tyfield) -> tyfield . COMMA separated_nonempty_list(COMMA,tyfield) [ RPAREN RBRACE ]
+## Transitions:
+-- On COMMA shift to state 111
+## Reductions:
+-- On RPAREN RBRACE
+--   reduce production separated_nonempty_list(COMMA,tyfield) -> tyfield
+
+State 111:
+## Known stack suffix:
+## tyfield COMMA
+## LR(1) items:
+separated_nonempty_list(COMMA,tyfield) -> tyfield COMMA . separated_nonempty_list(COMMA,tyfield) [ RPAREN RBRACE ]
+## Transitions:
+-- On ID shift to state 107
+-- On tyfield shift to state 110
+-- On separated_nonempty_list(COMMA,tyfield) shift to state 112
+## Reductions:
+
+State 112:
+## Known stack suffix:
+## tyfield COMMA separated_nonempty_list(COMMA,tyfield)
+## LR(1) items:
+separated_nonempty_list(COMMA,tyfield) -> tyfield COMMA separated_nonempty_list(COMMA,tyfield) . [ RPAREN RBRACE ]
+## Transitions:
+## Reductions:
+-- On RPAREN RBRACE
+--   reduce production separated_nonempty_list(COMMA,tyfield) -> tyfield COMMA separated_nonempty_list(COMMA,tyfield)
+
+State 113:
+## Known stack suffix:
+## separated_nonempty_list(COMMA,tyfield)
+## LR(1) items:
+loption(separated_nonempty_list(COMMA,tyfield)) -> separated_nonempty_list(COMMA,tyfield) . [ RPAREN RBRACE ]
+## Transitions:
+## Reductions:
+-- On RPAREN RBRACE
+--   reduce production loption(separated_nonempty_list(COMMA,tyfield)) -> separated_nonempty_list(COMMA,tyfield)
+
+State 114:
+## Known stack suffix:
+## ID EQ LBRACE loption(separated_nonempty_list(COMMA,tyfield))
+## LR(1) items:
+tydec -> ID EQ LBRACE loption(separated_nonempty_list(COMMA,tyfield)) . RBRACE [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On RBRACE shift to state 115
+## Reductions:
+
+State 115:
+## Known stack suffix:
+## ID EQ LBRACE loption(separated_nonempty_list(COMMA,tyfield)) RBRACE
+## LR(1) items:
+tydec -> ID EQ LBRACE loption(separated_nonempty_list(COMMA,tyfield)) RBRACE . [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN ID FUNCTION
+--   reduce production tydec -> ID EQ LBRACE loption(separated_nonempty_list(COMMA,tyfield)) RBRACE
+
+State 116:
+## Known stack suffix:
+## ID EQ ID
+## LR(1) items:
+tydec -> ID EQ ID . [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN ID FUNCTION
+--   reduce production tydec -> ID EQ ID
+
+State 117:
+## Known stack suffix:
+## ID EQ ARRAY
+## LR(1) items:
+tydec -> ID EQ ARRAY . OF ID [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On OF shift to state 118
+## Reductions:
+
+State 118:
+## Known stack suffix:
+## ID EQ ARRAY OF
+## LR(1) items:
+tydec -> ID EQ ARRAY OF . ID [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On ID shift to state 119
+## Reductions:
+
+State 119:
+## Known stack suffix:
+## ID EQ ARRAY OF ID
+## LR(1) items:
+tydec -> ID EQ ARRAY OF ID . [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN ID FUNCTION
+--   reduce production tydec -> ID EQ ARRAY OF ID
+
+State 120:
+## Known stack suffix:
+## tydec
+## LR(1) items:
+nonempty_list(tydec) -> tydec . [ VAR TYPE IN FUNCTION ]
+nonempty_list(tydec) -> tydec . nonempty_list(tydec) [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ID shift to state 104
+-- On tydec shift to state 120
+-- On nonempty_list(tydec) shift to state 121
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production nonempty_list(tydec) -> tydec
+
+State 121:
+## Known stack suffix:
+## tydec nonempty_list(tydec)
+## LR(1) items:
+nonempty_list(tydec) -> tydec nonempty_list(tydec) . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production nonempty_list(tydec) -> tydec nonempty_list(tydec)
+
+State 122:
+## Known stack suffix:
+## TYPE nonempty_list(tydec)
+## LR(1) items:
+tydecs -> TYPE nonempty_list(tydec) . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production tydecs -> TYPE nonempty_list(tydec)
+
+State 123:
+## Known stack suffix:
+## FUNCTION
+## LR(1) items:
+fundecs -> FUNCTION . nonempty_list(fundec) [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ID shift to state 124
+-- On nonempty_list(fundec) shift to state 134
+-- On fundec shift to state 135
+## Reductions:
+
+State 124:
+## Known stack suffix:
+## ID
+## LR(1) items:
+fundec -> ID . LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ entryexpr [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On LPAREN shift to state 125
+## Reductions:
+
+State 125:
+## Known stack suffix:
+## ID LPAREN
+## LR(1) items:
+fundec -> ID LPAREN . loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ entryexpr [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On ID shift to state 107
+-- On tyfield shift to state 110
+-- On separated_nonempty_list(COMMA,tyfield) shift to state 113
+-- On loption(separated_nonempty_list(COMMA,tyfield)) shift to state 126
+## Reductions:
+-- On RPAREN
+--   reduce production loption(separated_nonempty_list(COMMA,tyfield)) ->
+
+State 126:
+## Known stack suffix:
+## ID LPAREN loption(separated_nonempty_list(COMMA,tyfield))
+## LR(1) items:
+fundec -> ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) . RPAREN option(resultopt) EQ entryexpr [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On RPAREN shift to state 127
+## Reductions:
+
+State 127:
+## Known stack suffix:
+## ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN
+## LR(1) items:
+fundec -> ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN . option(resultopt) EQ entryexpr [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On COLON shift to state 128
+-- On resultopt shift to state 130
+-- On option(resultopt) shift to state 131
+## Reductions:
+-- On EQ
+--   reduce production option(resultopt) ->
+
+State 128:
+## Known stack suffix:
+## COLON
+## LR(1) items:
+resultopt -> COLON . ID [ EQ ]
+## Transitions:
+-- On ID shift to state 129
+## Reductions:
+
+State 129:
+## Known stack suffix:
+## COLON ID
+## LR(1) items:
+resultopt -> COLON ID . [ EQ ]
+## Transitions:
+## Reductions:
+-- On EQ
+--   reduce production resultopt -> COLON ID
+
+State 130:
+## Known stack suffix:
+## resultopt
+## LR(1) items:
+option(resultopt) -> resultopt . [ EQ ]
+## Transitions:
+## Reductions:
+-- On EQ
+--   reduce production option(resultopt) -> resultopt
+
+State 131:
+## Known stack suffix:
+## ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt)
+## LR(1) items:
+fundec -> ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) . EQ entryexpr [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On EQ shift to state 132
+## Reductions:
+
+State 132:
+## Known stack suffix:
+## ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ
+## LR(1) items:
+fundec -> ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ . entryexpr [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On expr shift to state 72
+-- On entryexpr shift to state 133
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+
+State 133:
+## Known stack suffix:
+## ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ entryexpr
+## LR(1) items:
+fundec -> ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ entryexpr . [ VAR TYPE IN ID FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN ID FUNCTION
+--   reduce production fundec -> ID LPAREN loption(separated_nonempty_list(COMMA,tyfield)) RPAREN option(resultopt) EQ entryexpr
+
+State 134:
+## Known stack suffix:
+## FUNCTION nonempty_list(fundec)
+## LR(1) items:
+fundecs -> FUNCTION nonempty_list(fundec) . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production fundecs -> FUNCTION nonempty_list(fundec)
+
+State 135:
+## Known stack suffix:
+## fundec
+## LR(1) items:
+nonempty_list(fundec) -> fundec . [ VAR TYPE IN FUNCTION ]
+nonempty_list(fundec) -> fundec . nonempty_list(fundec) [ VAR TYPE IN FUNCTION ]
+## Transitions:
+-- On ID shift to state 124
+-- On nonempty_list(fundec) shift to state 136
+-- On fundec shift to state 135
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production nonempty_list(fundec) -> fundec
+
+State 136:
+## Known stack suffix:
+## fundec nonempty_list(fundec)
+## LR(1) items:
+nonempty_list(fundec) -> fundec nonempty_list(fundec) . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production nonempty_list(fundec) -> fundec nonempty_list(fundec)
+
+State 137:
+## Known stack suffix:
+## vardec
+## LR(1) items:
+dec -> vardec . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production dec -> vardec
+
+State 138:
+## Known stack suffix:
+## tydecs
+## LR(1) items:
+dec -> tydecs . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production dec -> tydecs
+
+State 139:
+## Known stack suffix:
+## LET list(dec)
+## LR(1) items:
+expr -> LET list(dec) . IN list(exprseq) END [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On IN shift to state 140
+## Reductions:
+
+State 140:
+## Known stack suffix:
+## LET list(dec) IN
+## LR(1) items:
+expr -> LET list(dec) IN . list(exprseq) END [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On list(exprseq) shift to state 141
+-- On exprseq shift to state 143
+-- On expr shift to state 72
+-- On entryexpr shift to state 145
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+-- On END
+--   reduce production list(exprseq) ->
+
+State 141:
+## Known stack suffix:
+## LET list(dec) IN list(exprseq)
+## LR(1) items:
+expr -> LET list(dec) IN list(exprseq) . END [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On END shift to state 142
+## Reductions:
+
+State 142:
+## Known stack suffix:
+## LET list(dec) IN list(exprseq) END
+## LR(1) items:
+expr -> LET list(dec) IN list(exprseq) END . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> LET list(dec) IN list(exprseq) END
+
+State 143:
+## Known stack suffix:
+## exprseq
+## LR(1) items:
+list(exprseq) -> exprseq . list(exprseq) [ END ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On lvalue shift to state 21
+-- On list(exprseq) shift to state 144
+-- On exprseq shift to state 143
+-- On expr shift to state 72
+-- On entryexpr shift to state 145
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+-- On END
+--   reduce production list(exprseq) ->
+
+State 144:
+## Known stack suffix:
+## exprseq list(exprseq)
+## LR(1) items:
+list(exprseq) -> exprseq list(exprseq) . [ END ]
+## Transitions:
+## Reductions:
+-- On END
+--   reduce production list(exprseq) -> exprseq list(exprseq)
+
+State 145:
+## Known stack suffix:
+## entryexpr
+## LR(1) items:
+exprseq -> entryexpr . [ WHILE STRING RPAREN LPAREN LET INT IF ID FOR END ]
+exprseq -> entryexpr . SEMICOLON [ WHILE STRING RPAREN LPAREN LET INT IF ID FOR END ]
+## Transitions:
+-- On SEMICOLON shift to state 146
+## Reductions:
+-- On WHILE STRING RPAREN LPAREN LET INT IF ID FOR END
+--   reduce production exprseq -> entryexpr
+
+State 146:
+## Known stack suffix:
+## entryexpr SEMICOLON
+## LR(1) items:
+exprseq -> entryexpr SEMICOLON . [ WHILE STRING RPAREN LPAREN LET INT IF ID FOR END ]
+## Transitions:
+## Reductions:
+-- On WHILE STRING RPAREN LPAREN LET INT IF ID FOR END
+--   reduce production exprseq -> entryexpr SEMICOLON
+
+State 147:
+## Known stack suffix:
+## fundecs
+## LR(1) items:
+dec -> fundecs . [ VAR TYPE IN FUNCTION ]
+## Transitions:
+## Reductions:
+-- On VAR TYPE IN FUNCTION
+--   reduce production dec -> fundecs
+
+State 148:
+## Known stack suffix:
+## dec
+## LR(1) items:
+list(dec) -> dec . list(dec) [ IN ]
+## Transitions:
+-- On VAR shift to state 6
+-- On TYPE shift to state 103
+-- On FUNCTION shift to state 123
+-- On vardec shift to state 137
+-- On tydecs shift to state 138
+-- On list(dec) shift to state 149
+-- On fundecs shift to state 147
+-- On dec shift to state 148
+## Reductions:
+-- On IN
+--   reduce production list(dec) ->
+
+State 149:
+## Known stack suffix:
+## dec list(dec)
+## LR(1) items:
+list(dec) -> dec list(dec) . [ IN ]
+## Transitions:
+## Reductions:
+-- On IN
+--   reduce production list(dec) -> dec list(dec)
+
+State 150:
+## Known stack suffix:
+## LPAREN nonempty_list(exprseq)
+## LR(1) items:
+expr -> LPAREN nonempty_list(exprseq) . RPAREN [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On RPAREN shift to state 151
+## Reductions:
+
+State 151:
+## Known stack suffix:
+## LPAREN nonempty_list(exprseq) RPAREN
+## LR(1) items:
+expr -> LPAREN nonempty_list(exprseq) RPAREN . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+## Reductions:
+-- On WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND
+--   reduce production expr -> LPAREN nonempty_list(exprseq) RPAREN
+
+State 152:
+## Known stack suffix:
+## exprseq
+## LR(1) items:
+nonempty_list(exprseq) -> exprseq . [ RPAREN ]
+nonempty_list(exprseq) -> exprseq . nonempty_list(exprseq) [ RPAREN ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On IF shift to state 14
+-- On ID shift to state 15
+-- On FOR shift to state 64
+-- On openexpr shift to state 71
+-- On nonempty_list(exprseq) shift to state 153
+-- On lvalue shift to state 21
+-- On exprseq shift to state 152
+-- On expr shift to state 72
+-- On entryexpr shift to state 145
+-- On constant shift to state 26
+-- On closedexpr shift to state 74
+-- On binop shift to state 27
+## Reductions:
+-- On RPAREN
+--   reduce production nonempty_list(exprseq) -> exprseq
+
+State 153:
+## Known stack suffix:
+## exprseq nonempty_list(exprseq)
+## LR(1) items:
+nonempty_list(exprseq) -> exprseq nonempty_list(exprseq) . [ RPAREN ]
+## Transitions:
+## Reductions:
+-- On RPAREN
+--   reduce production nonempty_list(exprseq) -> exprseq nonempty_list(exprseq)
+
+State 154:
+## Known stack suffix:
+## WHILE expr
+## LR(1) items:
+binop -> expr . EQ expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . NEQ expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . TIMES expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . MINUS expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . PLUS expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+binop -> expr . GT expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+expr -> expr . AND expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+expr -> expr . OR expr [ TIMES PLUS OR NEQ MINUS GT EQ DO AND ]
+expr -> WHILE expr . DO expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On DO shift to state 155
+-- On AND shift to state 41
+## Reductions:
+
+State 155:
+## Known stack suffix:
+## WHILE expr DO
+## LR(1) items:
+expr -> WHILE expr DO . expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On WHILE shift to state 1
+-- On STRING shift to state 2
+-- On LPAREN shift to state 3
+-- On LET shift to state 5
+-- On INT shift to state 11
+-- On ID shift to state 15
+-- On lvalue shift to state 21
+-- On expr shift to state 156
+-- On constant shift to state 26
+-- On binop shift to state 27
+## Reductions:
+
+State 156:
+## Known stack suffix:
+## WHILE expr DO expr
+## LR(1) items:
+binop -> expr . EQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . NEQ expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . TIMES expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . MINUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . PLUS expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+binop -> expr . GT expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . AND expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> expr . OR expr [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+expr -> WHILE expr DO expr . [ WHILE VAR TYPE TO TIMES THEN STRING SEMICOLON RPAREN RBRACK RBRACE PLUS OR NEQ MINUS LPAREN LET INT IN IF ID GT FUNCTION FOR EQ EOF END ELSE DO COMMA AND ]
+## Transitions:
+-- On TIMES shift to state 24
+-- On PLUS shift to state 29
+-- On OR shift to state 31
+-- On NEQ shift to state 33
+-- On MINUS shift to state 35
+-- On GT shift to state 37
+-- On EQ shift to state 39
+-- On AND shift to state 41
+## Reductions:
+-- On WHILE VAR TYPE TO THEN STRING SEMICOLON RPAREN RBRACK RBRACE LPAREN LET INT IN IF ID FUNCTION FOR EOF END ELSE DO COMMA
+--   reduce production expr -> WHILE expr DO expr
+
+State 157:
+## Known stack suffix:
+## EOF
+## LR(1) items:
+prog -> EOF . [ # ]
+## Transitions:
+## Reductions:
+-- On #
+--   reduce production prog -> EOF
+
+State 158:
+## Known stack suffix:
+## prog
+## LR(1) items:
+prog' -> prog . [ # ]
+## Transitions:
+## Reductions:
+-- On #
+--   accept prog
+
+State 159:
+## Known stack suffix:
+## entryexpr
+## LR(1) items:
+prog -> entryexpr . EOF [ # ]
+## Transitions:
+-- On EOF shift to state 160
+## Reductions:
+
+State 160:
+## Known stack suffix:
+## entryexpr EOF
+## LR(1) items:
+prog -> entryexpr EOF . [ # ]
+## Transitions:
+## Reductions:
+-- On #
+--   reduce production prog -> entryexpr EOF
+

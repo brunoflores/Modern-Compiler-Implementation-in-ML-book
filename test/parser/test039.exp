@@ -1,21 +1,22 @@
 Tiger.LetExp {
   decs =
   [(Tiger.FunctionDec
-      [{ Tiger.name = "g";
+      [{ Tiger.name = ("g", 2);
          params =
-         [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
+         [{ Tiger.field_name = ("a", 1); escape = ref (true);
+            typ = ("int", 0);
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 164;
               pos_cnum = 176 }
             }
            ];
          result =
-         (Some ("int",
+         (Some (("int", 0),
                 { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 164;
                   pos_cnum = 182 }));
          body =
          (Tiger.VarExp
-            (Tiger.SimpleVar ("a",
+            (Tiger.SimpleVar (("a", 1),
                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 164;
                  pos_cnum = 189 }
                )));
@@ -25,21 +26,22 @@ Tiger.LetExp {
          }
         ]);
     (Tiger.FunctionDec
-       [{ Tiger.name = "g";
+       [{ Tiger.name = ("g", 2);
           params =
-          [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
+          [{ Tiger.field_name = ("a", 1); escape = ref (true);
+             typ = ("int", 0);
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 191;
                pos_cnum = 203 }
              }
             ];
           result =
-          (Some ("int",
+          (Some (("int", 0),
                  { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 191;
                    pos_cnum = 209 }));
           body =
           (Tiger.VarExp
-             (Tiger.SimpleVar ("a",
+             (Tiger.SimpleVar (("a", 1),
                 { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 191;
                   pos_cnum = 216 }
                 )));

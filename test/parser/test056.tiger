@@ -1,0 +1,9 @@
+let
+
+  type arrtype1 = array of int
+
+in
+
+  /* Nothing. */
+
+end

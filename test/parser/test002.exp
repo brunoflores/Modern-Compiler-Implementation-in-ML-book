@@ -1,9 +1,9 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "myint";
+      [{ Tiger.tydec_name = ("myint", 1);
          ty =
-         (Tiger.NameTy ("int",
+         (Tiger.NameTy (("int", 0),
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 58; pos_cnum = 72
               }
             ));
@@ -12,9 +12,9 @@ Tiger.LetExp {
          }
         ]);
     (Tiger.TypeDec
-       [{ Tiger.tydec_name = "arrtype";
+       [{ Tiger.tydec_name = ("arrtype", 2);
           ty =
-          (Tiger.ArrayTy ("myint",
+          (Tiger.ArrayTy (("myint", 1),
              { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 76;
                pos_cnum = 102 }
              ));
@@ -22,13 +22,13 @@ Tiger.LetExp {
           { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 76; pos_cnum = 83 }
           }
          ]);
-    Tiger.VarDec {name = "arr1"; escape = ref (true);
+    Tiger.VarDec {name = ("arr1", 3); escape = ref (true);
       typ =
-      (Some ("arrtype",
+      (Some (("arrtype", 2),
              { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 109;
                pos_cnum = 119 }));
       init =
-      Tiger.ArrayExp {typ = "arrtype"; size = (Tiger.IntExp 10);
+      Tiger.ArrayExp {typ = ("arrtype", 2); size = (Tiger.IntExp 10);
         init = (Tiger.IntExp 0);
         pos =
         { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 109; pos_cnum = 130 }};
@@ -38,7 +38,7 @@ Tiger.LetExp {
   body =
   (Tiger.SeqExp
      [((Tiger.VarExp
-          (Tiger.SimpleVar ("arr1",
+          (Tiger.SimpleVar (("arr1", 3),
              { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 151;
                pos_cnum = 152 }
              ))),

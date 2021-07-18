@@ -2,11 +2,11 @@ open Core
 
 let rec lex_and_print lexbuf =
   try
-    let token = Lexer.read lexbuf in
-    let out = Token.string_of_token token in
+    let token = Tigerlib.Lexer.read lexbuf in
+    let out = Tigerlib.Token.string_of_token token in
     Printf.fprintf stdout "%s\n" out;
     match token with EOF -> () | _ -> lex_and_print lexbuf
-  with Lexer.SyntaxError s ->
+  with Tigerlib.Lexer.SyntaxError s ->
     Printf.fprintf stderr "%s\n" s;
     exit 1
 

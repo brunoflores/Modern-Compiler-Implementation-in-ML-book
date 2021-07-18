@@ -1,16 +1,17 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "tree";
+      [{ Tiger.tydec_name = ("tree", 4);
          ty =
          (Tiger.RecordTy
-            [{ Tiger.field_name = "key"; escape = ref (true); typ = "int";
+            [{ Tiger.field_name = ("key", 1); escape = ref (true);
+               typ = ("int", 0);
                field_pos =
                { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84;
                  pos_cnum = 98 }
                };
-              { Tiger.field_name = "children"; escape = ref (true);
-                typ = "treelist";
+              { Tiger.field_name = ("children", 3); escape = ref (true);
+                typ = ("treelist", 2);
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84;
                   pos_cnum = 108 }
@@ -20,25 +21,26 @@ Tiger.LetExp {
          { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 84; pos_cnum = 91 }
          }
         ]);
-    Tiger.VarDec {name = "d"; escape = ref (true);
+    Tiger.VarDec {name = ("d", 5); escape = ref (true);
       typ =
-      (Some ("int",
+      (Some (("int", 0),
              { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 128;
                pos_cnum = 136 }));
       init = (Tiger.IntExp 0);
       pos =
       { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 128; pos_cnum = 130 }};
     (Tiger.TypeDec
-       [{ Tiger.tydec_name = "treelist";
+       [{ Tiger.tydec_name = ("treelist", 2);
           ty =
           (Tiger.RecordTy
-             [{ Tiger.field_name = "hd"; escape = ref (true); typ = "tree";
+             [{ Tiger.field_name = ("hd", 6); escape = ref (true);
+                typ = ("tree", 4);
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144;
                   pos_cnum = 163 }
                 };
-               { Tiger.field_name = "tl"; escape = ref (true);
-                 typ = "treelist";
+               { Tiger.field_name = ("tl", 7); escape = ref (true);
+                 typ = ("treelist", 2);
                  field_pos =
                  { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 144;
                    pos_cnum = 173 }
@@ -53,7 +55,7 @@ Tiger.LetExp {
   body =
   (Tiger.SeqExp
      [((Tiger.VarExp
-          (Tiger.SimpleVar ("d",
+          (Tiger.SimpleVar (("d", 5),
              { Tiger.pos_fname = ""; pos_lnum = 9; pos_bol = 193;
                pos_cnum = 197 }
              ))),

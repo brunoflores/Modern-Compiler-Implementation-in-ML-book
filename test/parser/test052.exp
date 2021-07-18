@@ -1,0 +1,9 @@
+Tiger.OpExp {
+  left =
+  (Tiger.StringExp ("3",
+     { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 2 }));
+  oper = Tiger.PlusOp;
+  right =
+  (Tiger.StringExp ("5",
+     { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 8 }));
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 2 }}

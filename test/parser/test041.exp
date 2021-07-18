@@ -1,9 +1,9 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "a";
+      [{ Tiger.tydec_name = ("a", 1);
          ty =
-         (Tiger.NameTy ("int",
+         (Tiger.NameTy (("int", 0),
             { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 34; pos_cnum = 44
               }
             ));
@@ -17,9 +17,9 @@ Tiger.LetExp {
      [(Tiger.LetExp {
          decs =
          [(Tiger.TypeDec
-             [{ Tiger.tydec_name = "a";
+             [{ Tiger.tydec_name = ("a", 1);
                 ty =
-                (Tiger.NameTy ("string",
+                (Tiger.NameTy (("string", 2),
                    { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 56;
                      pos_cnum = 67 }
                    ));

@@ -1,16 +1,17 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "rectype";
+      [{ Tiger.tydec_name = ("rectype", 4);
          ty =
          (Tiger.RecordTy
-            [{ Tiger.field_name = "name"; escape = ref (true);
-               typ = "string";
+            [{ Tiger.field_name = ("name", 1); escape = ref (true);
+               typ = ("string", 0);
                field_pos =
                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 33;
                  pos_cnum = 50 }
                };
-              { Tiger.field_name = "id"; escape = ref (true); typ = "int";
+              { Tiger.field_name = ("id", 3); escape = ref (true);
+                typ = ("int", 2);
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 33;
                   pos_cnum = 63 }
@@ -20,14 +21,14 @@ Tiger.LetExp {
          { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 33; pos_cnum = 39 }
          }
         ]);
-    Tiger.VarDec {name = "b"; escape = ref (true);
+    Tiger.VarDec {name = ("b", 6); escape = ref (true);
       typ =
-      (Some ("rectype",
+      (Some (("rectype", 4),
              { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 71;
                pos_cnum = 78 }));
       init =
       (Tiger.VarExp
-         (Tiger.SimpleVar ("nil",
+         (Tiger.SimpleVar (("nil", 5),
             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 71; pos_cnum = 89
               }
             )));
@@ -39,14 +40,14 @@ Tiger.LetExp {
      [(Tiger.OpExp {
          left =
          (Tiger.VarExp
-            (Tiger.SimpleVar ("b",
+            (Tiger.SimpleVar (("b", 6),
                { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 96;
                  pos_cnum = 97 }
                )));
          oper = Tiger.EqOp;
          right =
          (Tiger.VarExp
-            (Tiger.SimpleVar ("nil",
+            (Tiger.SimpleVar (("nil", 5),
                { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 96;
                  pos_cnum = 101 }
                )));
@@ -56,14 +57,14 @@ Tiger.LetExp {
        (Tiger.OpExp {
           left =
           (Tiger.VarExp
-             (Tiger.SimpleVar ("b",
+             (Tiger.SimpleVar (("b", 6),
                 { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 106;
                   pos_cnum = 107 }
                 )));
           oper = Tiger.NeqOp;
           right =
           (Tiger.VarExp
-             (Tiger.SimpleVar ("nil",
+             (Tiger.SimpleVar (("nil", 5),
                 { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 106;
                   pos_cnum = 112 }
                 )));

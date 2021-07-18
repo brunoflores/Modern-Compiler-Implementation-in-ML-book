@@ -1,0 +1,6 @@
+(executable
+ (name tigerc)
+ (modules tigerc)
+ (libraries core tigerlib)
+ (preprocess
+  (pps ppx_jane)))

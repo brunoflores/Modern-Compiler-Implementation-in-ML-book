@@ -6,6 +6,7 @@
     "@opam/core": "*",
     "@opam/menhir": "*",
     "@opam/menhirLib": "*",
-    "@opam/ppx_deriving": "*"
+    "@opam/ppx_deriving": "*",
+    "@opam/odoc": "*"
   }
 }

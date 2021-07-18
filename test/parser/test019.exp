@@ -1,31 +1,33 @@
 Tiger.LetExp {
   decs =
   [(Tiger.FunctionDec
-      [{ Tiger.name = "do_nothing1";
+      [{ Tiger.name = ("do_nothing1", 5);
          params =
-         [{ Tiger.field_name = "a"; escape = ref (true); typ = "int";
+         [{ Tiger.field_name = ("a", 1); escape = ref (true);
+            typ = ("int", 0);
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 94;
               pos_cnum = 115 }
             };
-           { Tiger.field_name = "b"; escape = ref (true); typ = "string";
+           { Tiger.field_name = ("b", 3); escape = ref (true);
+             typ = ("string", 2);
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 94;
                pos_cnum = 123 }
              }
            ];
          result =
-         (Some ("int",
+         (Some (("int", 0),
                 { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 94;
                   pos_cnum = 133 }));
          body =
          (Tiger.SeqExp
-            [(Tiger.CallExp {func = "do_nothing2";
+            [(Tiger.CallExp {func = ("do_nothing2", 4);
                 args =
                 [(Tiger.OpExp {
                     left =
                     (Tiger.VarExp
-                       (Tiger.SimpleVar ("a",
+                       (Tiger.SimpleVar (("a", 1),
                           { Tiger.pos_fname = ""; pos_lnum = 5;
                             pos_bol = 139; pos_cnum = 154 }
                           )));
@@ -50,24 +52,25 @@ Tiger.LetExp {
          }
         ]);
     (Tiger.FunctionDec
-       [{ Tiger.name = "do_nothing2";
+       [{ Tiger.name = ("do_nothing2", 4);
           params =
-          [{ Tiger.field_name = "d"; escape = ref (true); typ = "int";
+          [{ Tiger.field_name = ("d", 6); escape = ref (true);
+             typ = ("int", 0);
              field_pos =
              { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 163;
                pos_cnum = 184 }
              }
             ];
           result =
-          (Some ("string",
+          (Some (("string", 2),
                  { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 163;
                    pos_cnum = 191 }));
           body =
           (Tiger.SeqExp
-             [(Tiger.CallExp {func = "do_nothing1";
+             [(Tiger.CallExp {func = ("do_nothing1", 5);
                  args =
                  [((Tiger.VarExp
-                      (Tiger.SimpleVar ("a",
+                      (Tiger.SimpleVar (("a", 1),
                          { Tiger.pos_fname = ""; pos_lnum = 8; pos_bol = 201;
                            pos_cnum = 216 }
                          ))),
@@ -100,7 +103,7 @@ Tiger.LetExp {
     ];
   body =
   (Tiger.SeqExp
-     [(Tiger.CallExp {func = "do_nothing1";
+     [(Tiger.CallExp {func = ("do_nothing1", 5);
          args =
          [((Tiger.IntExp 0),
            { Tiger.pos_fname = ""; pos_lnum = 11; pos_bol = 235;

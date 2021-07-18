@@ -1,8 +1,8 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
+  [Tiger.VarDec {name = ("a", 1); escape = ref (true); typ = None;
      init =
-     Tiger.RecordExp {fields = []; typ = "rectype";
+     Tiger.RecordExp {fields = []; typ = ("rectype", 0);
        pos =
        { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 31; pos_cnum = 40 }};
      pos =

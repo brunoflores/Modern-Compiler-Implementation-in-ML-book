@@ -1,6 +1,6 @@
 Tiger.LetExp {
   decs =
-  [Tiger.VarDec {name = "d"; escape = ref (true); typ = None;
+  [Tiger.VarDec {name = ("d", 0); escape = ref (true); typ = None;
      init = (Tiger.IntExp 0);
      pos =
      { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 37; pos_cnum = 38 }}
@@ -9,7 +9,7 @@ Tiger.LetExp {
   (Tiger.SeqExp
      [((Tiger.VarExp
           (Tiger.SubscriptVar (
-             (Tiger.SimpleVar ("d",
+             (Tiger.SimpleVar (("d", 0),
                 { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 50;
                   pos_cnum = 51 }
                 )),

@@ -1,7 +1,7 @@
 type pos = { pos_fname : string; pos_lnum : int; pos_bol : int; pos_cnum : int }
 [@@deriving show]
 
-type symbol = string [@@deriving show]
+type symbol = Symbol.symbol [@@deriving show]
 
 type exp =
   | NilExp
@@ -29,7 +29,7 @@ type exp =
 
 and var =
   | SimpleVar of symbol * pos
-  | FieldVar of var * var * pos
+  | FieldVar of var * symbol * pos
   | SubscriptVar of var * exp * pos
 
 and dec =

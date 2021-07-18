@@ -1,0 +1,12 @@
+/* correct declarations */
+let
+
+in
+
+arr1[0] := 1;
+arr2[3].name := "kati";
+arr3[34] := "sfd";
+
+rec2.dates[0] := 2323;
+
+end

@@ -1,0 +1,2 @@
+/* Use of undefined "a". */
+1 + a

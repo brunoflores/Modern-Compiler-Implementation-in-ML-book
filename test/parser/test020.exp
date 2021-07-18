@@ -8,7 +8,7 @@ Tiger.WhileExp {
      [(Tiger.OpExp {
          left =
          (Tiger.VarExp
-            (Tiger.SimpleVar ("i",
+            (Tiger.SimpleVar (("i", 0),
                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 36;
                  pos_cnum = 53 }
                )));

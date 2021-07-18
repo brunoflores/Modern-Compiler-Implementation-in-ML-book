@@ -1,0 +1,6 @@
+let
+  var left := 1
+  var right := 2
+in
+  left + right
+end

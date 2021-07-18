@@ -1,18 +1,5 @@
-(rule
- (target token.ml)
- (action
-  (copy ../../token.ml ./token.ml)))
-
-(rule
- (target lexer.mll)
- (action
-  (copy ../../lexer.mll ./lexer.mll)))
-
-(ocamllex
- (modules lexer))
-
 (executable
  (name lexer_driver)
- (libraries core)
+ (libraries core tigerlib)
  (preprocess
   (pps ppx_jane)))

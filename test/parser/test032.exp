@@ -1,9 +1,9 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "arrayty";
+      [{ Tiger.tydec_name = ("arrayty", 1);
          ty =
-         (Tiger.ArrayTy ("int",
+         (Tiger.ArrayTy (("int", 0),
             { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 58; pos_cnum = 83
               }
             ));
@@ -11,9 +11,9 @@ Tiger.LetExp {
          { Tiger.pos_fname = ""; pos_lnum = 4; pos_bol = 58; pos_cnum = 64 }
          }
         ]);
-    Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
+    Tiger.VarDec {name = ("a", 2); escape = ref (true); typ = None;
       init =
-      Tiger.ArrayExp {typ = "arrayty"; size = (Tiger.IntExp 10);
+      Tiger.ArrayExp {typ = ("arrayty", 1); size = (Tiger.IntExp 10);
         init =
         (Tiger.StringExp (" ",
            { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 88; pos_cnum = 116

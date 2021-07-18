@@ -42,7 +42,7 @@ Generate messages from Menhir:
 TODO
 --------
 
-#. Improve the parsing of &, |, and unary negation; The current approach in
+#. Improve the parsing of ``&`` ``|`` and unary negation; The current approach in
    the AST will make it hard to provide quality error messages that relate
    to the source code.
 #. Improve the treatment of escaped variables; It is currently hacked into

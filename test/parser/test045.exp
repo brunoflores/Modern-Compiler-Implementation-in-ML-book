@@ -1,16 +1,17 @@
 Tiger.LetExp {
   decs =
   [(Tiger.TypeDec
-      [{ Tiger.tydec_name = "rectype";
+      [{ Tiger.tydec_name = ("rectype", 4);
          ty =
          (Tiger.RecordTy
-            [{ Tiger.field_name = "name"; escape = ref (true);
-               typ = "string";
+            [{ Tiger.field_name = ("name", 1); escape = ref (true);
+               typ = ("string", 0);
                field_pos =
                { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 78;
                  pos_cnum = 95 }
                };
-              { Tiger.field_name = "id"; escape = ref (true); typ = "int";
+              { Tiger.field_name = ("id", 3); escape = ref (true);
+                typ = ("int", 2);
                 field_pos =
                 { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 78;
                   pos_cnum = 108 }
@@ -20,10 +21,10 @@ Tiger.LetExp {
          { Tiger.pos_fname = ""; pos_lnum = 3; pos_bol = 78; pos_cnum = 84 }
          }
         ]);
-    Tiger.VarDec {name = "a"; escape = ref (true); typ = None;
+    Tiger.VarDec {name = ("a", 6); escape = ref (true); typ = None;
       init =
       (Tiger.VarExp
-         (Tiger.SimpleVar ("nil",
+         (Tiger.SimpleVar (("nil", 5),
             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 117;
               pos_cnum = 126 }
             )));
@@ -33,7 +34,7 @@ Tiger.LetExp {
   body =
   (Tiger.SeqExp
      [((Tiger.VarExp
-          (Tiger.SimpleVar ("a",
+          (Tiger.SimpleVar (("a", 6),
              { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 133;
                pos_cnum = 134 }
              ))),

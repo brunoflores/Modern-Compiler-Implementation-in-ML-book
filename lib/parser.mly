@@ -48,12 +48,27 @@
 %token OR
 %token EOF
 
-%left before_BINOPS
-%left AND OR
-%left EQ NEQ TIMES MINUS PLUS GT
-%left ID
+(* Page 517: Precedence of operators
+   Unary minus (negation) has the highest precedence.
+   Then operators *, / have the next highest precedence,
+   followed by +, -, then by =, <>, >, <, >=, <=, then by &, then by |. *)
+
+(* Page 518, Associativity of operators
+   The operators *, /, +, - are all left-associative.
+   The comparison operators do not associate, so a=b=c is not a
+   legal expression, although a=(b=c) is. *)
+
+%nonassoc ASSIGN
+%nonassoc DO
+%nonassoc OF
+%left OR
+%left AND
+%nonassoc EQ NEQ GT
+%left MINUS PLUS
+%left TIMES
+%nonassoc ID
+%left LBRACK
 %left LPAREN
-%left DOT
 
 %start <exp option> prog
 
@@ -67,28 +82,52 @@ entryexpr:
   | x = openexpr { x }
   | x = closedexpr { x }
 
+// For when ID[expr] is found in the right-hand side.
+// This happens in array creation, when expr is the number of elements.
+// "Array creation" (page 518).
+%inline exprorarr:
+  | e = expr { e }
+  | id = ID; LBRACK; size = expr; RBRACK; OF; e = expr
+    { ArrayExp {
+        typ = Symbol.create id;
+        size = size;
+        init = e;
+        pos = (pos_of_lexing_position $startpos) } }
+
 expr:
   | x = constant { x }
   | x = lvalue { VarExp x }
   | e = binop { e }
-  | e = arrexp { e }
   | LPAREN; RPAREN { NilExp }
   | LPAREN; seq = exprseq+; RPAREN { SeqExp seq }
 
-  | lvalue = lvalue; ASSIGN; e = expr
+  | left = expr; AND; right = expr
+    { IfExp {
+        test = left;
+        then' = right;
+        else' = Some (IntExp 0);
+        pos = (pos_of_lexing_position $startpos) } }
+
+  | left = expr; OR; right = expr
+    { IfExp {
+        test = left;
+        then' = IntExp 1;
+        else' = Some right;
+        pos = (pos_of_lexing_position $startpos) } }
+
+  | lvalue = lvalue; ASSIGN; e = exprorarr
     { AssignExp {
         var = lvalue;
         exp = e;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec before_BINOPS
 
   | id = ID; LBRACE; fields = fields*; RBRACE
     { RecordExp {
         fields = fields;
-        typ = id;
+        typ = Symbol.create id;
         pos = (pos_of_lexing_position $startpos) }  }
 
-  | LET; decs = dec*; IN; seq = exprseq+; END
+  | LET; decs = dec*; IN; seq = exprseq*; END
     { LetExp {
         decs = decs;
         body = SeqExp seq;
@@ -96,7 +135,7 @@ expr:
 
   | id = ID; LPAREN; l = exprlist*; RPAREN
     { CallExp {
-        func = id;
+        func = Symbol.create id;
         args = l;
         pos = (pos_of_lexing_position $startpos) } }
 
@@ -105,16 +144,6 @@ expr:
         test = test;
         body = body;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec before_BINOPS
-
-arrexp:
-  | id = ID; LBRACK; size = expr; RBRACK; OF; e = expr
-    { ArrayExp {
-        typ = id;
-        size = size;
-        init = e;
-        pos = (pos_of_lexing_position $startpos) } }
-    %prec before_BINOPS
 
 constant:
   | x = INT { IntExp x }
@@ -145,7 +174,7 @@ openexpr:
 
   | FOR; id = ID; ASSIGN; lo = expr; TO; hi = expr; DO; body = entryexpr
     { ForExp {
-        var = id;
+        var = Symbol.create id;
         lo = lo;
         hi = hi;
         body = body;
@@ -169,7 +198,6 @@ binop:
         oper = EqOp;
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec EQ
 
   | left = expr; NEQ; right = expr
     { OpExp {
@@ -177,7 +205,6 @@ binop:
         oper = NeqOp;
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec NEQ
 
   | left = expr; TIMES; right = expr
     { OpExp {
@@ -185,7 +212,6 @@ binop:
         oper = TimesOp;
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec TIMES
 
   | left = expr; MINUS; right = expr
     { OpExp {
@@ -193,7 +219,6 @@ binop:
         oper = MinusOp;
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec MINUS
 
   | left = expr; PLUS; right = expr
     { OpExp {
@@ -201,7 +226,6 @@ binop:
         oper = PlusOp;
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec PLUS
 
   | left = expr; GT; right = expr
     { OpExp {
@@ -209,25 +233,8 @@ binop:
         oper = GtOp;
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
-    %prec GT
 
-  | left = expr; AND; right = expr
-    { IfExp {
-        test = left;
-        then' = right;
-        else' = Some (IntExp 0);
-        pos = (pos_of_lexing_position $startpos) } }
-    %prec AND
-
-  | left = expr; OR; right = expr
-    { IfExp {
-        test = left;
-        then' = IntExp 1;
-        else' = Some right;
-        pos = (pos_of_lexing_position $startpos) } }
-    %prec OR
-
-exprlist:
+ exprlist:
   | e = entryexpr; { (e, (pos_of_lexing_position $startpos)) }
   | e = entryexpr; COMMA { (e, (pos_of_lexing_position $startpos)) }
 
@@ -236,16 +243,13 @@ exprseq:
   | e = entryexpr; SEMICOLON { (e, (pos_of_lexing_position $startpos(e))) }
 
 lvalue:
-  | id = ID { SimpleVar (id, (pos_of_lexing_position $startpos)) }
+  | id = ID { SimpleVar (Symbol.create id, (pos_of_lexing_position $startpos)) }
 
-  | var = lvalue; DOT; symbol = lvalue
-    { FieldVar (var, symbol, (pos_of_lexing_position $startpos)) }
+  | var = lvalue; DOT; symbol = ID
+    { FieldVar (var, Symbol.create symbol, (pos_of_lexing_position $startpos)) }
 
-  | var = ID; LBRACK; e = expr; RBRACK
-    { SubscriptVar (
-        SimpleVar (var, (pos_of_lexing_position ($startpos(var)))),
-        e,
-        (pos_of_lexing_position $startpos)) }
+  | var = lvalue; LBRACK; e = expr; RBRACK
+    { SubscriptVar (var, e, (pos_of_lexing_position $startpos)) }
 
 dec:
   | x = vardec { x }
@@ -258,27 +262,27 @@ fundecs:
 fundec:
   | id = ID; LPAREN; params = separated_list(COMMA, tyfield); RPAREN;
     result = resultopt?; EQ; body = entryexpr
-    { { name = id;
+    { { name = Symbol.create id;
         params = params;
         result = result;
         body = body;
         pos = (pos_of_lexing_position $startpos) } }
 
 resultopt:
-  | COLON; id = ID { (id, (pos_of_lexing_position $startpos)) }
+  | COLON; id = ID { (Symbol.create id, (pos_of_lexing_position $startpos)) }
 
 vardec:
-  | VAR; id = ID; COLON; tid = ID; ASSIGN; e = expr
+  | VAR; id = ID; COLON; tid = ID; ASSIGN; e = exprorarr
     { VarDec {
-        name = id;
-        typ = Some (tid, (pos_of_lexing_position $startpos(tid)));
+        name = Symbol.create id;
+        typ = Some (Symbol.create tid, (pos_of_lexing_position $startpos(tid)));
         init = e;
         escape = ref true;
         pos = (pos_of_lexing_position $startpos) } }
 
-  | VAR; id = ID; ASSIGN; e = expr
+  | VAR; id = ID; ASSIGN; e = exprorarr
     { VarDec {
-        name = id;
+        name = Symbol.create id;
         typ = None;
         init = e;
         escape = ref true;
@@ -289,24 +293,28 @@ tydecs:
 
 tydec:
   | id = ID; EQ; tid = ID
-    { { tydec_name = id;
-        ty = NameTy (tid, (pos_of_lexing_position $startpos(tid)));
+    { { tydec_name = Symbol.create id;
+        ty = NameTy (
+          Symbol.create tid,
+          (pos_of_lexing_position $startpos(tid)));
         tydec_pos = (pos_of_lexing_position $startpos) } }
 
   | id = ID; EQ; ARRAY; OF; tid = ID
-    { { tydec_name = id;
-        ty = (ArrayTy (tid, (pos_of_lexing_position $startpos(tid))));
+    { { tydec_name = Symbol.create id;
+        ty = (ArrayTy (
+          Symbol.create tid,
+          (pos_of_lexing_position $startpos(tid))));
         tydec_pos = (pos_of_lexing_position $startpos) } }
 
   | id = ID; EQ; LBRACE; fields = separated_list(COMMA, tyfield); RBRACE;
-    { { tydec_name = id;
+    { { tydec_name = Symbol.create id;
         ty = (RecordTy fields);
         tydec_pos = (pos_of_lexing_position $startpos) } }
 
 tyfield:
   | id = ID; COLON; tid = ID
-    { { field_name = id;
-        typ = tid;
+    { { field_name = Symbol.create id;
+        typ = Symbol.create tid;
         escape = ref true;
         field_pos = (pos_of_lexing_position $startpos) } }
 
@@ -315,4 +323,5 @@ fields:
   | x = field; COMMA { x }
 
 field:
-  | id = ID; EQ; e = expr { ( id, e, (pos_of_lexing_position $startpos)) }
+  | id = ID; EQ; e = exprorarr
+    { (Symbol.create id, e, (pos_of_lexing_position $startpos)) }

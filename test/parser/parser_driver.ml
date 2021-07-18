@@ -6,18 +6,18 @@ let print_position outx (lexbuf : Lexing.lexbuf) =
   fprintf outx "%s:%d:%d" fname line col
 
 let parse_with_error lexbuf =
-  try Parser.prog Lexer.read lexbuf with
-  | Lexer.SyntaxError msg ->
+  try Tigerlib.Parser.prog Tigerlib.Lexer.read lexbuf with
+  | Tigerlib.Lexer.SyntaxError msg ->
       fprintf stderr "%a: %s\n" print_position lexbuf msg;
       None
-  | Parser.Error ->
+  | Tigerlib.Parser.Error ->
       fprintf stderr "%a: Syntax error\n" print_position lexbuf;
       exit (-1)
 
 let rec parse_and_print lexbuf =
   match parse_with_error lexbuf with
   | Some value ->
-      let output = Format.asprintf "%a" Tiger.pp_exp value in
+      let output = Format.asprintf "%a" Tigerlib.Tiger.pp_exp value in
       fprintf stdout "%s\n" output;
       parse_and_print lexbuf
   | None -> ()

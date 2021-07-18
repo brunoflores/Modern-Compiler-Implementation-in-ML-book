@@ -1,0 +1,11 @@
+Tiger.IfExp {
+  test =
+  Tiger.OpExp {left = (Tiger.IntExp 1); oper = Tiger.EqOp;
+    right = (Tiger.IntExp 2);
+    pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }};
+  then' =
+  Tiger.OpExp {left = (Tiger.IntExp 3); oper = Tiger.EqOp;
+    right = (Tiger.IntExp 4);
+    pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 8 }};
+  else' = (Some (Tiger.IntExp 0));
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }}

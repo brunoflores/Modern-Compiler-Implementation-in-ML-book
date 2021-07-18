@@ -1,10 +1,12 @@
-.PHONY: intall-deps
-install-deps:
-	esy install
+all: build doc
 
 .PHONY: build
 build: install-deps
 	esy build dune build
+
+.PHONY: intall-deps
+install-deps:
+	esy install
 
 .PHONY: build-watch
 build-watch: install-deps
@@ -22,4 +24,8 @@ test: build
 
 .PHONY: test-watch
 test-watch:
-	./test_watch.sh
+	./scripts/test_watch.sh
+
+.PHONY: doc
+doc:
+	esy dune build @doc && esy dune build @doc-private

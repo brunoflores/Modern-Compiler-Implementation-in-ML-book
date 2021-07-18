@@ -1,16 +1,17 @@
 Tiger.LetExp {
   decs =
   [(Tiger.FunctionDec
-      [{ Tiger.name = "nfactor";
+      [{ Tiger.name = ("nfactor", 2);
          params =
-         [{ Tiger.field_name = "n"; escape = ref (true); typ = "int";
+         [{ Tiger.field_name = ("n", 1); escape = ref (true);
+            typ = ("int", 0);
             field_pos =
             { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 60; pos_cnum = 79
               }
             }
            ];
          result =
-         (Some ("int",
+         (Some (("int", 0),
                 { Tiger.pos_fname = ""; pos_lnum = 5; pos_bol = 60;
                   pos_cnum = 86 }));
          body =
@@ -19,7 +20,7 @@ Tiger.LetExp {
            Tiger.OpExp {
              left =
              (Tiger.VarExp
-                (Tiger.SimpleVar ("n",
+                (Tiger.SimpleVar (("n", 1),
                    { Tiger.pos_fname = ""; pos_lnum = 6; pos_bol = 94;
                      pos_cnum = 103 }
                    )));
@@ -32,18 +33,18 @@ Tiger.LetExp {
            (Some Tiger.OpExp {
                    left =
                    (Tiger.VarExp
-                      (Tiger.SimpleVar ("n",
+                      (Tiger.SimpleVar (("n", 1),
                          { Tiger.pos_fname = ""; pos_lnum = 10;
                            pos_bol = 141; pos_cnum = 149 }
                          )));
                    oper = Tiger.TimesOp;
                    right =
-                   Tiger.CallExp {func = "nfactor";
+                   Tiger.CallExp {func = ("nfactor", 2);
                      args =
                      [(Tiger.OpExp {
                          left =
                          (Tiger.VarExp
-                            (Tiger.SimpleVar ("n",
+                            (Tiger.SimpleVar (("n", 1),
                                { Tiger.pos_fname = ""; pos_lnum = 10;
                                  pos_bol = 141; pos_cnum = 161 }
                                )));
@@ -70,7 +71,7 @@ Tiger.LetExp {
     ];
   body =
   (Tiger.SeqExp
-     [(Tiger.CallExp {func = "nfactor";
+     [(Tiger.CallExp {func = ("nfactor", 2);
          args =
          [((Tiger.IntExp 10),
            { Tiger.pos_fname = ""; pos_lnum = 13; pos_bol = 172;

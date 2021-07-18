@@ -1,0 +1,9 @@
+Tiger.AssignExp {
+  var =
+  (Tiger.SubscriptVar (
+     (Tiger.SimpleVar (("arr", 0),
+        { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 })),
+     (Tiger.IntExp 0),
+     { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }));
+  exp = (Tiger.IntExp 0);
+  pos = { Tiger.pos_fname = ""; pos_lnum = 1; pos_bol = 0; pos_cnum = 0 }}

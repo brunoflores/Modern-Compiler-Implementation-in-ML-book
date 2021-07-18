@@ -1,0 +1,15 @@
+let
+
+  type arrtype1 = array of int
+  type arrtype2 = array of string
+  type rectype1 = {name:string, address:string, id: int , age: int}
+
+  var arr1 := arrtype1 [10] of 0
+  var arr2 := arrtype2 [5] of rectype1 {name="aname", address="somewhere", id=0, age=0}
+  var arr3:arrtype2 := arrtype3 [100] of ""
+
+in
+
+  /* Nothing. */
+
+end

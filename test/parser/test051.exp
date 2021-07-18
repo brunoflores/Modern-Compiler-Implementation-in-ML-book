@@ -1,7 +1,7 @@
 Tiger.LetExp {
   decs =
   [(Tiger.FunctionDec
-      [{ Tiger.name = "one"; params = []; result = None;
+      [{ Tiger.name = ("one", 0); params = []; result = None;
          body =
          (Tiger.SeqExp
             [((Tiger.IntExp 1),
@@ -14,7 +14,7 @@ Tiger.LetExp {
          }
         ]);
     (Tiger.FunctionDec
-       [{ Tiger.name = "zero"; params = []; result = None;
+       [{ Tiger.name = ("zero", 1); params = []; result = None;
           body =
           (Tiger.SeqExp
              [((Tiger.IntExp 0),
@@ -26,12 +26,12 @@ Tiger.LetExp {
             }
           }
          ]);
-    Tiger.VarDec {name = "N"; escape = ref (true); typ = None;
+    Tiger.VarDec {name = ("N", 2); escape = ref (true); typ = None;
       init = (Tiger.IntExp 1);
       pos =
       { Tiger.pos_fname = ""; pos_lnum = 7; pos_bol = 214; pos_cnum = 216 }};
     (Tiger.FunctionDec
-       [{ Tiger.name = "another"; params = []; result = None;
+       [{ Tiger.name = ("another", 3); params = []; result = None;
           body =
           (Tiger.SeqExp
              [((Tiger.IntExp 0),

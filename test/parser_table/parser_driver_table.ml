@@ -1,7 +1,7 @@
 open Core
 module E = MenhirLib.ErrorReports
 module L = MenhirLib.LexerUtil
-module I = Parser.MenhirInterpreter
+module I = Tigerlib.Parser.MenhirInterpreter
 
 let print_position outx (lexbuf : Lexing.lexbuf) =
   let pos = lexbuf.lex_curr_p in
@@ -38,7 +38,9 @@ let get text checkpoint i =
       "???"
 
 let succeed v =
-  match v with Some x -> Format.printf "%a\n" Tiger.pp_exp x | None -> ()
+  match v with
+  | Some x -> Format.printf "%a\n" Tigerlib.Tiger.pp_exp x
+  | None -> ()
 
 let fail text buffer checkpoint =
   (* Indicate where in the input file the error occurred. *)
@@ -46,7 +48,7 @@ let fail text buffer checkpoint =
   (* Show the tokens just before and just after the error. *)
   let indication = sprintf "Syntax error %s.\n" (E.show (show text) buffer) in
   (* Fetch an error message from the database. *)
-  let message = ParserMessages.message (state checkpoint) in
+  let message = Tigerlib.ParserMessages.message (state checkpoint) in
   (* Expand away the $i keywords that might appear in the message. *)
   let message = E.expand (get text checkpoint) message in
   (* Show these three components. *)
@@ -54,11 +56,11 @@ let fail text buffer checkpoint =
   exit 1
 
 let parse lexbuf text =
-  let supplier = I.lexer_lexbuf_to_supplier Lexer.read lexbuf in
+  let supplier = I.lexer_lexbuf_to_supplier Tigerlib.Lexer.read lexbuf in
   let buffer, supplier = E.wrap_supplier supplier in
-  let checkpoint = Parser.Incremental.prog lexbuf.lex_curr_p in
+  let checkpoint = Tigerlib.Parser.Incremental.prog lexbuf.lex_curr_p in
   try I.loop_handle succeed (fail text buffer) supplier checkpoint
-  with Lexer.SyntaxError msg ->
+  with Tigerlib.Lexer.SyntaxError msg ->
     fprintf stderr "%a: %s\n" print_position lexbuf msg;
     ()
 
