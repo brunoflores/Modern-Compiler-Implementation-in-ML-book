@@ -1,0 +1,4 @@
+{0 Tigerlib}
+
+The module type {!module:Tigerlib.Types} specifies the bindings for the
+compiler.

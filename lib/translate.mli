@@ -1,13 +1,28 @@
-type exp = unit * Tiger.pos option
+module type I = sig
+  (** Semantic translation. *)
 
-(* type level
+  (** This module provides functions that are useful in producing intermediate
+      representation from abstract syntax. *)
 
-type access
+  (** Manages local variables and static function nesting for {!Semant}. *)
 
-val outermost : level
+  type exp = unit * Tiger.pos option
 
-val new_level : level -> Temp.label -> bool list -> level
+  type level
+  (** For function static links. *)
 
-val formals : level -> access list
+  val outermost : level
+  (** The outermost level is the level within which the "main" program
+      is nested. All "library" functions are declared at this outermost
+      level. *)
 
-val alloc_local : level -> bool -> access *)
+  type access
+
+  val new_level : level -> Temp.label -> bool list -> level
+  (** Create a new level enclosing the given level. *)
+
+  val formals : level -> access list
+
+  (* val alloc_local : level -> bool -> access *)
+  val alloc_local : unit -> access
+end

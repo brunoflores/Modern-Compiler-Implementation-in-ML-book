@@ -12,7 +12,7 @@ module type I = sig
       frame or in registers. This is an abstract data type, so its
       implementation is visible only inside the implementation. *)
 
-  val new_frame : label:Temp.label -> escapes:bool list -> frame
+  val new_frame : Temp.label -> bool list -> frame
   (** To make a new frame for a function [f] with [k] formal parameters,
       call [new_frame f l], where [l] is a list of [k] booleans: [true] for
       each parameter that escapes and [false] for each parameter that

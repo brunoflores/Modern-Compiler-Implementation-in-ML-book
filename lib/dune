@@ -1,7 +1,9 @@
-(env
- (_
-  (odoc
-   (warnings fatal))))
+(documentation
+ (mld_files lib))
+
+; (_
+;  (odoc
+;   (warnings fatal)))
 
 (ocamllex
  (modules lexer))
@@ -15,7 +17,7 @@
  (public_name tigerc.lib)
  ;  (flags -open Core)
  (libraries core menhirLib)
- (modules_without_implementation frame)
+ (modules_without_implementation frame table translate env semant)
  (preprocess
   (pps ppx_jane ppx_deriving.show)))
 
