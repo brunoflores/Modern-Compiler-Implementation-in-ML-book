@@ -37,12 +37,16 @@ let get text checkpoint i =
          into the known suffix of the stack. *)
       "???"
 
+module Translate = Tigerlib.Translate_maker.Make (Tigerlib.Frame_mips.Frame_mips)
+module Env = Tigerlib.Env_maker.Make (Translate)
+module Semant = Tigerlib.Semant_maker.Make (Env) (Translate)
+
 let succeed v =
   match v with
   | Some x -> (
       (* For debugging: *)
       (* Format.printf "%a\n\n" Tiger.pp_exp x; *)
-      match Tigerlib.Semant.transProg x with
+      match Semant.transProg x with
       | Ok _ -> print_endline "Done"
       | Error errs ->
           List.iter errs ~f:(fun (pos, s) ->
