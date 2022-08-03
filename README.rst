@@ -3,29 +3,12 @@ Modern-Compiler-Implementation-in-ML-book
 
 https://www.cs.princeton.edu/~appel/modern/ml/
 
-.. code-block:: bash
-
-  # Install the package manager
-  npm install -g esy
-
-  # Build dependencies
-  make install-deps
-
-  # Build all
-  make build
-
-  # Test all and exit
-  make test
-
-  # Build documentation
-  make doc
-
 Tiger
 ------------
 
 Tiger is a simple but nontrivial language of the Algol family.
 
-Two namespaces:
+Two name spaces:
 
 #. Types
 #. Functions and variables
