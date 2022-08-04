@@ -1,4 +1,3 @@
-open Core
 module E = MenhirLib.ErrorReports
 module L = MenhirLib.LexerUtil
 module I = Tigerlib.Parser.MenhirInterpreter
@@ -73,9 +72,9 @@ let parse lexbuf text =
        exit (-1) *)
 
 (* let parse_and_print lexbuf content =
-  match parse lexbuf content with
-  | Some value -> fprintf stdout "%s\n" value
-  | None -> () *)
+   match parse lexbuf content with
+   | Some value -> fprintf stdout "%s\n" value
+   | None -> () *)
 
 let get_contents s =
   let filename, content =
@@ -90,10 +89,12 @@ let loop filename =
   (* parse_and_print lexbuf content *)
   parse lexbuf content
 
-let command =
-  Command.basic ~summary:"Parse and display the AST"
-    Command.Let_syntax.(
-      let%map_open filename = anon (maybe ("filename" %: Filename.arg_type)) in
-      fun () -> loop filename)
-
-let () = Command.run command
+let () =
+  let usage = "Parse and display the AST" in
+  let filename = ref None in
+  let spec = [] in
+  let readfname fname =
+    filename := if String.length fname > 0 then Some fname else None
+  in
+  Arg.parse spec readfname usage;
+  loop !filename

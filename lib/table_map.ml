@@ -1,14 +1,12 @@
-open Core
+module TableMap (Key : Map.OrderedType) : Table.I with type key = Key.t = struct
+  module M = Map.Make (Key)
 
-module TableMap (Key : Comparable) : Table.I with type key = Key.t = struct
   type key = Key.t
+  type 'a table = 'a M.t
 
-  type 'a table = (key, 'a, Key.comparator_witness) Map.t
+  let empty = M.empty
+  let enter (symbol : key) t table : 'a table = M.add symbol t table
 
-  let empty = Map.empty (module Key)
-
-  let enter (symbol : key) t table : 'a table =
-    Map.set table ~key:symbol ~data:t
-
-  let look (symbol : key) (table : 'a table) : 'a option = Map.find table symbol
+  let look (symbol : key) (table : 'a table) : 'a option =
+    try Some (M.find symbol table) with Not_found -> None
 end

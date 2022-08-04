@@ -3,12 +3,8 @@ module Make
     (Translate : Translate.I
                    with type access = Env.access
                     and type level = Env.level) : Semant.I = struct
-  open Core
-
   type venv = Env.env_entry Symbol.table
-
   type tenv = Types.ty Symbol.table
-
   type expty = { exp : Translate.exp; ty : Types.ty }
 
   let rec transExp (venv : venv) (tenv : tenv) (exp : Tiger.exp) :
@@ -61,7 +57,7 @@ module Make
               Error
                 (( Some pos,
                    Format.asprintf "variable %S undefined" (Symbol.name x) )
-                 :: errs))
+                :: errs))
       | Tiger.LetExp { decs; body; _ } ->
           let venv, tenv = trdec errs decs in
           transExp venv tenv body

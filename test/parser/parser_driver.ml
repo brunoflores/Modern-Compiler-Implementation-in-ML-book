@@ -31,10 +31,12 @@ let loop filename =
   let lexbuf = get_contents filename in
   parse_and_print lexbuf
 
-let command =
-  Command.basic ~summary:"Parse and display the AST"
-    Command.Let_syntax.(
-      let%map_open filename = anon (maybe ("filename" %: Filename.arg_type)) in
-      fun () -> loop filename)
-
-let () = Command.run command
+let () =
+  let usage = "Parse and display the AST" in
+  let filename = ref None in
+  let spec = [] in
+  let readfname fname =
+    filename := if String.length fname > 0 then Some fname else None
+  in
+  Arg.parse spec readfname usage;
+  loop !filename

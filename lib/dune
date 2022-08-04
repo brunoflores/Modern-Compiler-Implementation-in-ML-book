@@ -15,8 +15,7 @@
 (library
  (name tigerlib)
  (public_name tigerc.lib)
- ;  (flags -open Core)
- (libraries core menhirLib)
+ (libraries menhirLib)
  (modules_without_implementation frame table translate env semant)
  (preprocess
   (pps ppx_jane ppx_deriving.show)))

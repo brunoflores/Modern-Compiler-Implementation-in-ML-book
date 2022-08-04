@@ -1,6 +1,5 @@
 (executable
  (name parser_driver_table)
- (libraries core menhirLib tigerlib)
- (flags -open Core)
+ (libraries menhirLib tigerlib)
  (preprocess
   (pps ppx_jane ppx_deriving.show)))

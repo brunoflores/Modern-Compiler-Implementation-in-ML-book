@@ -1,5 +1,5 @@
 (executable
  (name lexer_driver)
- (libraries core tigerlib)
+ (libraries tigerlib)
  (preprocess
   (pps ppx_jane)))
