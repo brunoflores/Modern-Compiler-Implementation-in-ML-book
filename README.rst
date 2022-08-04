@@ -3,10 +3,19 @@ Modern-Compiler-Implementation-in-ML-book
 
 https://www.cs.princeton.edu/~appel/modern/ml/
 
+Usage
+-----------
+
+.. code-block:: bash
+
+   dune exec ./bin/tigerc.exe
+
+
 Tiger
 ------------
 
-Tiger is a simple but nontrivial language of the Algol family.
+Tiger is a simple but nontrivial language of the Algol family,
+with nested scope and heap-allocated records.
 
 Two name spaces:
 
