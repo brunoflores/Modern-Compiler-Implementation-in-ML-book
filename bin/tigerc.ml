@@ -31,9 +31,9 @@ let get text checkpoint i =
   | Some (I.Element (_, _, pos1, pos2)) -> show text (pos1, pos2)
   | None ->
       (* The index is out of range. This should not happen if [$i]
-         keywords are correctly inside the syntax error message
-         database. The integer [i] should always be a valid offset
-         into the known suffix of the stack. *)
+          keywords are correctly inside the syntax error message
+          database. The integer [i] should always be a valid offset
+          into the known suffix of the stack. *)
       "???"
 
 module Translate = Tigerlib.Translate_maker.Make (Tigerlib.Frame_mips.Frame_mips)
