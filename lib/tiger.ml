@@ -1,7 +1,5 @@
 type pos = { pos_fname : string; pos_lnum : int; pos_bol : int; pos_cnum : int }
-[@@deriving show]
-
-type symbol = Symbol.symbol [@@deriving show]
+type symbol = Symbol.symbol
 
 type exp =
   | NilExp
@@ -85,4 +83,3 @@ and functiondec = {
   body : exp;
   pos : pos;
 }
-[@@deriving show]

@@ -1,6 +1,6 @@
-(* Abstract representation of symbol tables. *)
+(* Abstract representation of symbol tables (environments). *)
 
-type symbol [@@deriving compare, show]
+type symbol
 
 val create : string -> symbol
 val name : symbol -> string

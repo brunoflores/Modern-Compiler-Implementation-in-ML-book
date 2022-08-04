@@ -1,32 +1,27 @@
-module Symbol = struct
-  module T = struct
-    type t = string * int [@@deriving compare, sexp, show]
-  end
-
-  include T
-  include Comparable.Make (T)
-end
-
-type symbol = Symbol.t [@@deriving compare, show]
+type symbol = string * int
 
 let next = ref 0
-
-module Hash_table = Hashtbl.Make (String)
-
-let hash_table = Hash_table.create 10
+let hash_table : (string, int) Hashtbl.t = Hashtbl.create 10
 
 let create name : symbol =
-  match Hash_table.find hash_table name with
-  | Some n -> (name, n)
-  | None ->
+  let i =
+    try Hashtbl.find hash_table name
+    with Not_found ->
       let i = !next in
       next := i + 1;
-      Hash_table.add hash_table name i;
-      (name, i)
+      Hashtbl.add hash_table name i;
+      i
+  in
+  (name, i)
 
 let name ((s, _) : symbol) = s
 
-module Table = Table_map.TableMap (Symbol)
+module Table = Table_map.TableMap (struct
+  type t = symbol
+
+  let compare (name0, i0) (name1, i1) =
+    match String.compare name0 name1 with 0 -> Int.compare i0 i1 | c -> c
+end)
 
 type 'a table = 'a Table.table
 

@@ -1,11 +1,7 @@
 module Temp = struct
-  module T = struct
-    (* type t = int [@@deriving compare, sexp, show] *)
-    type t = int [@@deriving compare, sexp]
-  end
+  type t = int
 
-  include T
-  include Comparable.Make (T)
+  let compare = Int.compare
 end
 
 type temp = Temp.t

@@ -73,15 +73,18 @@ module Make
     and trdec (errs : (Tiger.pos option * string) list) (decs : Tiger.dec list)
         =
       let venv =
-        List.map decs ~f:(function
-          | Tiger.VarDec { name; init; _ } -> (
-              match trexp errs init with
-              | Ok { ty; _ } ->
-                  (Env.VarEntry { access = Translate.alloc_local (); ty }, name)
-              | Error _ -> failwith "FATAL")
-          | Tiger.FunctionDec _ | Tiger.TypeDec _ -> failwith "not implemented")
-        |> List.fold ~init:venv ~f:(fun acc (x, name) ->
-               Symbol.enter name x acc)
+        List.map
+          (function
+            | Tiger.VarDec { name; init; _ } -> (
+                match trexp errs init with
+                | Ok { ty; _ } ->
+                    ( Env.VarEntry { access = Translate.alloc_local (); ty },
+                      name )
+                | Error _ -> failwith "FATAL")
+            | Tiger.FunctionDec _ | Tiger.TypeDec _ ->
+                failwith "not implemented")
+          decs
+        |> List.fold_left (fun acc (x, name) -> Symbol.enter name x acc) venv
       in
       (venv, tenv)
       (*
