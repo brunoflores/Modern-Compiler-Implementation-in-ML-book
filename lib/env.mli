@@ -20,12 +20,11 @@ module type I = sig
     stands for. *)
 
   type access
-
   type level
 
   (** For a value identifier, we need to know whether it is a variable or
-    a function. If a variable, what is its type. If a function,
-    what are its parameter and result types, and so on. *)
+      a function. If a variable, what is its type. If a function,
+      what are its parameter and result types, and so on. *)
   type env_entry =
     | VarEntry of { access : access;  (** TODO *) ty : ty_entry  (** TODO *) }
     | FunEntry of {
@@ -39,5 +38,5 @@ module type I = sig
   (** Predefined types. *)
 
   val base_venv : env_entry Symbol.table
-  (** Predefined functions. *)
+  (** Predefined values. *)
 end

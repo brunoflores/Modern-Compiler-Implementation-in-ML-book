@@ -5,14 +5,16 @@ struct
   type ty_entry = Types.ty
 
   let base_tenv : ty_entry Symbol.table =
-    Symbol.empty
-    |> Symbol.enter (Symbol.create "int") Types.INT
-    |> Symbol.enter (Symbol.create "string") Types.STRING
+    (* This notation can be improved with partial application and the |>
+       operator, but that requires changes in the Symbol interface. *)
+    let tenv = Symbol.empty in
+    let tenv = Symbol.enter (tenv, Symbol.create "int", Types.Int) in
+    let tenv = Symbol.enter (tenv, Symbol.create "string", Types.String) in
+    tenv
 
   (* Base value environment: *)
 
   type access = Translate.access
-
   type level = Translate.level
 
   type env_entry =
