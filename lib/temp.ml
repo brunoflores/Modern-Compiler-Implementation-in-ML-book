@@ -9,7 +9,7 @@ type key = temp
 
 let new_temp (_ : unit) : temp = failwith "not implemented"
 
-module Table = Table_map.TableMap (Temp)
+module Table = Tablemap.Make (Temp)
 
 type 'a table = 'a Table.table
 

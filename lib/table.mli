@@ -3,6 +3,6 @@ module type I = sig
   type 'a table
 
   val empty : 'a table
-  val enter : key -> 'a -> 'a table -> 'a table
-  val look : key -> 'a table -> 'a option
+  val enter : 'a table * key * 'a -> 'a table
+  val look : 'a table * key -> 'a option
 end
