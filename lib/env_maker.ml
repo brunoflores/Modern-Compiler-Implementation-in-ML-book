@@ -23,6 +23,8 @@ struct
 
   let base_venv : env_entry Symbol.table = Symbol.empty
 
+  (* Appendix A: *)
+
   (* let base_venv : env_entry Symbol.table =
      Symbol.empty
      |> Symbol.enter (Symbol.create "print")
