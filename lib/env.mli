@@ -38,5 +38,5 @@ module type S = sig
   (** Predefined types. *)
 
   val base_venv : env_entry Symbol.table
-  (** Predefined values. *)
+  (** Predefined functions. *)
 end
