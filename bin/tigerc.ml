@@ -45,7 +45,7 @@ let succeed v =
   | Some x -> (
       (* For debugging: *)
       (* Format.printf "%a\n\n" Tiger.pp_exp x; *)
-      match Semant.transProg x with
+      match Semant.trans_prog x with
       | Ok _ -> print_endline "Done"
       | Error errs ->
           List.iter

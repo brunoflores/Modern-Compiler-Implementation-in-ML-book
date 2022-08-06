@@ -1,7 +1,8 @@
-(** Type-checking. *)
+(** [Semant] performs semantic analysis - including type-checking -
+    of abstract syntax. *)
 
 module type S = sig
-  val transProg : Tiger.exp -> (unit, (Tiger.pos option * string) list) result
+  val trans_prog : Tiger.exp -> (unit, (Tiger.pos option * string) list) result
   (** Type-checks a given program and returns unit on success or a list of all
     errors identified. *)
 end
