@@ -1,5 +1,18 @@
+module type S = sig
+  type ty_entry = Types.ty
+  type access
+  type level
+
+  type env_entry =
+    | VarEntry of { access : access; ty : ty_entry }
+    | FunEntry of { formals : ty_entry list; result : ty_entry; level : level }
+
+  val base_tenv : ty_entry Symbol.table
+  val base_venv : env_entry Symbol.table
+end
+
 module Make (Translate : Translate.I) :
-  Env.I with type level = Translate.level and type access = Translate.access =
+  S with type level = Translate.level and type access = Translate.access =
 struct
   (* Base type environment: *)
   type ty_entry = Types.ty

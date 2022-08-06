@@ -1,5 +1,5 @@
 module Make
-    (Env : Env.I)
+    (Env : Env.S)
     (Translate : Translate.I
                    with type access = Env.access
                     and type level = Env.level) : Semant.I = struct
@@ -13,7 +13,7 @@ module Make
       let check e =
         let _, pos = e.exp in
         match e.ty with
-        | Types.INT -> Ok e
+        | Types.Int -> Ok e
         | _ -> Error (pos, "integer expected")
       in
       match e with
@@ -44,13 +44,13 @@ module Make
     and trexp (errs : (Tiger.pos option * string) list) (e : Tiger.exp) :
         (expty, (Tiger.pos option * string) list) result =
       match e with
-      | Tiger.NilExp -> Ok { exp = ((), None); ty = Types.NIL }
+      | Tiger.NilExp -> Ok { exp = ((), None); ty = Types.Nil }
       | Tiger.StringExp (_, pos) ->
-          Ok { exp = ((), Some pos); ty = Types.STRING }
-      | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.INT }
+          Ok { exp = ((), Some pos); ty = Types.String }
+      | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.Int }
       | Tiger.SeqExp ((e, _) :: _) -> trexp errs e
       | Tiger.VarExp (Tiger.SimpleVar (x, pos)) -> (
-          match Symbol.look x venv with
+          match Symbol.look (venv, x) with
           | Some (Env.VarEntry { ty; _ }) -> Ok { exp = ((), Some pos); ty }
           | Some (FunEntry _) -> failwith "not implemented"
           | None ->
@@ -65,7 +65,7 @@ module Make
           let lefty = checkInt (trexp errs left) in
           let righty = checkInt (trexp errs right) in
           match (lefty, righty) with
-          | Ok _, Ok _ -> Ok { exp = ((), Some pos); ty = Types.INT }
+          | Ok _, Ok _ -> Ok { exp = ((), Some pos); ty = Types.Int }
           | (Error _ as l), Ok _ -> l
           | Ok _, (Error _ as r) -> r
           | Error l, Error r -> Error (l @ r))

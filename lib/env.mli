@@ -1,4 +1,4 @@
-module type I = sig
+module type S = sig
   (** We have two environments: a type environment and a value environment.
     The following program demonstrates that one environment will not suffice:
 
