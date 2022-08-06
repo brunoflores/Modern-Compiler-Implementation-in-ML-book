@@ -1,5 +1,7 @@
 type pos = { pos_fname : string; pos_lnum : int; pos_bol : int; pos_cnum : int }
-type symbol = Symbol.symbol
+[@@deriving show]
+
+type symbol = Symbol.symbol [@@deriving show]
 
 type exp =
   | NilExp
@@ -24,6 +26,7 @@ type exp =
   | BreakExp of pos
   | LetExp of { decs : dec list; body : exp; pos : pos }
   | ArrayExp of { typ : symbol; size : exp; init : exp; pos : pos }
+[@@deriving show]
 
 and var =
   | SimpleVar of symbol * pos

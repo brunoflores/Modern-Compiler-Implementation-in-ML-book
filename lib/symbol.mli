@@ -2,7 +2,7 @@
     It provides fast lookup and is intented for cases where lookups occur
     more frequently than inserts. *)
 
-type symbol
+type symbol [@@deriving show]
 (** Abstract symbol. [symbol] provides efficient lookup of names in
     environments by avoiding string comparisons. *)
 

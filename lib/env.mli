@@ -40,3 +40,7 @@ module type S = sig
   val base_venv : env_entry Symbol.table
   (** Predefined functions. *)
 end
+
+(** Functor building an implementation of the environment structure. *)
+module Make (Translate : Translate.I) :
+  S with type level = Translate.level and type access = Translate.access

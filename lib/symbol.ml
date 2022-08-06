@@ -1,5 +1,5 @@
 (* This representation of symbol is to support the [name] function. *)
-type symbol = string * int
+type symbol = string * int [@@deriving show]
 
 (* The next available symbol identifier.  *)
 let next = ref 0

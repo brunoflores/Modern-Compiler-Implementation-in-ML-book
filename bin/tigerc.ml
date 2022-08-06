@@ -37,8 +37,8 @@ let get text checkpoint i =
       "???"
 
 module Translate = Tigerlib.Translate_maker.Make (Tigerlib.Frame_mips.Frame_mips)
-module Env = Tigerlib.Env_maker.Make (Translate)
-module Semant = Tigerlib.Semant_maker.Make (Env) (Translate)
+module Env = Tigerlib.Env.Make (Translate)
+module Semant = Tigerlib.Semant.Make (Env) (Translate)
 
 let succeed v =
   match v with
