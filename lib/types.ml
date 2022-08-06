@@ -39,7 +39,7 @@ type ty =
   | Int  (** Primitive *)
   | String  (** Primitive *)
   | Nil  (** Belongs to any record type *)
-  | Unit  (** "no value" *)
+  | Unit  (** The type with just one value *)
   | Record of (Symbol.symbol * ty) list * unique
   | Array of ty * unique
   | Name of Symbol.symbol * ty option ref

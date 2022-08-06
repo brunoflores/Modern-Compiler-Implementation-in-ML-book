@@ -69,13 +69,30 @@ module Make
       | Ok { ty = Types.String; _ }, Ok { ty = Types.String; _ } -> Ok String
       | Ok { ty = Types.Int; _ }, Ok { ty = Types.Int; _ } -> Ok Int
       | _ -> Error (Some pos, "both sides must be string or int")
+    and actual_seq_ty (exps : (Tiger.exp * Tiger.pos) list) :
+        (expty, error) result =
+      match exps with
+      | [] -> Ok { exp = ((), None); ty = Types.Unit }
+      | [ (exp, _pos) ] -> trexp exp
+      | (exp, pos) :: exps' -> (
+          match trexp exp with
+          | Ok { ty = Types.Unit; _ } -> actual_seq_ty exps'
+          | Ok _ ->
+              Error
+                ( Some pos,
+                  "this expression is on the left side of a sequence: expected \
+                   unit" )
+          | Error _ as err -> err)
     and trexp (e : Tiger.exp) : (expty, error) result =
       match e with
       | Tiger.NilExp -> Ok { exp = ((), None); ty = Types.Nil }
       | Tiger.StringExp (_, pos) ->
           Ok { exp = ((), Some pos); ty = Types.String }
       | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.Int }
-      | Tiger.SeqExp ((e, _pos), _tail) -> trexp e
+      | Tiger.SeqExp exps -> (
+          match actual_seq_ty exps with
+          | Ok _ as ok -> ok
+          | Error _ as err -> err)
       | Tiger.VarExp var -> trvar var
       | Tiger.LetExp { decs; body; _ } ->
           let venv', tenv' = trans_decs venv tenv decs in
