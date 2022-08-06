@@ -77,7 +77,7 @@ module Make
       | (exp, pos) :: exps' -> (
           match trexp exp with
           | Ok { ty = Types.Unit; _ } -> actual_seq_ty exps'
-          | Ok _ ->
+          | Ok { ty = _; _ } ->
               Error
                 ( Some pos,
                   "this expression is on the left side of a sequence: expected \
