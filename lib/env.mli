@@ -42,5 +42,5 @@ module type S = sig
 end
 
 (** Functor building an implementation of the environment structure. *)
-module Make (Translate : Translate.I) :
+module Make (Translate : Translate.S) :
   S with type level = Translate.level and type access = Translate.access

@@ -4,7 +4,7 @@ end
 
 module Make
     (Env : Env.S)
-    (Translate : Translate.I
+    (Translate : Translate.S
                    with type access = Env.access
                     and type level = Env.level) : S = struct
   type venv = Env.env_entry Symbol.table

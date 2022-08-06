@@ -11,7 +11,7 @@ module type S = sig
   val base_venv : env_entry Symbol.table
 end
 
-module Make (Translate : Translate.I) :
+module Make (Translate : Translate.S) :
   S with type level = Translate.level and type access = Translate.access =
 struct
   (* Base type environment: *)

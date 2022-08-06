@@ -1,4 +1,4 @@
-module type I = sig
+module type S = sig
   (** Semantic translation. *)
 
   (** This module provides functions that are useful in producing intermediate
@@ -26,3 +26,5 @@ module type I = sig
   (* val alloc_local : level -> bool -> access *)
   val alloc_local : unit -> access
 end
+
+module Make (Frame : Frame.I) : S
