@@ -128,16 +128,17 @@ module Make
                 Error (Format.sprintf "undefined type: %s" (Symbol.name id)))
       in
       let rec walk_record (var : Tiger.var) (field : Symbol.symbol) :
-          (Types.ty, string) result =
+          (expty, error) result =
         match var with
-        | Tiger.SimpleVar (id, _) -> (
+        | Tiger.SimpleVar (id, pos) -> (
             match Symbol.look (venv, id) with
             | Some (Env.VarEntry { ty = Types.Record (fields, _); _ }) -> (
                 match List.find_opt (fun (x, _) -> x = field) fields with
-                | Some (_, field_ty) -> Ok field_ty
-                | None -> Error "field is not a member of the record")
-            | Some _ -> Error "var is not a record"
-            | None -> Error "undefined record")
+                | Some (_, ty) -> Ok { exp = ((), None); ty }
+                | None -> Error (Some pos, "field is not a member of the record")
+                )
+            | Some _ -> Error (Some pos, "var is not a record")
+            | None -> Error (Some pos, "undefined record"))
         | Tiger.FieldVar (var, field, _) -> walk_record var field
         | Tiger.SubscriptVar _ -> failwith "not implemented"
       in
@@ -151,11 +152,8 @@ module Make
               | Error e -> Error (Some pos, e))
           | Some (FunEntry _) -> Error (Some pos, "function")
           | None -> Error (Some pos, "undefined variable"))
-      | Tiger.FieldVar (var, field, pos) -> (
-          match walk_record var field with
-          | Ok ty -> Ok { exp = ((), Some pos); ty }
-          | Error e -> Error (Some pos, e))
-      | Tiger.SubscriptVar _ -> failwith "not implemented"
+      | Tiger.FieldVar (var, field, _pos) -> walk_record var field
+      | Tiger.SubscriptVar (_var, _exp, _pos) -> failwith "not implemented"
     in
 
     trexp exp
