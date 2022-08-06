@@ -1,12 +1,12 @@
 %{
-  (* The AST. *)
-  open Tiger
+(* The AST. *)
+open Tiger
 
-  let pos_of_lexing_position (pos : Lexing.position) : pos =
-    { pos_fname = pos.pos_fname;
-      pos_lnum = pos.pos_lnum;
-      pos_bol = pos.pos_bol;
-      pos_cnum = pos.pos_cnum }
+let pos_of_lexing_position (pos : Lexing.position) : pos =
+  { pos_fname = pos.pos_fname;
+    pos_lnum = pos.pos_lnum;
+    pos_bol = pos.pos_bol;
+    pos_cnum = pos.pos_cnum }
 %}
 
 %token <string> ID
@@ -242,7 +242,7 @@ binop:
         right = right;
         pos = (pos_of_lexing_position $startpos) } }
 
- exprlist:
+exprlist:
   | e = entryexpr; { (e, (pos_of_lexing_position $startpos)) }
   | e = entryexpr; COMMA { (e, (pos_of_lexing_position $startpos)) }
 
