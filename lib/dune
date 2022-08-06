@@ -10,7 +10,7 @@
 
 (menhir
  (modules parser)
- (flags --table --strict --external-tokens Token))
+ (flags --table --strict))
 
 (library
  (name tigerlib)

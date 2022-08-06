@@ -1,5 +1,5 @@
 module type S = sig
-  val trans_prog : Tiger.exp -> (unit, (Tiger.pos option * string) list) result
+  val trans_prog : Tiger.exp -> (unit, Tiger.pos option * string) result
 end
 
 module Make
@@ -14,57 +14,77 @@ module Make
      Tiger-language type. *)
   type expty = { exp : Translate.exp; ty : Types.ty }
   type error = Tiger.pos option * string
-  type errors = error list
-  type ty_res = (expty, errors) result
   type binop_ty = String | Int
 
-  let rec trans_exp (venv : venv) (tenv : tenv) (exp : Tiger.exp) : ty_res =
-    let rec check_int (e : ty_res) =
+  (* Augment a given environment with declarations. *)
+  let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
+      venv * tenv =
+    let venv' =
+      List.map
+        (function
+          | Tiger.VarDec { name; init; typ = None; _ } -> (
+              match trans_exp venv tenv init with
+              | Ok { ty; _ } ->
+                  (Env.VarEntry { access = Translate.alloc_local (); ty }, name)
+              | Error _ -> failwith "")
+          | Tiger.VarDec _ -> failwith "not implemented"
+          | Tiger.FunctionDec _ -> failwith "not implemented"
+          | Tiger.TypeDec _ -> failwith "not implemented")
+        decs
+      |> List.fold_left
+           (fun acc (env_entry, sym) -> Symbol.enter (acc, sym, env_entry))
+           venv
+    in
+    (venv', tenv)
+
+  and _trans_ty (_tenv : tenv) (_ty : Tiger.ty) : Types.ty =
+    failwith "not implemented"
+
+  and _trans_dec (_venv : venv) (_tenv : tenv) (_dec : Tiger.dec) : venv * tenv
+      =
+    failwith "not implemented"
+
+  and _trans_var (_venv : venv) (_tenv : tenv) (_var : Tiger.var) : expty =
+    failwith "not implemented"
+
+  and trans_exp (venv : venv) (tenv : tenv) (exp : Tiger.exp) :
+      (expty, error) result =
+    let rec check_int (e : (expty, error) result) =
       match e with
       | Ok expty -> (
           match expty.ty with
           | Types.Int -> e
-          | _ -> Error [ (None, "integer required") ])
+          | _ -> Error (None, "integer required"))
       | Error _ -> e
-    and check_int_binop (errs : errors) left right : (unit, errors) result =
-      let lefty = check_int (trexp errs left) in
-      let righty = check_int (trexp errs right) in
+    and check_int_binop left right : (unit, error) result =
+      let lefty = check_int (trexp left) in
+      let righty = check_int (trexp right) in
       match (lefty, righty) with
       | Ok _, Ok _ -> Ok ()
-      | Error err', Error err'' -> Error (err' @ err'' @ errs)
-      | _, Error err' | Error err', _ -> Error (err' @ errs)
-    and check_binop errs left right pos : (binop_ty, errors) result =
-      let lefty = trexp errs left in
-      let righty = trexp errs right in
+      | (Error _ as err), _ | _, (Error _ as err) -> err
+    and check_binop left right pos : (binop_ty, error) result =
+      let lefty = trexp left in
+      let righty = trexp right in
       match (lefty, righty) with
       | Ok { ty = Types.String; _ }, Ok { ty = Types.String; _ } -> Ok String
       | Ok { ty = Types.Int; _ }, Ok { ty = Types.Int; _ } -> Ok Int
-      | _ -> Error ((Some pos, "both sides must be string or int") :: errs)
-    and trexp (errs : errors) (e : Tiger.exp) : ty_res =
+      | _ -> Error (Some pos, "both sides must be string or int")
+    and trexp (e : Tiger.exp) : (expty, error) result =
       match e with
       | Tiger.NilExp -> Ok { exp = ((), None); ty = Types.Nil }
       | Tiger.StringExp (_, pos) ->
           Ok { exp = ((), Some pos); ty = Types.String }
       | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.Int }
-      | Tiger.SeqExp [] -> failwith ""
-      | Tiger.SeqExp ((e, _) :: _) -> trexp errs e
-      | Tiger.VarExp (Tiger.SimpleVar (x, pos)) -> (
-          match Symbol.look (venv, x) with
-          | Some (Env.VarEntry { ty; _ }) -> Ok { exp = ((), Some pos); ty }
-          | Some (FunEntry _) -> failwith "not implemented"
-          | None ->
-              Error
-                (( Some pos,
-                   Format.asprintf "variable %S undefined" (Symbol.name x) )
-                :: errs))
+      | Tiger.SeqExp ((e, _pos), _tail) -> trexp e
+      | Tiger.VarExp var -> trvar var
       | Tiger.LetExp { decs; body; _ } ->
-          let venv, tenv = trdec errs decs in
-          trans_exp venv tenv body
+          let venv', tenv' = trans_decs venv tenv decs in
+          trans_exp venv' tenv' body
       | Tiger.OpExp { left; oper = Tiger.PlusOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.DivideOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.TimesOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.MinusOp; right; _ } -> (
-          match check_int_binop errs left right with
+          match check_int_binop left right with
           | Ok _ -> Ok { exp = ((), None); ty = Types.Int }
           | Error _ as err -> err)
       | Tiger.OpExp { left; oper = Tiger.GeOp; right; pos }
@@ -73,60 +93,54 @@ module Make
       | Tiger.OpExp { left; oper = Tiger.LtOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.NeqOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.EqOp; right; pos } -> (
-          match check_binop errs left right pos with
+          match check_binop left right pos with
           | Ok String -> Ok { exp = ((), Some pos); ty = Types.String }
           | Ok Int -> Ok { exp = ((), Some pos); ty = Types.Int }
           | Error _ as err -> err)
-      | Tiger.VarExp var -> trvar errs var
       | Tiger.CallExp _ | Tiger.RecordExp _ | Tiger.AssignExp _ | Tiger.IfExp _
       | Tiger.WhileExp _ | Tiger.ForExp _ | Tiger.BreakExp _ | Tiger.ArrayExp _
         ->
           failwith ""
-    and trdec (errs : errors) (decs : Tiger.dec list) =
-      let venv =
-        List.map
-          (function
-            | Tiger.VarDec { name; init; _ } -> (
-                match trexp errs init with
-                | Ok { ty; _ } ->
-                    ( Env.VarEntry { access = Translate.alloc_local (); ty },
-                      name )
-                | Error _ -> failwith "FATAL")
-            | Tiger.FunctionDec _ | Tiger.TypeDec _ ->
-                failwith "not implemented")
-          decs
-        |> List.fold_left
-             (fun acc (x, name) -> Symbol.enter (acc, name, x))
-             venv
+    and trvar (var : Tiger.var) : (expty, error) result =
+      let rec actual_ty = function
+        | ( Types.Int | Types.String | Types.Nil | Types.Unit | Types.Record _
+          | Types.Array _ ) as t ->
+            Ok t
+        | Types.Name (id, ty_opt) -> (
+            let ty = !ty_opt in
+            match ty with
+            | Some ty -> actual_ty ty
+            | None ->
+                Error (Format.sprintf "undefined type: %s" (Symbol.name id)))
       in
-      (venv, tenv)
-    and trvar (errs : errors) (var : Tiger.var) : ty_res =
       match var with
       | Tiger.SimpleVar (id, pos) -> (
           match Symbol.look (venv, id) with
-          | Some (Env.VarEntry _) ->
-              Ok { exp = ((), Some pos); ty = Types.Name (id, ref None) }
-          | Some (FunEntry _) | None ->
-              Error ((Some pos, "undefined variable") :: errs))
-      | Tiger.FieldVar (obj, field, _) -> (
-          match obj with
-          | Tiger.SimpleVar (id, pos) -> (
+          | Some (Env.VarEntry { ty; _ }) -> (
+              let ty_res = actual_ty ty in
+              match ty_res with
+              | Ok ty -> Ok { exp = ((), Some pos); ty }
+              | Error e -> Error (Some pos, e))
+          | Some (FunEntry _) -> Error (Some pos, "function")
+          | None -> Error (Some pos, "undefined variable"))
+      | Tiger.FieldVar (var, field, pos) -> (
+          match var with
+          | Tiger.SimpleVar (id, _) -> (
               match Symbol.look (venv, id) with
               | Some (Env.VarEntry { ty = Types.Record (fields, _); _ }) -> (
                   match List.find_opt (fun (x, _) -> x = field) fields with
-                  | Some _ -> Ok { exp = ((), Some pos); ty = Types.Int }
+                  | Some (_, field_ty) ->
+                      Ok { exp = ((), Some pos); ty = field_ty }
                   | None ->
-                      Error
-                        ((Some pos, "field is not a member of the record")
-                        :: errs))
-              | Some _ -> failwith ""
-              | None -> Error ((Some pos, "undefined record") :: errs))
+                      Error (Some pos, "field is not a member of the record"))
+              | Some _ -> Error (Some pos, "var is not a record")
+              | None -> Error (Some pos, "undefined record"))
           | Tiger.FieldVar _ -> failwith ""
           | Tiger.SubscriptVar _ -> failwith "")
       | Tiger.SubscriptVar _ -> failwith "not implemented"
     in
 
-    trexp [] exp
+    trexp exp
 
   let trans_prog (exp : Tiger.exp) =
     match trans_exp Env.base_venv Env.base_tenv exp with

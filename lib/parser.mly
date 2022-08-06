@@ -9,7 +9,7 @@
       pos_cnum = pos.pos_cnum }
 %}
 
-%token <Token.id> ID
+%token <string> ID
 %token <int> INT
 %token <string> STRING
 %token END
@@ -99,7 +99,12 @@ expr:
   | x = lvalue { VarExp x }
   | e = binop { e }
   | LPAREN; RPAREN { NilExp }
-  | LPAREN; seq = exprseq+; RPAREN { SeqExp seq }
+  | LPAREN; seq = exprseq+; RPAREN
+    { let seq_head, seq_tail = match seq with
+      | [] -> failwith "found empty sequence"
+      | hd :: [] -> (hd, [])
+      | hd :: tl -> (hd, tl)
+      in SeqExp (seq_head, seq_tail) }
 
   | left = expr; AND; right = expr
     { IfExp {
@@ -127,11 +132,14 @@ expr:
         typ = Symbol.create id;
         pos = (pos_of_lexing_position $startpos) }  }
 
-  | LET; decs = dec*; IN; seq = exprseq*; END
-    { LetExp {
-        decs = decs;
-        body = SeqExp seq;
-        pos = (pos_of_lexing_position $startpos) } }
+  | LET; decs = dec*; IN; seq = exprseq+; END
+    { let seq_head, seq_tail = match seq with
+      | [] -> failwith "found empty sequence"
+      | hd :: [] -> (hd, [])
+      | hd :: tl -> (hd, tl)
+      in LetExp { decs = decs;
+                  body = SeqExp (seq_head, seq_tail);
+                  pos = (pos_of_lexing_position $startpos) } }
 
   | id = ID; LPAREN; l = exprlist*; RPAREN
     { CallExp {

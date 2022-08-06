@@ -47,7 +47,7 @@ let succeed v =
       (* Format.printf "%a\n\n" Tiger.pp_exp x; *)
       match Semant.trans_prog x with
       | Ok _ -> print_endline "Done"
-      | Error errs ->
+      | Error err ->
           List.iter
             (fun (pos, s) ->
               match pos with
@@ -56,7 +56,7 @@ let succeed v =
                   Printf.printf "%s\tLine: %d\tColumn: %d\t%s\n" pos_fname
                     pos_lnum (pos_cnum - pos_bol) s
               | None -> print_endline s)
-            errs)
+            [ err ])
   | None -> ()
 
 let fail text buffer checkpoint =
