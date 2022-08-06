@@ -89,10 +89,7 @@ module Make
       | Tiger.StringExp (_, pos) ->
           Ok { exp = ((), Some pos); ty = Types.String }
       | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.Int }
-      | Tiger.SeqExp exps -> (
-          match actual_seq_ty exps with
-          | Ok _ as ok -> ok
-          | Error _ as err -> err)
+      | Tiger.SeqExp exps -> actual_seq_ty exps
       | Tiger.VarExp var -> trvar var
       | Tiger.LetExp { decs; body; _ } ->
           let venv', tenv' = trans_decs venv tenv decs in
