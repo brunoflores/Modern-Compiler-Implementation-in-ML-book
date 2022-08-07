@@ -27,6 +27,18 @@ module Make
   (* Helper *)
   let ty_eq = function Types.Int, Types.Int -> true | _ -> false
 
+  (* Helper *)
+  (* Find the actual type behind [Name]s. *)
+  let rec actual_ty = function
+    | ( Types.Int | Types.String | Types.Nil | Types.Unit | Types.Record _
+      | Types.Array _ ) as t ->
+        Ok t
+    | Types.Name (id, ty_opt) -> (
+        let ty = !ty_opt in
+        match ty with
+        | Some ty -> actual_ty ty
+        | None -> Error (Format.sprintf "undefined type: %s" (Symbol.name id)))
+
   let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
       (venv * tenv, error) result =
     match decs with
@@ -60,19 +72,51 @@ module Make
                   ( Symbol.enter
                       ( venv,
                         name,
-                        Env.VarEntry { access = Translate.alloc_local (); ty }
-                      ),
+                        Env.VarEntry
+                          { (* access = Translate.alloc_local (); *) ty } ),
                     tenv )
             | Error _ as err -> err)
         | Error _ as err -> err)
     | Tiger.FunctionDec _ -> failwith "not implemented"
-    | Tiger.TypeDec [ { Tiger.tydec_name; ty; _ } ] ->
-        Ok (venv, Symbol.enter (tenv, tydec_name, trans_ty tenv ty))
-    | Tiger.TypeDec _ -> failwith "not implemented"
+    | Tiger.TypeDec decs ->
+        (* TODO *)
+        let trty tenv name ty = Symbol.enter (tenv, name, trans_ty tenv ty) in
+        let rec trtydecs tenv = function
+          | [] -> tenv
+          | { Tiger.tydec_name; ty; _ } :: more ->
+              trtydecs (trty tenv tydec_name ty) more
+        in
+        Ok (venv, trtydecs tenv decs)
+  (* let tenv' = *)
+  (*   List.fold_left *)
+  (*     (fun acc { Tiger.tydec_name; _ } -> *)
+  (*       Symbol.enter (acc, tydec_name, Types.Name (tydec_name, ref None))) *)
+  (*     tenv decs *)
+  (* in *)
+  (* let tenv'' = *)
+  (*   List.iter *)
+  (*     (fun { Tiger.tydec_name; ty; _ } -> *)
+  (*       let ty = trans_ty tenv' ty in *)
+  (*       match Symbol.look (tenv', tydec_name) with *)
+  (*       | Some (Name (_, ty_opt)) -> ty_opt := Some ty *)
+  (*       | None -> ()) *)
+  (*     decs *)
+  (* in *)
+  (* Ok (venv, tenv'') *)
 
-  and trans_ty (_tenv : tenv) (ty : Tiger.ty) : Types.ty =
+  and trans_ty (tenv : tenv) (ty : Tiger.ty) : Types.ty =
     match ty with
-    | Tiger.RecordTy _fields -> Types.Record ([], ref ())
+    | Tiger.RecordTy fields ->
+        Types.Record
+          ( List.map
+              (fun { Tiger.field_name; typ; _ } ->
+                (field_name, trans_ty tenv typ))
+              fields,
+            ref () )
+    | Tiger.NameTy (sym, _pos) -> (
+        match Symbol.look (tenv, sym) with
+        | Some _ as ty -> Types.Name (sym, ref ty)
+        | None -> Types.Name (sym, ref None))
     | _ -> failwith "not implemented"
 
   and _trans_var (_venv : venv) (_tenv : tenv) (_var : Tiger.var) : expty =
@@ -161,21 +205,58 @@ module Make
                   | Error _ as err -> err)
               | Error _ as err -> err)
           | _ -> Error (Some pos, "type not delclared as array"))
-      | Tiger.CallExp _ | Tiger.RecordExp _ | Tiger.AssignExp _ | Tiger.IfExp _
-      | Tiger.WhileExp _ | Tiger.ForExp _ | Tiger.BreakExp _ ->
-          failwith ""
+      | Tiger.RecordExp { typ; pos; fields = arg_fields } -> (
+          match Symbol.look (tenv, typ) with
+          | Some (Types.Record (formal_fields, _)) -> (
+              let exps =
+                List.fold_left
+                  (fun (errs, oks) (sym, exp, _pos) ->
+                    match trexp exp with
+                    | Ok ok -> (errs, (sym, ok) :: oks)
+                    | Error err -> (err :: errs, oks))
+                  ([], []) arg_fields
+              in
+              match exps with
+              | err :: _, _ -> Error err
+              | _, fields -> (
+                  let tests =
+                    List.fold_left
+                      (fun acc (sym, expty) ->
+                        let { ty; _ } = expty in
+                        match
+                          List.find_opt
+                            (fun (s, _) -> Symbol.equal sym s)
+                            formal_fields
+                        with
+                        | Some (_, formal_ty) -> (
+                            match ty_eq (ty, formal_ty) with
+                            | false -> (false, sym, expty) :: acc
+                            | true -> (true, sym, expty) :: acc)
+                        | None -> (false, sym, expty) :: acc)
+                      [] fields
+                  in
+                  match
+                    List.find_opt (fun (result, _, _) -> result = false) tests
+                  with
+                  | Some (_, sym, _) ->
+                      Error
+                        ( None,
+                          Format.sprintf "field type mismatch: %s"
+                            (Symbol.name sym) )
+                  | None ->
+                      let tys =
+                        List.map (fun (_, sym, { ty; _ }) -> (sym, ty)) tests
+                      in
+                      Ok { exp = ((), None); ty = Types.Record (tys, ref ()) }))
+          | _ ->
+              Error
+                ( Some pos,
+                  Format.sprintf "record type undefined: %s" (Symbol.name typ)
+                ))
+      | Tiger.CallExp _ | Tiger.AssignExp _ | Tiger.IfExp _ | Tiger.WhileExp _
+      | Tiger.ForExp _ | Tiger.BreakExp _ ->
+          failwith "not implemented"
     and trvar (var : Tiger.var) : (expty, error) result =
-      let rec actual_ty = function
-        | ( Types.Int | Types.String | Types.Nil | Types.Unit | Types.Record _
-          | Types.Array _ ) as t ->
-            Ok t
-        | Types.Name (id, ty_opt) -> (
-            let ty = !ty_opt in
-            match ty with
-            | Some ty -> actual_ty ty
-            | None ->
-                Error (Format.sprintf "undefined type: %s" (Symbol.name id)))
-      in
       let rec walk_record (var : Tiger.var) (field : Symbol.symbol) pos :
           (expty, error) result =
         match var with
@@ -203,7 +284,10 @@ module Make
               | Ok ty -> Ok { exp = ((), Some pos); ty }
               | Error e -> Error (Some pos, e))
           | Some (FunEntry _) -> Error (Some pos, "function")
-          | None -> Error (Some pos, "undefined variable"))
+          | None ->
+              Error
+                ( Some pos,
+                  Format.sprintf "undefined variable: %s" (Symbol.name id) ))
       | Tiger.FieldVar (var, field, pos) -> walk_record var field pos
       | Tiger.SubscriptVar (var, exp, pos) -> (
           match trvar var with

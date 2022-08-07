@@ -46,7 +46,7 @@ let succeed v =
       (* For debugging: *)
       (* Format.printf "%a\n\n" Tiger.pp_exp x; *)
       match Semant.trans_prog x with
-      | Ok _ -> print_endline "Done"
+      | Ok _ -> print_endline "Ok"
       | Error err ->
           List.iter
             (fun (pos, s) ->

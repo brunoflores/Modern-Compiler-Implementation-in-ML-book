@@ -4,7 +4,7 @@ module type S = sig
   type level
 
   type env_entry =
-    | VarEntry of { access : access; ty : ty_entry }
+    | VarEntry of { (* access : access; *) ty : ty_entry }
     | FunEntry of { formals : ty_entry list; result : ty_entry; level : level }
 
   val base_tenv : ty_entry Symbol.table
@@ -31,7 +31,7 @@ struct
   type level = Translate.level
 
   type env_entry =
-    | VarEntry of { access : access; ty : ty_entry }
+    | VarEntry of { (* access : access; *) ty : ty_entry }
     | FunEntry of { formals : ty_entry list; result : ty_entry; level : level }
 
   let base_venv : env_entry Symbol.table = Symbol.empty

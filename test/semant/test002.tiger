@@ -1,0 +1,6 @@
+let
+  type a_record = { hd: int }
+  var my_record := a_record { hd = 42 }
+in
+  my_record
+end

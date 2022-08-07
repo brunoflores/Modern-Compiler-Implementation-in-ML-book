@@ -1,6 +1,8 @@
 (* This representation of symbol is to support the [name] function. *)
 type symbol = string * int [@@deriving show]
 
+let equal ((_, s1) : symbol) ((_, s2) : symbol) = s1 = s2
+
 (* The next available symbol identifier.  *)
 let next = ref 0
 

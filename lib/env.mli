@@ -26,7 +26,7 @@ module type S = sig
       a function. If a variable, what is its type. If a function,
       what are its parameter and result types, and so on. *)
   type env_entry =
-    | VarEntry of { access : access;  (** TODO *) ty : ty_entry  (** TODO *) }
+    | VarEntry of { (*access : access;*) ty : ty_entry  (** TODO *) }
     | FunEntry of {
         formals : ty_entry list;  (** TODO *)
         result : ty_entry;

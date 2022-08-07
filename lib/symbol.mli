@@ -6,6 +6,8 @@ type symbol [@@deriving show]
 (** Abstract symbol. [symbol] provides efficient lookup of names in
     environments by avoiding string comparisons. *)
 
+val equal : symbol -> symbol -> bool
+
 val create : string -> symbol
 (** Transform a string into a symbol. *)
 
