@@ -27,31 +27,53 @@ module Make
   (* Helper *)
   let ty_eq = function Types.Int, Types.Int -> true | _ -> false
 
-  (* We use a tuple [venv, tenv] so that we can evaluate a new one with
-     a call to [trans_dec] and then pass it to the recursive call. *)
-  let rec trans_decs ((venv : venv), (tenv : tenv)) (decs : Tiger.dec list) :
-      venv * tenv =
+  let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
+      (venv * tenv, error) result =
     match decs with
-    | [] -> (venv, tenv)
-    | dec :: decs' -> trans_decs (trans_dec venv tenv dec) decs'
+    | [] -> Ok (venv, tenv)
+    | dec :: decs' -> (
+        match trans_dec venv tenv dec with
+        | Ok (venv', tenv') -> trans_decs venv' tenv' decs'
+        | Error _ as err -> err)
 
-  and _trans_ty (_tenv : tenv) (_ty : Tiger.ty) : Types.ty =
-    failwith "not implemented"
-
-  and trans_dec (venv : venv) (tenv : tenv) (dec : Tiger.dec) : venv * tenv =
+  and trans_dec (venv : venv) (tenv : tenv) (dec : Tiger.dec) :
+      (venv * tenv, error) result =
     match dec with
-    | Tiger.VarDec { name; init; typ = None; _ } -> (
+    | Tiger.VarDec { name; init; typ; _ } -> (
         match trans_exp venv tenv init with
-        | Ok { ty; _ } ->
-            ( Symbol.enter
-                ( venv,
-                  name,
-                  Env.VarEntry { access = Translate.alloc_local (); ty } ),
-              tenv )
-        | Error _ -> failwith "not implemented")
-    | Tiger.VarDec _ -> failwith "not implemented"
+        | Ok { ty; _ } -> (
+            let assertion_test =
+              match typ with
+              | Some (ty_assertion, pos) -> (
+                  match Symbol.look (tenv, ty_assertion) with
+                  | Some ty_assertion' -> (
+                      match ty_eq (ty_assertion', ty) with
+                      | true -> Ok ()
+                      | false -> Error (Some pos, "type assertion does not hold")
+                      )
+                  | None -> Error (Some pos, "undefined type"))
+              | None -> Ok ()
+            in
+            match assertion_test with
+            | Ok () ->
+                Ok
+                  ( Symbol.enter
+                      ( venv,
+                        name,
+                        Env.VarEntry { access = Translate.alloc_local (); ty }
+                      ),
+                    tenv )
+            | Error _ as err -> err)
+        | Error _ as err -> err)
     | Tiger.FunctionDec _ -> failwith "not implemented"
+    | Tiger.TypeDec [ { Tiger.tydec_name; ty; _ } ] ->
+        Ok (venv, Symbol.enter (tenv, tydec_name, trans_ty tenv ty))
     | Tiger.TypeDec _ -> failwith "not implemented"
+
+  and trans_ty (_tenv : tenv) (ty : Tiger.ty) : Types.ty =
+    match ty with
+    | Tiger.RecordTy _fields -> Types.Record ([], ref ())
+    | _ -> failwith "not implemented"
 
   and _trans_var (_venv : venv) (_tenv : tenv) (_var : Tiger.var) : expty =
     failwith "not implemented"
@@ -100,9 +122,10 @@ module Make
       | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.Int }
       | Tiger.SeqExp exps -> actual_seq_ty exps
       | Tiger.VarExp var -> trvar var
-      | Tiger.LetExp { decs; body; _ } ->
-          let venv', tenv' = trans_decs (venv, tenv) decs in
-          trans_exp venv' tenv' body
+      | Tiger.LetExp { decs; body; _ } -> (
+          match trans_decs venv tenv decs with
+          | Ok (venv', tenv') -> trans_exp venv' tenv' body
+          | Error _ as err -> err)
       | Tiger.OpExp { left; oper = Tiger.PlusOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.DivideOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.TimesOp; right; _ }

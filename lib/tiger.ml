@@ -37,7 +37,7 @@ and var =
 
 and dec =
   (* Why is FunctionDec a list?
-     From the book, page 97:
+     Page 97:
        "The Tiger language treats adjacent function declarations as (possibly)
         mutually recursive. The FunctionDec constructor of the abstract
         syntax takes a list of function declarations, not just a single
@@ -45,6 +45,8 @@ and dec =
         sequence of function declarations. Thus, functions declared by the
         same FunctionDec can be mutually recursive." *)
   | FunctionDec of functiondec list
+    (* Why is TypeDec a list? See FunctionDec above. *)
+  | TypeDec of tydec list
   | VarDec of {
       name : symbol;
       escape : bool ref;
@@ -52,8 +54,6 @@ and dec =
       init : exp;
       pos : pos;
     }
-  (* Why is TypeDec a list? See FunctionDec above. *)
-  | TypeDec of tydec list
 
 and ty =
   | NameTy of symbol * pos
