@@ -25,33 +25,31 @@ module Make
   (* Helper *)
   let ty_eq = function Types.Int, Types.Int -> true | _ -> false
 
-  (* Augment a given environment with declarations. *)
-  let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
+  (* We use a tuple [venv, tenv] so that we can evaluate a new one with
+     a call to [trans_dec] and then pass it to the recursive call. *)
+  let rec trans_decs ((venv : venv), (tenv : tenv)) (decs : Tiger.dec list) :
       venv * tenv =
-    let venv' =
-      List.map
-        (function
-          | Tiger.VarDec { name; init; typ = None; _ } -> (
-              match trans_exp venv tenv init with
-              | Ok { ty; _ } ->
-                  (Env.VarEntry { access = Translate.alloc_local (); ty }, name)
-              | Error _ -> failwith "")
-          | Tiger.VarDec _ -> failwith "not implemented"
-          | Tiger.FunctionDec _ -> failwith "not implemented"
-          | Tiger.TypeDec _ -> failwith "not implemented")
-        decs
-      |> List.fold_left
-           (fun acc (env_entry, sym) -> Symbol.enter (acc, sym, env_entry))
-           venv
-    in
-    (venv', tenv)
+    match decs with
+    | [] -> (venv, tenv)
+    | dec :: decs' -> trans_decs (trans_dec venv tenv dec) decs'
 
   and _trans_ty (_tenv : tenv) (_ty : Tiger.ty) : Types.ty =
     failwith "not implemented"
 
-  and _trans_dec (_venv : venv) (_tenv : tenv) (_dec : Tiger.dec) : venv * tenv
-      =
-    failwith "not implemented"
+  and trans_dec (venv : venv) (tenv : tenv) (dec : Tiger.dec) : venv * tenv =
+    match dec with
+    | Tiger.VarDec { name; init; typ = None; _ } -> (
+        match trans_exp venv tenv init with
+        | Ok { ty; _ } ->
+            ( Symbol.enter
+                ( venv,
+                  name,
+                  Env.VarEntry { access = Translate.alloc_local (); ty } ),
+              tenv )
+        | Error _ -> failwith "not implemented")
+    | Tiger.VarDec _ -> failwith "not implemented"
+    | Tiger.FunctionDec _ -> failwith "not implemented"
+    | Tiger.TypeDec _ -> failwith "not implemented"
 
   and _trans_var (_venv : venv) (_tenv : tenv) (_var : Tiger.var) : expty =
     failwith "not implemented"
@@ -101,7 +99,7 @@ module Make
       | Tiger.SeqExp exps -> actual_seq_ty exps
       | Tiger.VarExp var -> trvar var
       | Tiger.LetExp { decs; body; _ } ->
-          let venv', tenv' = trans_decs venv tenv decs in
+          let venv', tenv' = trans_decs (venv, tenv) decs in
           trans_exp venv' tenv' body
       | Tiger.OpExp { left; oper = Tiger.PlusOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.DivideOp; right; _ }
