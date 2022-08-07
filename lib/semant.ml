@@ -153,7 +153,15 @@ module Make
           | Some (FunEntry _) -> Error (Some pos, "function")
           | None -> Error (Some pos, "undefined variable"))
       | Tiger.FieldVar (var, field, _pos) -> walk_record var field
-      | Tiger.SubscriptVar (_var, _exp, _pos) -> failwith "not implemented"
+      | Tiger.SubscriptVar (var, exp, pos) -> (
+          match trvar var with
+          | Ok { ty = Types.Array (arr_ty, _); _ } -> (
+              match check_int (trexp exp) with
+              | Ok _ -> Ok { exp = ((), None); ty = arr_ty }
+              | Error _ as err -> err)
+          | Ok { ty = _; _ } ->
+              Error (Some pos, "taking a subscript here: expected an array")
+          | Error _ as err -> err)
     in
 
     trexp exp
