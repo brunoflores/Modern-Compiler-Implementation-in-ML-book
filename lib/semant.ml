@@ -16,6 +16,11 @@ module Make
   type error = Tiger.pos option * string
   type binop_ty = String | Int
 
+  let find_record_field fields field pos =
+    match List.find_opt (fun (x, _) -> x = field) fields with
+    | Some (_, ty) -> Ok { exp = ((), None); ty }
+    | None -> Error (Some pos, "field is not a member of the record")
+
   (* Augment a given environment with declarations. *)
   let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
       venv * tenv =
@@ -127,20 +132,23 @@ module Make
             | None ->
                 Error (Format.sprintf "undefined type: %s" (Symbol.name id)))
       in
-      let rec walk_record (var : Tiger.var) (field : Symbol.symbol) :
+      let rec walk_record (var : Tiger.var) (field : Symbol.symbol) pos :
           (expty, error) result =
         match var with
-        | Tiger.SimpleVar (id, pos) -> (
+        | Tiger.SimpleVar (id, _pos) -> (
             match Symbol.look (venv, id) with
-            | Some (Env.VarEntry { ty = Types.Record (fields, _); _ }) -> (
-                match List.find_opt (fun (x, _) -> x = field) fields with
-                | Some (_, ty) -> Ok { exp = ((), None); ty }
-                | None -> Error (Some pos, "field is not a member of the record")
-                )
+            | Some (Env.VarEntry { ty = Types.Record (fields, _); _ }) ->
+                find_record_field fields field pos
             | Some _ -> Error (Some pos, "var is not a record")
             | None -> Error (Some pos, "undefined record"))
-        | Tiger.FieldVar (var, field, _) -> walk_record var field
-        | Tiger.SubscriptVar _ -> failwith "not implemented"
+        | Tiger.SubscriptVar _ as var -> (
+            match trvar var with
+            | Ok { ty = Types.Record (fields, _); _ } ->
+                find_record_field fields field pos
+            | Ok { ty = _; _ } ->
+                Error (Some pos, "this array item is not a record")
+            | Error _ as err -> err)
+        | Tiger.FieldVar (var, field, pos) -> walk_record var field pos
       in
       match var with
       | Tiger.SimpleVar (id, pos) -> (
@@ -152,7 +160,7 @@ module Make
               | Error e -> Error (Some pos, e))
           | Some (FunEntry _) -> Error (Some pos, "function")
           | None -> Error (Some pos, "undefined variable"))
-      | Tiger.FieldVar (var, field, _pos) -> walk_record var field
+      | Tiger.FieldVar (var, field, pos) -> walk_record var field pos
       | Tiger.SubscriptVar (var, exp, pos) -> (
           match trvar var with
           | Ok { ty = Types.Array (arr_ty, _); _ } -> (
