@@ -16,10 +16,14 @@ module Make
   type error = Tiger.pos option * string
   type binop_ty = String | Int
 
+  (* Helper *)
   let find_record_field fields field pos =
     match List.find_opt (fun (x, _) -> x = field) fields with
     | Some (_, ty) -> Ok { exp = ((), None); ty }
     | None -> Error (Some pos, "field is not a member of the record")
+
+  (* Helper *)
+  let ty_eq = function Types.Int, Types.Int -> true | _ -> false
 
   (* Augment a given environment with declarations. *)
   let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
@@ -118,12 +122,19 @@ module Make
           | Error _ as err -> err)
       | Tiger.ArrayExp { typ; size; init; pos } -> (
           match Symbol.look (tenv, typ) with
-          | Some (Types.Array _) -> (
+          | Some (Types.Array (array_ty, _)) -> (
               match check_int (trexp size) with
               | Ok _ -> (
                   match trexp init with
-                  | Ok { ty; _ } ->
-                      Ok { exp = ((), None); ty = Types.Array (ty, ref ()) }
+                  | Ok { ty; _ } -> (
+                      match ty_eq (array_ty, ty) with
+                      | true ->
+                          Ok { exp = ((), None); ty = Types.Array (ty, ref ()) }
+                      | false ->
+                          Error
+                            ( Some pos,
+                              "type of array initialisation value does not \
+                               match the array declaration" ))
                   | Error _ as err -> err)
               | Error _ as err -> err)
           | _ -> Error (Some pos, "type not delclared as array"))
