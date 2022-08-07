@@ -116,9 +116,19 @@ module Make
           | Ok String -> Ok { exp = ((), Some pos); ty = Types.String }
           | Ok Int -> Ok { exp = ((), Some pos); ty = Types.Int }
           | Error _ as err -> err)
+      | Tiger.ArrayExp { typ; size; init; pos } -> (
+          match Symbol.look (tenv, typ) with
+          | Some (Types.Array _) -> (
+              match check_int (trexp size) with
+              | Ok _ -> (
+                  match trexp init with
+                  | Ok { ty; _ } ->
+                      Ok { exp = ((), None); ty = Types.Array (ty, ref ()) }
+                  | Error _ as err -> err)
+              | Error _ as err -> err)
+          | _ -> Error (Some pos, "type not delclared as array"))
       | Tiger.CallExp _ | Tiger.RecordExp _ | Tiger.AssignExp _ | Tiger.IfExp _
-      | Tiger.WhileExp _ | Tiger.ForExp _ | Tiger.BreakExp _ | Tiger.ArrayExp _
-        ->
+      | Tiger.WhileExp _ | Tiger.ForExp _ | Tiger.BreakExp _ ->
           failwith ""
     and trvar (var : Tiger.var) : (expty, error) result =
       let rec actual_ty = function
