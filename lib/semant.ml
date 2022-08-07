@@ -14,6 +14,8 @@ module Make
      Tiger-language type. *)
   type expty = { exp : Translate.exp; ty : Types.ty }
   type error = Tiger.pos option * string
+
+  (* Helper type to specify the valid types for binary operations. *)
   type binop_ty = String | Int
 
   (* Helper *)
