@@ -10,4 +10,4 @@
     environment. This new environment is used in processing expressions within
     the scope of the variable; whenever [a] is used at depth > [d], then [r]
     is set to true. *)
-let findEscape (_ : Tiger.exp) : unit = ()
+let find_escape (_ : Tiger.exp) : unit = ()
