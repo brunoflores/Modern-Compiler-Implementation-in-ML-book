@@ -78,45 +78,43 @@ module Make
             | Error _ as err -> err)
         | Error _ as err -> err)
     | Tiger.FunctionDec _ -> failwith "not implemented"
-    | Tiger.TypeDec decs ->
-        (* TODO *)
-        let trty tenv name ty = Symbol.enter (tenv, name, trans_ty tenv ty) in
+    | Tiger.TypeDec decs -> (
         let rec trtydecs tenv = function
-          | [] -> tenv
-          | { Tiger.tydec_name; ty; _ } :: more ->
-              trtydecs (trty tenv tydec_name ty) more
+          | [] -> Ok tenv
+          | { Tiger.tydec_name; ty; _ } :: more -> (
+              match trans_ty tenv ty with
+              | Ok ty' -> trtydecs (Symbol.enter (tenv, tydec_name, ty')) more
+              | Error _ as err -> err)
         in
-        Ok (venv, trtydecs tenv decs)
-  (* let tenv' = *)
-  (*   List.fold_left *)
-  (*     (fun acc { Tiger.tydec_name; _ } -> *)
-  (*       Symbol.enter (acc, tydec_name, Types.Name (tydec_name, ref None))) *)
-  (*     tenv decs *)
-  (* in *)
-  (* let tenv'' = *)
-  (*   List.iter *)
-  (*     (fun { Tiger.tydec_name; ty; _ } -> *)
-  (*       let ty = trans_ty tenv' ty in *)
-  (*       match Symbol.look (tenv', tydec_name) with *)
-  (*       | Some (Name (_, ty_opt)) -> ty_opt := Some ty *)
-  (*       | None -> ()) *)
-  (*     decs *)
-  (* in *)
-  (* Ok (venv, tenv'') *)
+        match trtydecs tenv decs with
+        | Ok tenv' -> Ok (venv, tenv')
+        | Error _ as err -> err)
 
-  and trans_ty (tenv : tenv) (ty : Tiger.ty) : Types.ty =
+  and trans_ty (tenv : tenv) (ty : Tiger.ty) : (Types.ty, error) result =
     match ty with
-    | Tiger.RecordTy fields ->
-        Types.Record
-          ( List.map
-              (fun { Tiger.field_name; typ; _ } ->
-                (field_name, trans_ty tenv typ))
-              fields,
-            ref () )
+    | Tiger.RecordTy fields -> (
+        let fields' =
+          List.fold_left
+            (fun acc { Tiger.field_name; typ; field_pos; _ } ->
+              match acc with
+              | Error _ -> acc
+              | Ok acc -> (
+                  match Symbol.look (tenv, typ) with
+                  | Some f -> Ok ((field_name, f) :: acc)
+                  | None ->
+                      Error
+                        ( Some field_pos,
+                          Format.sprintf "undefined type: %s" (Symbol.name typ)
+                        )))
+            (Ok []) fields
+        in
+        match fields' with
+        | Ok fs -> Ok (Types.Record (fs, ref ()))
+        | Error _ as err -> err)
     | Tiger.NameTy (sym, _pos) -> (
         match Symbol.look (tenv, sym) with
-        | Some _ as ty -> Types.Name (sym, ref ty)
-        | None -> Types.Name (sym, ref None))
+        | Some _ as ty -> Ok (Types.Name (sym, ref ty))
+        | None -> Ok (Types.Name (sym, ref None)))
     | _ -> failwith "not implemented"
 
   and _trans_var (_venv : venv) (_tenv : tenv) (_var : Tiger.var) : expty =
@@ -210,9 +208,9 @@ module Make
           | Some (Types.Record (formal_fields, _)) -> (
               let exps =
                 List.fold_left
-                  (fun (errs, oks) (sym, exp, _pos) ->
+                  (fun (errs, oks) (sym, exp, pos) ->
                     match trexp exp with
-                    | Ok ok -> (errs, (sym, ok) :: oks)
+                    | Ok ok -> (errs, (sym, ok, pos) :: oks)
                     | Error err -> (err :: errs, oks))
                   ([], []) arg_fields
               in
@@ -221,7 +219,7 @@ module Make
               | _, fields -> (
                   let tests =
                     List.fold_left
-                      (fun acc (sym, expty) ->
+                      (fun acc (sym, expty, pos) ->
                         let { ty; _ } = expty in
                         match
                           List.find_opt
@@ -230,22 +228,26 @@ module Make
                         with
                         | Some (_, formal_ty) -> (
                             match ty_eq (ty, formal_ty) with
-                            | false -> (false, sym, expty) :: acc
-                            | true -> (true, sym, expty) :: acc)
-                        | None -> (false, sym, expty) :: acc)
+                            | false -> (false, sym, expty, pos) :: acc
+                            | true -> (true, sym, expty, pos) :: acc)
+                        | None -> (false, sym, expty, pos) :: acc)
                       [] fields
                   in
                   match
-                    List.find_opt (fun (result, _, _) -> result = false) tests
+                    List.find_opt
+                      (fun (result, _, _, _) -> result = false)
+                      tests
                   with
-                  | Some (_, sym, _) ->
+                  | Some (_, sym, _, pos) ->
                       Error
-                        ( None,
+                        ( Some pos,
                           Format.sprintf "field type mismatch: %s"
                             (Symbol.name sym) )
                   | None ->
                       let tys =
-                        List.map (fun (_, sym, { ty; _ }) -> (sym, ty)) tests
+                        List.map
+                          (fun (_, sym, { ty; _ }, _pos) -> (sym, ty))
+                          tests
                       in
                       Ok { exp = ((), None); ty = Types.Record (tys, ref ()) }))
           | _ ->
