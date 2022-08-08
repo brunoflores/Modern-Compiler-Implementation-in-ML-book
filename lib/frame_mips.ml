@@ -4,7 +4,7 @@ module Make : Frame.S = struct
      - Location of all the formals,
      - Instructions required to implement the "view shift",
      - Number of locals allocated so far,
-     - The [label] at which the function's machine code is to begin.
+     - The [label] at which the function's machine code is to begin (page 140).
   *)
 
   type access = InFrame of int | InReg of Temp.temp
