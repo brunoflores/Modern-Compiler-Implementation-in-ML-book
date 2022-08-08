@@ -11,7 +11,7 @@ module type S = sig
   val alloc_local : unit -> access
 end
 
-module Make (Frame : Frame.I) : S = struct
+module Make (Frame : Frame.S) : S = struct
   type exp = unit * Tiger.pos option
   type level = unit
   type access = level * Frame.access

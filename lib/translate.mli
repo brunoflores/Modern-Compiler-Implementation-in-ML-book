@@ -30,4 +30,4 @@ module type S = sig
 end
 
 (** Functor interface. *)
-module Make (Frame : Frame.I) : S
+module Make (Frame : Frame.S) : S

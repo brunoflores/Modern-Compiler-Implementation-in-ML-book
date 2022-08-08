@@ -36,7 +36,7 @@ let get text checkpoint i =
           into the known suffix of the stack. *)
       "???"
 
-module Translate = Tigerlib.Translate.Make (Tigerlib.Frame_mips.Frame_mips)
+module Translate = Tigerlib.Translate.Make (Tigerlib.Frame_mips.Make)
 module Env = Tigerlib.Env.Make (Translate)
 module Semant = Tigerlib.Semant.Make (Env) (Translate)
 

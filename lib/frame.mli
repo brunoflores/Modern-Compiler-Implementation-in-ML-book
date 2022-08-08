@@ -1,8 +1,7 @@
 (** An abstract representation of stack frames.
+    Implementation of {!Frame.S} is specific to a target machine. *)
 
-    Implementation of {!Frame.I} is specific to a target machine. *)
-
-module type I = sig
+module type S = sig
   type frame
   (** The [frame] type holds information about formal parameters and local
       variables allocated in this frame. This is an abstract data type. *)
