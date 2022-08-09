@@ -20,7 +20,9 @@ type label = Symbol.symbol
 (** Abstract name for a static memory address. *)
 
 val new_label : unit -> label
-(** Returns a new label from an infinite set of labels. *)
+(** Returns a new label from an infinite set of labels.
+    When processing the declaration [function f(...)], a label for the
+    address of [f]'s machine code can be produced by [new_label ()]. *)
 
 val named_label : string -> label
 (** Returns a new label whose assembly-language name is {i string}. *)
