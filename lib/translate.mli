@@ -1,9 +1,9 @@
-(** Semantic translation. *)
+(** Semantic translation.
 
-(** This module provides functions that are useful in producing intermediate
-      representation from abstract syntax. *)
+    This module provides functions that are useful in producing intermediate
+    representation from abstract syntax.
 
-(** Manages local variables and static function nesting for {!Semant}. *)
+    Manages local variables and static function nesting for {!Semant}. *)
 
 module type S = sig
   type exp = unit * Tiger.pos option
