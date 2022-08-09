@@ -23,4 +23,4 @@ val new_label : unit -> label
 val named_label : string -> label
 (** Returns a new label whose assembly-language name is {i string}. *)
 
-include Table.I
+include Table.S

@@ -1,4 +1,4 @@
-module Make (Key : Map.OrderedType) : Table.I with type key = Key.t = struct
+module Make (Key : Map.OrderedType) : Table.S with type key = Key.t = struct
   module M = Map.Make (Key)
 
   type key = Key.t

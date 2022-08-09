@@ -9,5 +9,8 @@
     then the [bool ref r] is set to [false]; the binding is entered in the
     environment. This new environment is used in processing expressions within
     the scope of the variable; whenever [a] is used at depth > [d], then [r]
-    is set to true. *)
-let find_escape (_ : Tiger.exp) : unit = ()
+    is set to [true]. *)
+let find_escape (_ : Tiger.exp) : unit =
+  (* TODO mutual recursion on abstract syntax exp's and var's just like
+     the type-checker. *)
+  ()

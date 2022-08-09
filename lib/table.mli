@@ -1,4 +1,4 @@
-module type I = sig
+module type S = sig
   type key
   type 'a table
 
