@@ -10,6 +10,17 @@ Usage
 
    dune exec ./bin/tigerc.exe
 
+Layers of abstraction
+---------------------
+
+The Tiger compiler has two layers of abstraction between semantic analysis
+and frame-layout details:
+
+.. image:: img/abs.png
+
+The `Frame` and `Temp` interfaces provide machine-independent views of
+memory-resident and register-resident variables.
+
 
 Tiger
 ------------

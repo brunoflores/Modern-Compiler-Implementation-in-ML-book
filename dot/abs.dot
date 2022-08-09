@@ -1,0 +1,6 @@
+digraph {
+  node [ shape=record ];
+  ranksep=.1;
+
+  Semant -> Translate -> { Frame; Temp } [style=invis];
+}
