@@ -7,7 +7,8 @@ module Make : Frame.S = struct
      - The [label] at which the function's machine code is to begin (page 140).
   *)
 
-  type access = InFrame of int | InReg of Temp.temp
+  (* type access = InFrame of int | InReg of Temp.temp *)
+  type access = unit
   (* [InFrame x] indicates a memory location at offset [x] from the
      frame pointer. [InReg r1] indicates that it will be held in
      "register" [r1].

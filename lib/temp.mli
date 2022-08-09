@@ -9,6 +9,8 @@
 type temp
 (** Abstract name for a local variable. *)
 
+val compare : temp -> temp -> int
+
 val new_temp : unit -> temp
 (** Returns a new temporary from an infinite set of temps. *)
 
@@ -23,4 +25,4 @@ val new_label : unit -> label
 val named_label : string -> label
 (** Returns a new label whose assembly-language name is {i string}. *)
 
-include Table.S
+include Table.S with type key = temp
