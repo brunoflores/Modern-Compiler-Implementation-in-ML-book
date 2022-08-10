@@ -1,30 +1,30 @@
 type exp =
-  | CONST of int
-  | NAME of Temp.label
-  | TEMP of Temp.temp
-  | BINOP of binop * exp * exp
-  | MEM of exp
-  | CALL of exp * exp list
-  | ESEQ of stm * exp
+  | Const of int
+  | Name of Symbol.symbol
+  | Temp of Temp.temp
+  | Binop of binop * exp * exp
+  | Mem of exp
+  | Call of exp * exp list
+  | Eseq of stm * exp
 
 and stm =
-  | MOVE of exp * exp
-  | EXP of exp
-  | JUMP of exp * Temp.label list
-  | CJUMP of relop * exp * exp * Temp.label * Temp.label
-  | SEQ of stm * stm
-  | LABEL of Temp.label
+  | Move of exp * exp
+  | Exp of exp
+  | Jump of exp * Symbol.symbol list
+  | Cjump of relop * exp * exp * Symbol.symbol * Symbol.symbol
+  | Seq of stm * stm
+  | Label of Symbol.symbol
 
 and binop =
-  | PLUS
-  | MINUS
-  | MUL
-  | DIV
-  | AND
-  | OR
-  | XOR
-  | LSHIFT
-  | RSHIFT
-  | ARSHIFT
+  | Plus
+  | Minus
+  | Mul
+  | Div
+  | And
+  | Ok
+  | Xor
+  | Lshift
+  | Rshift
+  | Arshift
 
-and relop = EQ | NE | LT | GT | LE | GE | ULT | ULE | UGT | UGE
+and relop = Eq | Ne | Lt | Gt | Le | Ge | Ult | Ule | Ugt | Uge
