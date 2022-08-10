@@ -6,27 +6,15 @@
     Manages local variables and static function nesting for {!Semant}. *)
 
 module type S = sig
-  (** [exp] models the three kinds of abstract syntax expressions
-      in the Tree IR *)
-  type exp =
-    | Ex of Tree.exp  (** Stands for an "expression" *)
-    | Nx of Tree.stm  (** Stands for "no result" *)
-    | Cx of (Temp.label * Temp.label -> Tree.stm)
-        (** Stands for "conditional". Given a true-destination and a
-            false-destination, it will make a statement that evaluates some
-            conditionals and then jumps to one of the destinations
-            (the statement will never "fall through"). *)
-  [@@deriving show]
+  type exp [@@deriving show]
+  (** Abstract type to stand as the interface between the Semant and Translate
+      modules. *)
 
   type level
   (** For function static links. *)
 
   type access
   (* TODO document *)
-
-  val unEx : exp -> Tree.exp
-  val unNx : exp -> Tree.stm
-  val unCx : Temp.label * Temp.label -> Tree.stm
 
   val outermost : level
   (** The outermost level is the level within which the "main" program
@@ -40,7 +28,9 @@ module type S = sig
   (* TODO document *)
 
   val alloc_local : level -> bool -> access
+  val simple_var : access * level -> exp
 end
 
-(** Functor interface. *)
+(** Functor interface to abstract over machine-dependent Frame
+    implementations. *)
 module Make (Frame : Frame.S) : S
