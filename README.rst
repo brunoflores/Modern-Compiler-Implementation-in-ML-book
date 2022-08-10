@@ -18,8 +18,10 @@ and frame-layout details:
 
 .. image:: img/abs.png
 
-The `Frame` and `Temp` interfaces provide machine-independent views of
-memory-resident and register-resident variables.
+The ``Frame`` and ``Temp`` interfaces provide machine-independent views of
+memory-resident and register-resident variables. The ``Translate`` module
+augments this by handling the notion of nested scopes (via static links),
+providing the interface ``Translate`` to the ``Semant`` module.
 
 
 Tiger
@@ -45,7 +47,7 @@ Generate messages from Menhir:
 TODO
 --------
 
-#. Improve the parsing of ``&`` ``|`` and unary negation; The current approach in
+#. Improve the parsing of ```&`` ``|`` and unary negation; The current approach in
    the AST will make it hard to provide quality error messages that relate
    to the source code.
 #. Improve the treatment of escaped variables; It is currently hacked into
