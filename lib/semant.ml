@@ -21,7 +21,7 @@ module Make
   (* Helper *)
   let find_record_field fields field pos =
     match List.find_opt (fun (x, _) -> x = field) fields with
-    | Some (_, ty) -> Ok { exp = ((), None); ty }
+    | Some (_, ty) -> Ok { exp = Translate.Ex (Tree.Const 0); ty }
     | None -> Error (Some pos, "field is not a member of the record")
 
   (* Helper *)
@@ -196,7 +196,7 @@ module Make
     and actual_seq_ty (exps : (Tiger.exp * Tiger.pos) list) :
         (expty, error) result =
       match exps with
-      | [] -> Ok { exp = ((), None); ty = Types.Unit }
+      | [] -> Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.Unit }
       | [ (exp, _pos) ] -> trexp exp
       | (exp, pos) :: exps' -> (
           match trexp exp with
@@ -209,10 +209,11 @@ module Make
           | Error _ as err -> err)
     and trexp (e : Tiger.exp) : (expty, error) result =
       match e with
-      | Tiger.NilExp -> Ok { exp = ((), None); ty = Types.Nil }
-      | Tiger.StringExp (_, pos) ->
-          Ok { exp = ((), Some pos); ty = Types.String }
-      | Tiger.IntExp _ -> Ok { exp = ((), None); ty = Types.Int }
+      | Tiger.NilExp -> Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.Nil }
+      | Tiger.StringExp (_, _pos) ->
+          Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.String }
+      | Tiger.IntExp _ ->
+          Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
       | Tiger.SeqExp exps -> actual_seq_ty exps
       | Tiger.VarExp var -> trvar var
       | Tiger.LetExp { decs; body; _ } -> (
@@ -224,7 +225,7 @@ module Make
       | Tiger.OpExp { left; oper = Tiger.TimesOp; right; _ }
       | Tiger.OpExp { left; oper = Tiger.MinusOp; right; _ } -> (
           match check_int_binop left right with
-          | Ok _ -> Ok { exp = ((), None); ty = Types.Int }
+          | Ok _ -> Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
           | Error _ as err -> err)
       | Tiger.OpExp { left; oper = Tiger.GeOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.GtOp; right; pos }
@@ -233,8 +234,9 @@ module Make
       | Tiger.OpExp { left; oper = Tiger.NeqOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.EqOp; right; pos } -> (
           match check_binop left right pos with
-          | Ok String -> Ok { exp = ((), Some pos); ty = Types.String }
-          | Ok Int -> Ok { exp = ((), Some pos); ty = Types.Int }
+          | Ok String ->
+              Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.String }
+          | Ok Int -> Ok { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
           | Error _ as err -> err)
       | Tiger.ArrayExp { typ; size; init; pos } -> (
           match Symbol.look (tenv, typ) with
@@ -245,7 +247,11 @@ module Make
                   | Ok { ty; _ } -> (
                       match ty_eq (array_ty, ty) with
                       | true ->
-                          Ok { exp = ((), None); ty = Types.Array (ty, ref ()) }
+                          Ok
+                            {
+                              exp = Translate.Ex (Tree.Const 0);
+                              ty = Types.Array (ty, ref ());
+                            }
                       | false ->
                           Error
                             ( Some pos,
@@ -300,7 +306,11 @@ module Make
                           (fun (_, sym, { ty; _ }, _pos) -> (sym, ty))
                           tests
                       in
-                      Ok { exp = ((), None); ty = Types.Record (tys, ref ()) }))
+                      Ok
+                        {
+                          exp = Translate.Ex (Tree.Const 0);
+                          ty = Types.Record (tys, ref ());
+                        }))
           | _ ->
               Error
                 ( Some pos,
@@ -335,7 +345,8 @@ module Make
                       (Ok ()) args formals
                   in
                   match argsmatch with
-                  | Ok _ -> Ok { exp = ((), None); ty = result }
+                  | Ok _ ->
+                      Ok { exp = Translate.Ex (Tree.Const 0); ty = result }
                   | Error _ as err -> err)
               | Some _ -> Error (Some pos, "symbol not bound to a function")
               | None -> Error (Some pos, "undefined function"))
@@ -368,7 +379,7 @@ module Make
           | Some (Env.VarEntry { ty; _ }) -> (
               let ty_res = actual_ty ty in
               match ty_res with
-              | Ok ty -> Ok { exp = ((), Some pos); ty }
+              | Ok ty -> Ok { exp = Translate.Ex (Tree.Const 0); ty }
               | Error e -> Error (Some pos, e))
           | Some (FunEntry _) -> Error (Some pos, "function")
           | None ->
@@ -380,7 +391,7 @@ module Make
           match trvar var with
           | Ok { ty = Types.Array (arr_ty, _); _ } -> (
               match check_int (trexp exp) with
-              | Ok _ -> Ok { exp = ((), None); ty = arr_ty }
+              | Ok _ -> Ok { exp = Translate.Ex (Tree.Const 0); ty = arr_ty }
               | Error _ as err -> err)
           | Ok { ty = _; _ } ->
               Error (Some pos, "taking a subscript here: expected an array")
