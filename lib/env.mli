@@ -26,12 +26,13 @@ module type S = sig
       a function. If a variable, what is its type. If a function,
       what are its parameter and result types, and so on. *)
   type env_entry =
-    | VarEntry of { (*access : access;*) ty : ty_entry  (** TODO *) }
+    | VarEntry of { (*access : access;*) ty : ty_entry }
     | FunEntry of {
-        formals : ty_entry list;  (** TODO *)
+        formals : ty_entry list;
         result : ty_entry;
-            (** Result type can be {!Types.ty.UNIT} for procedures. *)
-        level : level;  (** TODO *)
+        level : level;
+        label : Temp.label;
+            (** The label of the function's machine-code entry point. *)
       }
 
   val base_tenv : ty_entry Symbol.table

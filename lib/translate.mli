@@ -12,21 +12,21 @@ module type S = sig
   type level
   (** For function static links. *)
 
+  type access
+  (* TODO document *)
+
   val outermost : level
   (** The outermost level is the level within which the "main" program
       is nested. All "library" functions are declared at this outermost
       level. *)
 
-  type access
-
   val new_level : level -> Temp.label -> bool list -> level
   (** Create a new level enclosing the given level. *)
 
   val formals : level -> access list
-  (** TODO document*)
+  (* TODO document *)
 
-  (* val alloc_local : level -> bool -> access *)
-  val alloc_local : unit -> access
+  val alloc_local : level -> bool -> access
 end
 
 (** Functor interface. *)
