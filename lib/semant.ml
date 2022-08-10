@@ -25,7 +25,10 @@ module Make
     | None -> Error (Some pos, "field is not a member of the record")
 
   (* Helper *)
-  let ty_eq = function Types.Int, Types.Int -> true | _ -> false
+  let ty_eq = function
+    | Types.Int, Types.Int -> true
+    | Types.String, Types.String -> true
+    | _ -> false
 
   (* Helper *)
   (* Find the actual type behind [Name]s. *)
