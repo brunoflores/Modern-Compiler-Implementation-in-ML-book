@@ -80,7 +80,7 @@ module Make
     | Tiger.FunctionDec decs -> (
         let trfundecs venv = function
           | [] -> Ok venv
-          | { Tiger.name; params; result; body; _ } :: _more -> (
+          | [ { Tiger.name; params; result; body; _ } ] -> (
               match result with
               | Some (rt, pos) -> (
                   match Symbol.look (tenv, rt) with
@@ -124,6 +124,7 @@ module Make
                           Format.sprintf "undefined type: %s" (Symbol.name rt)
                         ))
               | None -> failwith "not implemented")
+          | _ -> failwith "not implemented"
         in
         match trfundecs venv decs with
         | Ok venv -> Ok (venv, tenv)
@@ -302,8 +303,9 @@ module Make
                 ( Some pos,
                   Format.sprintf "record type undefined: %s" (Symbol.name typ)
                 ))
-      | Tiger.CallExp _ | Tiger.AssignExp _ | Tiger.IfExp _ | Tiger.WhileExp _
-      | Tiger.ForExp _ | Tiger.BreakExp _ ->
+      | Tiger.CallExp _ -> failwith "here"
+      | Tiger.AssignExp _ | Tiger.IfExp _ | Tiger.WhileExp _ | Tiger.ForExp _
+      | Tiger.BreakExp _ ->
           failwith "not implemented"
     and trvar (var : Tiger.var) : (expty, error) result =
       let rec walk_record (var : Tiger.var) (field : Symbol.symbol) pos :
