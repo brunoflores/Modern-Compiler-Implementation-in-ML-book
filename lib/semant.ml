@@ -303,7 +303,40 @@ module Make
                 ( Some pos,
                   Format.sprintf "record type undefined: %s" (Symbol.name typ)
                 ))
-      | Tiger.CallExp _ -> failwith "here"
+      | Tiger.CallExp { func; args; pos } -> (
+          let args =
+            List.fold_left
+              (fun acc (exp, pos) ->
+                match acc with
+                | Ok acc -> (
+                    match trexp exp with
+                    | Ok { ty; _ } -> Ok ((ty, pos) :: acc)
+                    | Error _ as err -> err)
+                | Error _ as err -> err)
+              (Ok []) args
+          in
+          match args with
+          | Ok args -> (
+              match Symbol.look (venv, func) with
+              | Some (Env.FunEntry { formals; result }) -> (
+                  let argsmatch =
+                    List.fold_left2
+                      (fun acc (arg, pos) form ->
+                        match acc with
+                        | Ok _ -> (
+                            match ty_eq (arg, form) with
+                            | true -> Ok ()
+                            | false -> Error (Some pos, "argument type mismatch")
+                            )
+                        | Error _ as err -> err)
+                      (Ok ()) args formals
+                  in
+                  match argsmatch with
+                  | Ok _ -> Ok { exp = ((), None); ty = result }
+                  | Error _ as err -> err)
+              | Some _ -> Error (Some pos, "symbol not bound to a function")
+              | None -> Error (Some pos, "undefined function"))
+          | Error _ as err -> err)
       | Tiger.AssignExp _ | Tiger.IfExp _ | Tiger.WhileExp _ | Tiger.ForExp _
       | Tiger.BreakExp _ ->
           failwith "not implemented"
