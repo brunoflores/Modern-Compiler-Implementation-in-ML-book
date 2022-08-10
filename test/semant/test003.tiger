@@ -1,0 +1,5 @@
+let
+  function plus_one (n: int): int = n + 1
+in
+  plus_one (41)
+end
