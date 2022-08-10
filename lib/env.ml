@@ -8,8 +8,8 @@ module type S = sig
     | FunEntry of {
         formals : ty_entry list;
         result : ty_entry;
-        level : level;
-        label : Temp.label;
+            (* level : level; *)
+            (* label : Temp.label; *)
       }
 
   val base_tenv : ty_entry Symbol.table
@@ -40,8 +40,8 @@ struct
     | FunEntry of {
         formals : ty_entry list;
         result : ty_entry;
-        level : level;
-        label : Temp.label;
+            (* level : level; *)
+            (* label : Temp.label; *)
       }
 
   let base_venv : env_entry Symbol.table = Symbol.empty

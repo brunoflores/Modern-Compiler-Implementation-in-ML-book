@@ -77,7 +77,57 @@ module Make
                     tenv )
             | Error _ as err -> err)
         | Error _ as err -> err)
-    | Tiger.FunctionDec _ -> failwith "not implemented"
+    | Tiger.FunctionDec decs -> (
+        let trfundecs venv = function
+          | [] -> Ok venv
+          | { Tiger.name; params; result; body; _ } :: _more -> (
+              match result with
+              | Some (rt, pos) -> (
+                  match Symbol.look (tenv, rt) with
+                  | Some rt -> (
+                      let transparam acc { Tiger.field_name; typ; field_pos; _ }
+                          =
+                        match acc with
+                        | Error _ as err -> err
+                        | Ok acc -> (
+                            match Symbol.look (tenv, typ) with
+                            | Some ty -> Ok ((field_name, ty) :: acc)
+                            | None -> Error (Some field_pos, "undefined type"))
+                      in
+                      let params' = List.fold_left transparam (Ok []) params in
+                      match params' with
+                      | Ok params' -> (
+                          let venv' =
+                            Symbol.enter
+                              ( venv,
+                                name,
+                                Env.FunEntry
+                                  {
+                                    formals =
+                                      List.map (fun (_, ty) -> ty) params';
+                                    result = rt;
+                                  } )
+                          in
+                          let enterparam venv (name, ty) =
+                            Symbol.enter (venv, name, Env.VarEntry { ty })
+                          in
+                          let venv'' =
+                            List.fold_left enterparam venv' params'
+                          in
+                          match trans_exp venv'' tenv body with
+                          | Ok _ -> Ok venv'
+                          | Error _ as err -> err)
+                      | Error _ as err -> err)
+                  | None ->
+                      Error
+                        ( Some pos,
+                          Format.sprintf "undefined type: %s" (Symbol.name rt)
+                        ))
+              | None -> failwith "not implemented")
+        in
+        match trfundecs venv decs with
+        | Ok venv -> Ok (venv, tenv)
+        | Error _ as err -> err)
     | Tiger.TypeDec decs -> (
         let rec trtydecs tenv = function
           | [] -> Ok tenv
@@ -116,9 +166,6 @@ module Make
         | Some _ as ty -> Ok (Types.Name (sym, ref ty))
         | None -> Ok (Types.Name (sym, ref None)))
     | _ -> failwith "not implemented"
-
-  and _trans_var (_venv : venv) (_tenv : tenv) (_var : Tiger.var) : expty =
-    failwith "not implemented"
 
   and trans_exp (venv : venv) (tenv : tenv) (exp : Tiger.exp) :
       (expty, error) result =

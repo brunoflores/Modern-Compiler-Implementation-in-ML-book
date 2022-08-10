@@ -30,9 +30,9 @@ module type S = sig
     | FunEntry of {
         formals : ty_entry list;
         result : ty_entry;
-        level : level;
-        label : Temp.label;
             (** The label of the function's machine-code entry point. *)
+            (* level : level; *)
+            (* label : Temp.label; *)
       }
 
   val base_tenv : ty_entry Symbol.table
