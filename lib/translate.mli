@@ -16,6 +16,7 @@ module type S = sig
             false-destination, it will make a statement that evaluates some
             conditionals and then jumps to one of the destinations
             (the statement will never "fall through"). *)
+  [@@deriving show]
 
   type level
   (** For function static links. *)

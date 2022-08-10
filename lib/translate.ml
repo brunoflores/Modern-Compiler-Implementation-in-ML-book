@@ -3,6 +3,7 @@ module type S = sig
     | Ex of Tree.exp
     | Nx of Tree.stm
     | Cx of (Temp.label * Temp.label -> Tree.stm)
+  [@@deriving show]
 
   type level
   type access
@@ -21,6 +22,7 @@ module Make (Frame : Frame.S) : S = struct
     | Ex of Tree.exp
     | Nx of Tree.stm
     | Cx of (Temp.label * Temp.label -> Tree.stm)
+  [@@deriving show]
 
   type level = unit
   type access = level * Frame.access

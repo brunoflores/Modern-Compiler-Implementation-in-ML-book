@@ -1,10 +1,10 @@
 module Temp = struct
-  type t = int
+  type t = int [@@deriving show]
 
   let compare = Int.compare
 end
 
-type temp = Temp.t
+type temp = Temp.t [@@deriving show]
 
 let compare = Temp.compare
 let new_temp (_ : unit) : temp = failwith "not implemented"

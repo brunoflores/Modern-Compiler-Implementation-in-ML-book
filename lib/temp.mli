@@ -6,7 +6,7 @@
 
     This module manages these two distinct sets of names. *)
 
-type temp
+type temp [@@deriving show]
 (** Abstract name for a local variable. *)
 
 val compare : temp -> temp -> int

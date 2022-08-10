@@ -8,6 +8,7 @@ type exp =
   | Mem of exp  (** See {!section: mem}. *)
   | Call of exp * exp list  (** A procedure call. See {!section: call}. *)
   | Eseq of stm * exp  (** See {!section: eseq}. *)
+[@@deriving show]
 
 (** The statements ({!stm}) perform side effects and control flow. *)
 and stm =
@@ -18,6 +19,7 @@ and stm =
       (** See {!section: cjump}. *)
   | Seq of stm * stm  (** See {!section: seq}. *)
   | Label of Symbol.symbol  (** See {!section: label}. *)
+[@@deriving show]
 
 and binop =
   | Plus  (** Integer arithmetic. *)
@@ -30,6 +32,7 @@ and binop =
   | Lshift  (** Integer logical shift. *)
   | Rshift  (** Integer logical shift. *)
   | Arshift  (** Integer arithmetic right-shift. *)
+[@@deriving show]
 
 and relop =
   | Eq  (** Integer equality (signed or unsigned). *)
@@ -42,6 +45,7 @@ and relop =
   | Ule  (** Unsigned integer inequality. *)
   | Ugt  (** Unsigned integer inequality. *)
   | Uge  (** Unsigned integer inequality. *)
+[@@deriving show]
 
 (** {1:name NAME}
     Corresponds to an assembly language label.

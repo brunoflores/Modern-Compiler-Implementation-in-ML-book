@@ -6,6 +6,7 @@ type exp =
   | Mem of exp
   | Call of exp * exp list
   | Eseq of stm * exp
+[@@deriving show]
 
 and stm =
   | Move of exp * exp
@@ -14,6 +15,7 @@ and stm =
   | Cjump of relop * exp * exp * Symbol.symbol * Symbol.symbol
   | Seq of stm * stm
   | Label of Symbol.symbol
+[@@deriving show]
 
 and binop =
   | Plus
@@ -26,5 +28,7 @@ and binop =
   | Lshift
   | Rshift
   | Arshift
+[@@deriving show]
 
 and relop = Eq | Ne | Lt | Gt | Le | Ge | Ult | Ule | Ugt | Uge
+[@@deriving show]
