@@ -49,18 +49,43 @@ instruction set architecture and the programming language we are compiling.
 The Frame Pointer
 +++++++++++++++++
 
-TODO
+Suppose a caller g and a callee f. On entry to f, the stack pointer points to
+the first argument that g passes to f. On entry, f allocates a frame by simply
+subtracting the frame size from the stack pointer SP.
+
+We save the FP in memory (in the frame) and the old SP becomes the new
+frame pointer FP.
 
 Tiger
 -----
 
+Some of the noteworthy language features:
+
 Tiger is a simple but nontrivial language of the Algol family,
 with nested scope and heap-allocated records.
 
-Two name spaces:
+It has two name spaces:
 
 #. Types
 #. Functions and variables
+
+It supports nested function declarations where the inner scopes may access
+variables in outer scopes (block structure), but it does not support
+higher-order functions: the programmer cannot return functions as values
+or store them in variables.
+
+This implementation
++++++++++++++++++++
+
+This implementation uses static links to implement nested function declarations.
+Whenever we call a function f, we pass it a pointer to the stack frame of
+the "current" (most recently entered) activation of the function g that
+immediately encloses f in the text of the program.
+
+Other options are:
+
+* A display, or
+* Lambda lifting
 
 Development
 -----------
