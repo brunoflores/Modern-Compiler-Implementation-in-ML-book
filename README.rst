@@ -3,6 +3,56 @@ Modern Compiler Implementation in ML by A. Appel
 
 https://www.cs.princeton.edu/~appel/modern/ml/
 
+This book describes techniques, data structures, and algorithms for translating
+programming languages into executable code.
+
+The compiler is organised in phases, each operating on a different abstract
+"language":
+
+* Source Program -> Lex -> Tokens
+* Parse -> Reductions
+* Parsing Actions -> Abstract Syntax
+* Semantic Analysis -> Translate (Tables -> Environments)
+* Translate -> IR Trees (Frame -> Frame Layout)
+* Canonicalise -> IR Trees
+* Instruction Selection -> Assem
+* Control Flow Analysis -> Flow Graph
+* Data Flow Analysis -> Interference Graph
+* Register Allocation -> Register Assignment
+* Code Emission -> Assembly Language
+* Assembler -> Relocatable Object Code
+* Linker -> Machine Language
+
+Description of compiler phases:
+
+* **Lex:** Break the source file into individual works, or *tokens*
+* **Parse:** Analyse the phrase structureof the program
+* **Parsing Actions:** BUild a pice of *abstract syntax tree* corresponding to
+  each phrase
+* **Semantic Analysis:** Determine what each phrase means, relate uses of
+  variables to their definitions, check types of expressions, request
+  translation of each phrase
+* **Frame Layout:** Place variables, function parameters, etc. into activation
+  records (stack frames) in a machine-dependent way
+* **Translate:** Produce *intermediate representation trees* (IR trees), a
+  notation that is not tied to any particular source language or target machine
+  architecture
+* **Canonicalise:** Hoist side effects out of expressions, and clean up
+  additional branches, for the convenience of the next phases
+* **Instruction Selection:** Goup the IR-tree nodes into clumps that correspond
+  to the actions of target-machine instructions
+* **Control Flow Analysis:** Analyse the sequence of instructions into a
+  *control flow graph* that shows all the possible flows of control the program
+  might follow when it executes
+* **Dataflow Analysis:** Gather information about the flow of information
+  through variables of the program; for example, *liveness analysis* calculates
+  the places where each program variable holds a still-needed value
+* **Register Allocation:** Choose a register to hold each of the variables and
+  temporary values used by the program; variables not live at the same time can
+  share the same register
+* **Code Emission:** Replace the temporary names in each machine instruction
+  with machine registers
+
 Usage
 -----------
 
