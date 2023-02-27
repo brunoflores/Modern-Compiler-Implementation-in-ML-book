@@ -1,4 +1,4 @@
-(** Abstract representation of symbol tables (environments).
+(** Abstract representation of symbol tables.
     It provides fast lookup and is intented for cases where lookups occur
     more frequently than inserts. *)
 

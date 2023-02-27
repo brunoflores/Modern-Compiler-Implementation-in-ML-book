@@ -1,4 +1,5 @@
-(* This representation of symbol is to support the [name] function. *)
+(* This representation of symbol is to support the [name] function.
+   The [int] value is to support comparisons. *)
 type symbol = string * int [@@deriving show]
 
 let equal ((_, s1) : symbol) ((_, s2) : symbol) = s1 = s2
