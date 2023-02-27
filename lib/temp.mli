@@ -1,13 +1,12 @@
-(** Temporaries and labels.
+(** This module manages temporaries and labels.
 
     We use the word "temporary" to mean a value that is temporarily held in
     a register, and the word "label" to mean some machine-language location
-    whose exact address is yet to be determined.
-
-    This module manages these two distinct sets of names. *)
+    whose exact address is yet to be determined. *)
 
 type temp [@@deriving show]
-(** Abstract name for a local variable. *)
+(** Abstract name for a local variable. It models a register when there is
+    an infinite suppply of registers. *)
 
 val compare : temp -> temp -> int
 
