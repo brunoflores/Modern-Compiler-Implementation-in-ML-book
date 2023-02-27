@@ -15,12 +15,12 @@ module type S = sig
     identifiers are expected, and the variable "a" in syntactic contexts
     where variables are expected. *)
 
+  type access
+  type level
+
   type ty_entry = Types.ty
   (** For a type identifier, we need to remember only the type that it
     stands for. *)
-
-  type access
-  type level
 
   (** For a value identifier, we need to know whether it is a variable or
       a function. If a variable, what is its type. If a function,
