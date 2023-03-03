@@ -34,7 +34,7 @@ let get text checkpoint i =
           keywords are correctly inside the syntax error message
           database. The integer [i] should always be a valid offset
           into the known suffix of the stack. *)
-      "???"
+      failwith "index out of range (from Menhir): see the source code"
 
 module Translate = Tigerlib.Translate.Make (Tigerlib.Frame_lc3.Make)
 module Env = Tigerlib.Env.Make (Translate)
