@@ -40,15 +40,31 @@ module Translate = Tigerlib.Translate.Make (Tigerlib.Frame_lc3.Make)
 module Env = Tigerlib.Env.Make (Translate)
 module Semant = Tigerlib.Semant.Make (Env) (Translate)
 
+let pretty_print_err = function
+  | Some { Tigerlib.Tiger.pos_fname; pos_lnum; _ }, message -> (
+      let ic = open_in pos_fname in
+      let lnum = ref pos_lnum in
+      let line = ref "" in
+      try
+        while !lnum > 0 do
+          line := input_line ic;
+          decr lnum
+        done;
+        Printf.printf "\n%d |%s\nError: %s\n\n" pos_lnum !line message;
+        close_in ic
+      with e ->
+        close_in_noerr ic;
+        raise e)
+  | None, message -> print_endline message
+
 let succeed v =
   match v with
   | Some x -> (
       (* For debugging: *)
       (* Format.printf "%a\n\n" Tiger.pp_exp x; *)
-      try
-        let _ = Semant.trans_prog x in
-        ()
-      with Failure e -> print_endline e)
+      match Semant.trans_prog x with
+      | Ok () -> ()
+      | Error errors -> List.iter pretty_print_err errors)
   | None -> ()
 
 let fail text buffer checkpoint =
