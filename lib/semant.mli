@@ -2,8 +2,8 @@
     of abstract syntax. *)
 
 module type S = sig
-  val trans_prog : Tiger.exp -> unit
-  (** Type-checks a given program and returns unit on success. *)
+  val trans_prog : Tiger.exp -> (unit, (Tiger.pos option * string) list) result
+  (** Type-checks a given program. *)
 end
 
 (** Functor interface. *)

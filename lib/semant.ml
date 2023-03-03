@@ -1,6 +1,5 @@
 module type S = sig
-  (* val trans_prog : Tiger.exp -> (unit, Tiger.pos option * string) result *)
-  val trans_prog : Tiger.exp -> unit
+  val trans_prog : Tiger.exp -> (unit, (Tiger.pos option * string) list) result
 end
 
 module Make
@@ -15,13 +14,14 @@ module Make
      Tiger-language type. *)
   type expty = { exp : Translate.exp; ty : Types.ty }
 
-  exception SemantError of Tiger.pos option * string
+  exception SemantError of (Tiger.pos option * string) list
 
   let find_record_field fields field pos =
     match List.find_opt (fun (x, _) -> x = field) fields with
     | Some (_, ty) -> { exp = Translate.Ex (Tree.Const 0); ty }
     | None ->
-        raise @@ SemantError (Some pos, "field is not a member of the record")
+        raise
+        @@ SemantError [ (Some pos, "field is not a member of the record") ]
 
   let ty_eq = function
     | Types.Int, Types.Int -> true
@@ -40,8 +40,10 @@ module Make
         | None ->
             raise
             @@ SemantError
-                 (Some pos, Format.sprintf "undefined type: %s" (Symbol.name id))
-        )
+                 [
+                   ( Some pos,
+                     Format.sprintf "undefined type: %s" (Symbol.name id) );
+                 ])
 
   let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
       venv * tenv =
@@ -53,32 +55,32 @@ module Make
 
   and trans_dec venv tenv dec : venv * tenv =
     match dec with
-    | Tiger.VarDec { name; init; typ; _ } ->
+    | Tiger.VarDec { name; init; typ; pos; _ } ->
         let { ty; _ } = trans_exp venv tenv init in
-        let _assertion_test =
-          match typ with
-          | Some (ty_assertion, pos) -> (
-              match Symbol.look (tenv, ty_assertion) with
-              | Some ty_assertion' -> (
-                  match ty_eq (ty_assertion', ty) with
-                  | true -> ()
-                  | false ->
-                      raise
-                      @@ SemantError (Some pos, "type assertion does not hold"))
-              | None -> raise @@ SemantError (Some pos, "undefined type"))
-          | None -> ()
-        in
+        (match typ with
+        | Some (ty_assertion, pos) -> (
+            match Symbol.look (tenv, ty_assertion) with
+            | Some ty_assertion' -> (
+                match ty_eq (ty_assertion', ty) with
+                | true -> ()
+                | false ->
+                    raise
+                    @@ SemantError
+                         [ (Some pos, "type assertion does not hold") ])
+            | None -> raise @@ SemantError [ (Some pos, "undefined type") ])
+        | None -> ());
         ( Symbol.enter
             ( venv,
               name,
-              Env.VarEntry { (* access = Translate.alloc_local (); *) ty } ),
+              Env.VarEntry { (* access = Translate.alloc_local (); *) ty; pos }
+            ),
           tenv )
     | Tiger.FunctionDec decs ->
         let trfundecs venv = function
           | [] -> venv
-          | [ { Tiger.name; params; result; body; _ } ] -> (
+          | [ { Tiger.name; params; result; body; pos = decl_pos; _ } ] -> (
               match result with
-              | Some (rt, pos) -> (
+              | Some (rt, rt_pos) -> (
                   match Symbol.look (tenv, rt) with
                   | Some rt ->
                       let transparam acc { Tiger.field_name; typ; field_pos; _ }
@@ -87,7 +89,8 @@ module Make
                         | Some ty -> (field_name, ty) :: acc
                         | None ->
                             raise
-                            @@ SemantError (Some field_pos, "undefined type")
+                            @@ SemantError
+                                 [ (Some field_pos, "undefined type") ]
                       in
                       let params' = List.fold_left transparam [] params in
                       let venv' =
@@ -101,7 +104,8 @@ module Make
                               } )
                       in
                       let enterparam venv (name, ty) =
-                        Symbol.enter (venv, name, Env.VarEntry { ty })
+                        Symbol.enter
+                          (venv, name, Env.VarEntry { ty; pos = decl_pos })
                       in
                       let venv'' = List.fold_left enterparam venv' params' in
                       let _ = trans_exp venv'' tenv body in
@@ -109,9 +113,11 @@ module Make
                   | None ->
                       raise
                       @@ SemantError
-                           ( Some pos,
-                             Format.sprintf "undefined type: %s"
-                               (Symbol.name rt) ))
+                           [
+                             ( Some rt_pos,
+                               Format.sprintf "undefined type: %s"
+                                 (Symbol.name rt) );
+                           ])
               | None -> failwith "not implemented")
           | _ -> failwith "not implemented"
         in
@@ -138,9 +144,11 @@ module Make
               | None ->
                   raise
                   @@ SemantError
-                       ( Some field_pos,
-                         Format.sprintf "undefined type: %s" (Symbol.name typ)
-                       ))
+                       [
+                         ( Some field_pos,
+                           Format.sprintf "undefined type: %s" (Symbol.name typ)
+                         );
+                       ])
             [] fields
         in
         let fs = fields' in
@@ -162,9 +170,11 @@ module Make
           | { ty = _; _ } ->
               raise
               @@ SemantError
-                   ( Some pos,
-                     "this expression is on the left side of a sequence: \
-                      expected unit" ))
+                   [
+                     ( Some pos,
+                       "this expression is on the left side of a sequence: \
+                        expected unit" );
+                   ])
     and trexp (e : Tiger.exp) : expty =
       match e with
       | Tiger.NilExp -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Nil }
@@ -180,12 +190,20 @@ module Make
       | Tiger.OpExp { left; oper = Tiger.DivideOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.TimesOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.MinusOp; right; pos } -> (
-          match (trexp left, trexp right) with
-          | { ty = Types.Int; _ }, { ty = Types.Int; _ } ->
-              { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
-          | _ ->
-              raise @@ SemantError (Some pos, "this operation requires two ints")
-          )
+          let trintexp e =
+            match trexp e with
+            | { ty = Types.Int; _ } ->
+                { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+            | _ -> raise @@ SemantError [ (None, "") ]
+            (* TODO *)
+          in
+          try
+            let _ = trintexp left in
+            let _ = trintexp right in
+            { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+          with SemantError _ ->
+            raise
+            @@ SemantError [ (Some pos, "this operation requires two ints") ])
       | Tiger.OpExp { left; oper = Tiger.GeOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.GtOp; right; pos }
       | Tiger.OpExp { left; oper = Tiger.LeOp; right; pos }
@@ -198,15 +216,15 @@ module Make
           | { ty = Types.Int; _ }, { ty = Types.Int; _ } ->
               { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
           | _ ->
-              raise @@ SemantError (Some pos, "both sides must be string or int")
-          )
+              raise
+              @@ SemantError [ (Some pos, "both sides must be string or int") ])
       | Tiger.ArrayExp { typ; size; init; pos } -> (
           match Symbol.look (tenv, typ) with
           | Some (Types.Array (array_ty, _)) -> (
               let _ =
                 match trexp size with
                 | { ty = Types.Int; _ } -> ()
-                | _ -> raise @@ SemantError (Some pos, "integer required")
+                | _ -> raise @@ SemantError [ (Some pos, "integer required") ]
               in
               let { ty; _ } = trexp init in
               match ty_eq (array_ty, ty) with
@@ -218,10 +236,13 @@ module Make
               | false ->
                   raise
                   @@ SemantError
-                       ( Some pos,
-                         "type of array initialisation value does not match \
-                          the array declaration" ))
-          | _ -> raise @@ SemantError (Some pos, "type not declared as array"))
+                       [
+                         ( Some pos,
+                           "type of array initialisation value does not match \
+                            the array declaration" );
+                       ])
+          | _ ->
+              raise @@ SemantError [ (Some pos, "type not declared as array") ])
       | Tiger.RecordExp { typ; pos; fields = arg_fields } -> (
           match Symbol.look (tenv, typ) with
           | Some (Types.Record (formal_fields, _)) -> (
@@ -261,9 +282,11 @@ module Make
                   | Some (_, sym, _, pos) ->
                       raise
                       @@ SemantError
-                           ( Some pos,
-                             Format.sprintf "field type mismatch: %s"
-                               (Symbol.name sym) )
+                           [
+                             ( Some pos,
+                               Format.sprintf "field type mismatch: %s"
+                                 (Symbol.name sym) );
+                           ]
                   | None ->
                       let tys =
                         List.map
@@ -277,9 +300,11 @@ module Make
           | _ ->
               raise
               @@ SemantError
-                   ( Some pos,
-                     Format.sprintf "record type undefined: %s"
-                       (Symbol.name typ) ))
+                   [
+                     ( Some pos,
+                       Format.sprintf "record type undefined: %s"
+                         (Symbol.name typ) );
+                   ])
       | Tiger.CallExp { func; args; pos } -> (
           let args =
             List.fold_left
@@ -296,31 +321,35 @@ module Make
                     match ty_eq (arg, form) with
                     | true -> ()
                     | false ->
-                        raise @@ SemantError (Some pos, "argument type mismatch"))
+                        raise
+                        @@ SemantError [ (Some pos, "argument type mismatch") ])
                   args formals
               in
               { exp = Translate.Ex (Tree.Const 0); ty = result }
           | Some _ ->
-              raise @@ SemantError (Some pos, "symbol not bound to a function")
-          | None -> raise @@ SemantError (Some pos, "undefined function"))
+              raise
+              @@ SemantError [ (Some pos, "symbol not bound to a function") ]
+          | None -> raise @@ SemantError [ (Some pos, "undefined function") ])
       | Tiger.AssignExp _ | Tiger.IfExp _ | Tiger.WhileExp _ | Tiger.ForExp _
       | Tiger.BreakExp _ ->
           failwith "not implemented"
-    and trvar (var : Tiger.var) : expty =
+    and trvar var : expty =
       let rec walk_record (field : Symbol.symbol) pos = function
         | Tiger.SimpleVar (id, _pos) -> (
             match Symbol.look (venv, id) with
             | Some (Env.VarEntry { ty = Types.Record (fields, _); _ }) ->
                 find_record_field fields field pos
-            | Some _ -> raise @@ SemantError (Some pos, "var is not a record")
-            | None -> raise @@ SemantError (Some pos, "undefined record"))
+            | Some _ ->
+                raise @@ SemantError [ (Some pos, "var is not a record") ]
+            | None -> raise @@ SemantError [ (Some pos, "undefined record") ])
         | Tiger.SubscriptVar _ as var -> (
             match trvar var with
             | { ty = Types.Record (fields, _); _ } ->
                 find_record_field fields field pos
             | { ty = _; _ } ->
                 raise
-                @@ SemantError (Some pos, "this array item is not a record"))
+                @@ SemantError [ (Some pos, "this array item is not a record") ]
+            )
         | Tiger.FieldVar (var, field, pos) -> walk_record field pos var
       in
       match var with
@@ -329,12 +358,15 @@ module Make
           | Some (Env.VarEntry { ty; _ }) ->
               let ty = actual_ty pos ty in
               { exp = Translate.Ex (Tree.Const 0); ty }
-          | Some (FunEntry _) -> raise @@ SemantError (Some pos, "function")
+          | Some (FunEntry _) -> raise @@ SemantError [ (Some pos, "function") ]
           | None ->
               raise
               @@ SemantError
-                   ( Some pos,
-                     Format.sprintf "undefined variable: %s" (Symbol.name id) ))
+                   [
+                     ( Some pos,
+                       Format.sprintf "undefined variable: %s" (Symbol.name id)
+                     );
+                   ])
       | Tiger.FieldVar (var, field, pos) -> walk_record field pos var
       | Tiger.SubscriptVar (var, exp, pos) -> (
           match trvar var with
@@ -342,17 +374,22 @@ module Make
               let _ =
                 match trexp exp with
                 | { ty = Types.Int; _ } -> ()
-                | _ -> raise @@ SemantError (Some pos, "integer required")
+                | _ -> raise @@ SemantError [ (Some pos, "integer required") ]
               in
               { exp = Translate.Ex (Tree.Const 0); ty = arr_ty }
           | { ty = _; _ } ->
               raise
               @@ SemantError
-                   (Some pos, "taking a subscript here: expected an array"))
+                   [ (Some pos, "taking a subscript here: expected an array") ])
     in
     trexp exp
 
-  let trans_prog (exp : Tiger.exp) =
-    let { exp; _ } = trans_exp Env.base_venv Env.base_tenv exp in
-    print_endline @@ Translate.show_exp exp
+  let trans_prog exp =
+    try
+      let { exp; _ } = trans_exp Env.base_venv Env.base_tenv exp in
+      print_endline @@ Translate.show_exp exp;
+      Ok ()
+    with
+    | SemantError errs -> Error errs
+    | Failure e -> Error [ (None, e) ]
 end

@@ -4,7 +4,7 @@ module type S = sig
   type level
 
   type env_entry =
-    | VarEntry of { (* access : access; *) ty : ty_entry }
+    | VarEntry of { (* access : access; *) ty : ty_entry; pos : Tiger.pos }
     | FunEntry of {
         formals : ty_entry list;
         result : ty_entry;
@@ -36,7 +36,7 @@ struct
   type level = Translate.level
 
   type env_entry =
-    | VarEntry of { (* access : access; *) ty : ty_entry }
+    | VarEntry of { (* access : access; *) ty : ty_entry; pos : Tiger.pos }
     | FunEntry of {
         formals : ty_entry list;
         result : ty_entry;
