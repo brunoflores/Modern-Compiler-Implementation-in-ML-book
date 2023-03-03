@@ -50,7 +50,8 @@ let pretty_print_err = function
           line := input_line ic;
           decr lnum
         done;
-        Printf.printf "\n%d |%s\nError: %s\n\n" pos_lnum !line message;
+        Printf.printf "File \"%s\"\n%d |%s\nError: %s\n" pos_fname pos_lnum
+          !line message;
         close_in ic
       with e ->
         close_in_noerr ic;
