@@ -11,7 +11,7 @@ module type S = sig
   type exp =
     | Ex of Tree.exp
     | Nx of Tree.stm
-    | Cx of (Temp.label * Temp.label -> Tree.stm)
+    | Cx of (t:Temp.label -> f:Temp.label -> Tree.stm)
   [@@deriving show]
 
   type level

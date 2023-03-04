@@ -13,7 +13,7 @@ and stm =
   | Exp of exp
   | Jump of exp * Symbol.symbol list
   | Cjump of relop * exp * exp * Symbol.symbol * Symbol.symbol
-  | Seq of stm * stm
+  | Seq of stm list
   | Label of Symbol.symbol
 [@@deriving show]
 

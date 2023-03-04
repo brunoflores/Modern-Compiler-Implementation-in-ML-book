@@ -2,7 +2,7 @@ module type S = sig
   type exp =
     | Ex of Tree.exp
     | Nx of Tree.stm
-    | Cx of (Temp.label * Temp.label -> Tree.stm)
+    | Cx of (t:Temp.label -> f:Temp.label -> Tree.stm)
   [@@deriving show]
 
   type level
@@ -19,7 +19,7 @@ module Make (Frame : Frame.S) : S = struct
   type exp =
     | Ex of Tree.exp  (** Stands for an "expression" *)
     | Nx of Tree.stm  (** Stands for "no result" *)
-    | Cx of (Temp.label * Temp.label -> Tree.stm)
+    | Cx of (t:Temp.label -> f:Temp.label -> Tree.stm)
         (** Stands for "conditional".
           Given a true-destination and a false-destination, it will make a
           statement that evaluates some conditionals and then jumps to one
@@ -29,9 +29,33 @@ module Make (Frame : Frame.S) : S = struct
   type level = Frame.frame
   type access = level * Frame.access
 
-  let _unEx _exp = failwith "not implemented"
-  let _unNx _exp = failwith "not implemented"
-  let _unCx (_true, _false) = failwith "not implemented"
+  let unEx = function
+    | Ex e -> e
+    | Nx s -> Tree.Eseq (s, Tree.Const 0)
+    | Cx genstm ->
+        (* Convert a conditional into a value expression.
+           We invent a new temporary [r] and new labels [t] and [f].
+           Then we make a Tree statement that moves 1 into [r]. and a conditional
+           jump that implements the conditional. If the condition is false, then
+           0 is moved into [r]; if true, then execution proceeds at [t] and the
+           second move is skipped.
+           The result is just the temporary [r] containing zero or one. *)
+        let r = Temp.new_temp () in
+        let t = Temp.new_label () in
+        let f = Temp.new_label () in
+        Tree.Eseq
+          ( Tree.Seq
+              [
+                Tree.Move (Tree.Temp r, Tree.Const 1);
+                genstm ~t ~f;
+                Tree.Label f;
+                Tree.Move (Tree.Temp r, Tree.Const 0);
+                Tree.Label t;
+              ],
+            Tree.Temp r )
+
+  let unNx _exp = failwith "not implemented"
+  let unCx (_true, _false) = failwith "not implemented"
   let outermost : level = Frame.new_frame (Symbol.create "outermost") [ true ]
 
   let new_level (_level : level) (label : Temp.label) (escape : bool list) :

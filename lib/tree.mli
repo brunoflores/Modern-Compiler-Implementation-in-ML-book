@@ -17,7 +17,7 @@ and stm =
   | Jump of exp * Symbol.symbol list  (** See {!section: jump}. *)
   | Cjump of relop * exp * exp * Symbol.symbol * Symbol.symbol
       (** See {!section: cjump}. *)
-  | Seq of stm * stm  (** See {!section: seq}. *)
+  | Seq of stm list  (** See {!section: seq}. *)
   | Label of Symbol.symbol  (** See {!section: label}. *)
 [@@deriving show]
 
@@ -135,7 +135,11 @@ and relop =
 *)
 
 (** {1:seq SEQ}
-    [SEQ(s1, s2)] means statement {i s1} followed by {i s2}.
+    {v
+    SEQ(statements)
+    v}
+
+    Execute {i statements} in order.
 *)
 
 (** {1:label LABEL}
