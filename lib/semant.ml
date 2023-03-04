@@ -45,15 +45,14 @@ module Make
                      Format.sprintf "undefined type: %s" (Symbol.name id) );
                  ])
 
-  let rec trans_decs (venv : venv) (tenv : tenv) (decs : Tiger.dec list) :
-      venv * tenv =
+  let rec trans_decs venv tenv level decs : venv * tenv =
     match decs with
     | [] -> (venv, tenv)
     | dec :: decs' ->
         let venv', tenv' = trans_dec venv tenv dec in
         trans_decs venv' tenv' decs'
 
-  and trans_dec venv tenv dec : venv * tenv =
+  and trans_dec venv tenv level dec : venv * tenv =
     match dec with
     | Tiger.VarDec { name; init; typ; pos; _ } ->
         let { ty; _ } = trans_exp venv tenv init in
@@ -133,7 +132,7 @@ module Make
         let tenv' = trtydecs tenv decs in
         (venv, tenv')
 
-  and trans_ty (tenv : tenv) (ty : Tiger.ty) : Types.ty =
+  and trans_ty tenv ty : Types.ty =
     match ty with
     | Tiger.RecordTy fields ->
         let fields' =
@@ -159,7 +158,7 @@ module Make
         | None -> Types.Name (sym, ref None))
     | _ -> failwith "not implemented"
 
-  and trans_exp venv tenv exp : expty =
+  and trans_exp venv tenv level exp : expty =
     let rec actual_seq_ty (exps : (Tiger.exp * Tiger.pos) list) : expty =
       match exps with
       | [] -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Unit }
@@ -175,21 +174,20 @@ module Make
                        "this expression is on the left side of a sequence: \
                         expected unit" );
                    ])
-    and trexp (e : Tiger.exp) : expty =
-      match e with
-      | Tiger.NilExp -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Nil }
-      | Tiger.StringExp (_, _pos) ->
+    and trexp = function
+      | NilExp -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Nil }
+      | StringExp (_, _pos) ->
           { exp = Translate.Ex (Tree.Const 0); ty = Types.String }
-      | Tiger.IntExp _ -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
-      | Tiger.SeqExp exps -> actual_seq_ty exps
-      | Tiger.VarExp var -> trvar var
-      | Tiger.LetExp { decs; body; _ } ->
-          let venv', tenv' = trans_decs venv tenv decs in
-          trans_exp venv' tenv' body
-      | Tiger.OpExp { left; oper = Tiger.PlusOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.DivideOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.TimesOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.MinusOp; right; pos } -> (
+      | IntExp _ -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+      | SeqExp exps -> actual_seq_ty exps
+      | VarExp var -> trvar var
+      | LetExp { decs; body; _ } ->
+          let venv', tenv' = trans_decs venv tenv level decs in
+          trans_exp venv' tenv' level body
+      | OpExp { left; oper = PlusOp; right; pos }
+      | OpExp { left; oper = DivideOp; right; pos }
+      | OpExp { left; oper = TimesOp; right; pos }
+      | OpExp { left; oper = MinusOp; right; pos } -> (
           let trintexp e =
             match trexp e with
             | { ty = Types.Int; _ } ->
@@ -204,12 +202,12 @@ module Make
           with SemantError _ ->
             raise
             @@ SemantError [ (Some pos, "this operation requires two ints") ])
-      | Tiger.OpExp { left; oper = Tiger.GeOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.GtOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.LeOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.LtOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.NeqOp; right; pos }
-      | Tiger.OpExp { left; oper = Tiger.EqOp; right; pos } -> (
+      | OpExp { left; oper = GeOp; right; pos }
+      | OpExp { left; oper = GtOp; right; pos }
+      | OpExp { left; oper = LeOp; right; pos }
+      | OpExp { left; oper = LtOp; right; pos }
+      | OpExp { left; oper = NeqOp; right; pos }
+      | OpExp { left; oper = EqOp; right; pos } -> (
           match (trexp left, trexp right) with
           | { ty = Types.String; _ }, { ty = Types.String; _ } ->
               { exp = Translate.Ex (Tree.Const 0); ty = Types.String }
@@ -218,7 +216,7 @@ module Make
           | _ ->
               raise
               @@ SemantError [ (Some pos, "both sides must be string or int") ])
-      | Tiger.ArrayExp { typ; size; init; pos } -> (
+      | ArrayExp { typ; size; init; pos } -> (
           match Symbol.look (tenv, typ) with
           | Some (Types.Array (array_ty, _)) -> (
               let _ =
@@ -243,7 +241,7 @@ module Make
                        ])
           | _ ->
               raise @@ SemantError [ (Some pos, "type not declared as array") ])
-      | Tiger.RecordExp { typ; pos; fields = arg_fields } -> (
+      | RecordExp { typ; pos; fields = arg_fields } -> (
           match Symbol.look (tenv, typ) with
           | Some (Types.Record (formal_fields, _)) -> (
               let exps =
@@ -305,7 +303,7 @@ module Make
                        Format.sprintf "record type undefined: %s"
                          (Symbol.name typ) );
                    ])
-      | Tiger.CallExp { func; args; pos } -> (
+      | CallExp { func; args; pos } -> (
           let args =
             List.fold_left
               (fun acc (exp, pos) ->
@@ -330,8 +328,7 @@ module Make
               raise
               @@ SemantError [ (Some pos, "symbol not bound to a function") ]
           | None -> raise @@ SemantError [ (Some pos, "undefined function") ])
-      | Tiger.AssignExp _ | Tiger.IfExp _ | Tiger.WhileExp _ | Tiger.ForExp _
-      | Tiger.BreakExp _ ->
+      | AssignExp _ | IfExp _ | WhileExp _ | ForExp _ | BreakExp _ ->
           failwith "not implemented"
     and trvar var : expty =
       let rec walk_record (field : Symbol.symbol) pos = function
