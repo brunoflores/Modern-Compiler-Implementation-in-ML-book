@@ -54,8 +54,27 @@ module Make (Frame : Frame.S) : S = struct
               ],
             Tree.Temp r )
 
-  let unNx _exp = failwith "not implemented"
-  let unCx (_true, _false) = failwith "not implemented"
+  let unNx = function
+    | Ex e -> Tree.Exp e
+    | Nx s -> s
+    | Cx genstm ->
+        let torf = Temp.new_label () in
+        genstm ~t:torf ~f:torf
+
+  let unCx (e : exp) : t:Temp.label -> f:Temp.label -> Tree.stm =
+    match e with
+    | Ex e ->
+        fun ~t ~f ->
+          let _ = t in
+          let _ = f in
+          Tree.Exp e
+    | Nx s ->
+        fun ~t ~f ->
+          let _ = t in
+          let _ = f in
+          s
+    | Cx genstm -> genstm
+
   let outermost : level = Frame.new_frame (Symbol.create "outermost") [ true ]
 
   let new_level (_level : level) (label : Temp.label) (escape : bool list) :
