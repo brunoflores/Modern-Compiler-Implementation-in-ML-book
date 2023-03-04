@@ -49,13 +49,13 @@ module Make
     match decs with
     | [] -> (venv, tenv)
     | dec :: decs' ->
-        let venv', tenv' = trans_dec venv tenv dec in
-        trans_decs venv' tenv' decs'
+        let venv', tenv' = trans_dec venv tenv level dec in
+        trans_decs venv' tenv' level decs'
 
   and trans_dec venv tenv level dec : venv * tenv =
     match dec with
     | Tiger.VarDec { name; init; typ; pos; _ } ->
-        let { ty; _ } = trans_exp venv tenv init in
+        let { ty; _ } = trans_exp venv tenv level init in
         (match typ with
         | Some (ty_assertion, pos) -> (
             match Symbol.look (tenv, ty_assertion) with
@@ -71,8 +71,8 @@ module Make
         ( Symbol.enter
             ( venv,
               name,
-              Env.VarEntry { (* access = Translate.alloc_local (); *) ty; pos }
-            ),
+              Env.VarEntry
+                { access = Translate.alloc_local level true; ty; pos } ),
           tenv )
     | Tiger.FunctionDec decs ->
         let trfundecs venv = function
@@ -92,6 +92,7 @@ module Make
                                  [ (Some field_pos, "undefined type") ]
                       in
                       let params' = List.fold_left transparam [] params in
+                      let label = Temp.new_label () in
                       let venv' =
                         Symbol.enter
                           ( venv,
@@ -100,14 +101,23 @@ module Make
                               {
                                 formals = List.map (fun (_, ty) -> ty) params';
                                 result = rt;
+                                level = Translate.new_level level label [ true ];
+                                label;
                               } )
                       in
                       let enterparam venv (name, ty) =
                         Symbol.enter
-                          (venv, name, Env.VarEntry { ty; pos = decl_pos })
+                          ( venv,
+                            name,
+                            Env.VarEntry
+                              {
+                                access = Translate.alloc_local level true;
+                                ty;
+                                pos = decl_pos;
+                              } )
                       in
                       let venv'' = List.fold_left enterparam venv' params' in
-                      let _ = trans_exp venv'' tenv body in
+                      let _ = trans_exp venv'' tenv level body in
                       venv'
                   | None ->
                       raise
@@ -312,7 +322,7 @@ module Make
               [] args
           in
           match Symbol.look (venv, func) with
-          | Some (Env.FunEntry { formals; result }) ->
+          | Some (Env.FunEntry { formals; result; level = _; label = _ }) ->
               let _ =
                 List.iter2
                   (fun (arg, _) form ->
@@ -383,10 +393,10 @@ module Make
 
   let trans_prog exp =
     try
-      let { exp; _ } = trans_exp Env.base_venv Env.base_tenv exp in
+      let { exp; _ } =
+        trans_exp Env.base_venv Env.base_tenv Translate.outermost exp
+      in
       print_endline @@ Translate.show_exp exp;
       Ok ()
-    with
-    | SemantError errs -> Error errs
-    | Failure e -> Error [ (None, e) ]
+    with SemantError errs -> Error errs
 end

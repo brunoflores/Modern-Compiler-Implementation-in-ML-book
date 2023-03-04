@@ -1,5 +1,5 @@
 module type S = sig
-  type exp [@@deriving show]
+  type exp = Ex of Tree.exp [@@deriving show]
   type level
   type access
 
@@ -11,28 +11,31 @@ module type S = sig
 end
 
 module Make (Frame : Frame.S) : S = struct
-  type exp =
-    | Ex of Tree.exp  (** Stands for an "expression" *)
-    | Nx of Tree.stm  (** Stands for "no result" *)
-    | Cx of (Temp.label * Temp.label -> Tree.stm)
-        (** Stands for "conditional".
-            Given a true-destination and a false-destination, it will make a
-            statement that evaluates some conditionals and then jumps to one
-            of the destinations (the statement will never "fall through"). *)
+  type exp = Ex of Tree.exp  (** Stands for an "expression" *)
+  (* | Nx of Tree.stm  (\** Stands for "no result" *\) *)
+  (* | Cx of (Temp.label * Temp.label -> Tree.stm) *)
+  (*     (\** Stands for "conditional". *)
+  (*         Given a true-destination and a false-destination, it will make a *)
+  (*         statement that evaluates some conditionals and then jumps to one *)
+  (*         of the destinations (the statement will never "fall through"). *\) *)
   [@@deriving show]
 
-  type level = unit
+  type level = Frame.frame
   type access = level * Frame.access
 
   let _unEx _exp = failwith "not implemented"
   let _unNx _exp = failwith "not implemented"
   let _unCx (_true, _false) = failwith "not implemented"
-  let outermost : level = ()
+  let outermost : level = Frame.new_frame (Symbol.create "outermost") [ true ]
 
-  let new_level (_ : level) (_ : Temp.label) (_ : bool list) : level =
-    failwith "not implemented"
+  let new_level (_level : level) (label : Temp.label) (escape : bool list) :
+      level =
+    Frame.new_frame label escape
 
   let formals (_ : level) : access list = failwith "not implemented"
-  let alloc_local (_ : level) (_ : bool) : access = failwith "not implemented"
+
+  let alloc_local (level : level) (escape : bool) : access =
+    (level, Frame.alloc_local level escape)
+
   let simple_var (_access, _level) = Ex (Tree.Const 0)
 end
