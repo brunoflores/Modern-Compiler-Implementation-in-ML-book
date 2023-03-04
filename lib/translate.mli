@@ -8,7 +8,11 @@
 module type S = sig
   (** Abstract type to stand as the interface between the Semant and Translate
       modules. *)
-  type exp = Ex of Tree.exp [@@deriving show]
+  type exp =
+    | Ex of Tree.exp
+    | Nx of Tree.stm
+    | Cx of (Temp.label * Temp.label -> Tree.stm)
+  [@@deriving show]
 
   type level
   (** For function static links. *)

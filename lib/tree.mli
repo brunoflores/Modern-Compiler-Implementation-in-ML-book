@@ -2,7 +2,7 @@
 
 type exp =
   | Const of int  (** The integer constant *)
-  | Name of Symbol.symbol  (** Symbolic constant. See {!section: name}. *)
+  | Name of Temp.label  (** Symbolic constant. See {!section: name}. *)
   | Temp of Temp.temp  (** Temporary. See {!section: temp}. *)
   | Binop of binop * exp * exp  (** Binary operator. See {!section: binop}. *)
   | Mem of exp  (** See {!section: mem}. *)
@@ -70,7 +70,7 @@ and relop =
     The contents of {i wordSize} bytes of memmory starting at address {i e}
     (where {i wordSize} is defined by an implementation of {!Frame}).
 
-    When [MEM] is used as the left child of a [MOVE], it means "store",
+    When [MEM] is used as the left child of a [MOVE] it means "store",
     but anywhere else it means "fetch".
 *)
 
