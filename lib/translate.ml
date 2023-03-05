@@ -1,10 +1,5 @@
 module type S = sig
-  type exp =
-    | Ex of Tree.exp
-    | Nx of Tree.stm
-    | Cx of (t:Temp.label -> f:Temp.label -> Tree.stm)
-  [@@deriving show]
-
+  type exp
   type level
   type access
 
@@ -24,21 +19,23 @@ module Make (Frame : Frame.S) : S = struct
           Given a true-destination and a false-destination, it will make a
           statement that evaluates some conditionals and then jumps to one
           of the destinations (the statement will never "fall through"). *)
-  [@@deriving show]
 
-  type level = Frame.frame
-  type access = level * Frame.access
+  type level_id = unit ref
+  type level = Bottom | Level of level * Frame.frame * level_id
+  type access = level_id * Frame.access
 
-  let unEx = function
+  let _unEx = function
     | Ex e -> e
     | Nx s -> Tree.Eseq (s, Tree.Const 0)
     | Cx genstm ->
         (* Convert a conditional into a value expression.
-           We invent a new temporary [r] and new labels [t] and [f].
-           Then we make a Tree statement that moves 1 into [r]. and a conditional
-           jump that implements the conditional. If the condition is false, then
-           0 is moved into [r]; if true, then execution proceeds at [t] and the
+
+           We invent a new temporary [r] and new labels [t] and [f].  Then we
+           make a Tree statement that moves 1 into [r]. and a conditional jump
+           that implements the conditional. If the condition is false, then 0 is
+           moved into [r]; if true, then execution proceeds at [t] and the
            second move is skipped.
+
            The result is just the temporary [r] containing zero or one. *)
         let r = Temp.new_temp () in
         let t = Temp.new_label () in
@@ -54,14 +51,14 @@ module Make (Frame : Frame.S) : S = struct
               ],
             Tree.Temp r )
 
-  let unNx = function
+  let _unNx = function
     | Ex e -> Tree.Exp e
     | Nx s -> s
     | Cx genstm ->
         let torf = Temp.new_label () in
         genstm ~t:torf ~f:torf
 
-  let unCx (e : exp) : t:Temp.label -> f:Temp.label -> Tree.stm =
+  let _unCx (e : exp) : t:Temp.label -> f:Temp.label -> Tree.stm =
     match e with
     | Ex e ->
         fun ~t ~f ->
@@ -75,17 +72,51 @@ module Make (Frame : Frame.S) : S = struct
           s
     | Cx genstm -> genstm
 
-  let outermost : level = Frame.new_frame (Symbol.create "outermost") [ true ]
+  let outermost : level =
+    (* let id = ref () in *)
+    (* (Frame.new_frame (Symbol.create "outermost") [ true ], id) *)
+    Bottom
 
-  let new_level (_level : level) (label : Temp.label) (escape : bool list) :
+  let new_level (parent : level) (label : Temp.label) (escape : bool list) :
       level =
-    Frame.new_frame label escape
+    let id = ref () in
+    (* Add static link - it escapes. *)
+    let escape = true :: escape in
+    Level (parent, Frame.new_frame label escape, id)
 
-  let formals (level : level) : access list =
-    List.map (fun access -> (level, access)) (Frame.formals level)
+  let formals level : access list =
+    match level with
+    | Bottom -> failwith "called formals on Bottom"
+    | Level (_parent, frame, id) ->
+        (* Take the tail to discard the static link. *)
+        let formals = List.tl (Frame.formals frame) in
+        List.map (fun access -> (id, access)) formals
 
-  let alloc_local (level : level) (escape : bool) : access =
-    (level, Frame.alloc_local level escape)
+  let alloc_local level (escape : bool) : access =
+    match level with
+    | Bottom -> failwith "called alloc_local on Bottom"
+    | Level (_parent, frame, id) -> (id, Frame.alloc_local frame escape)
 
-  let simple_var (_access, _level) = Ex (Tree.Const 0)
+  let simple_var ((level_id, frame_access), level) =
+    let rec iter k = function
+      | Bottom -> failwith "simple_var iter reached Bottom"
+      | Level (parent, frame, id) ->
+          (* Test for physical equality. *)
+          if level_id == id then k
+          else
+            let k' = List.length (Frame.formals frame) in
+            iter (k + k') parent
+    in
+    match level with
+    | Bottom -> failwith "simple_var on Bottom"
+    | Level (parent, frame, id) ->
+        (* Test for physical equality. *)
+        if level_id == id then Ex (Frame.exp frame_access (Tree.Temp Frame.fp))
+        else
+          let k = List.length (Frame.formals frame) in
+          let k = iter k parent in
+          Ex
+            (Frame.exp frame_access
+               (Tree.Mem
+                  (Tree.Binop (Tree.Plus, Tree.Const k, Tree.Temp Frame.fp))))
 end

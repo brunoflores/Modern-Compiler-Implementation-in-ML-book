@@ -3,7 +3,7 @@
 
 module type S = sig
   val trans_prog : Tiger.exp -> (unit, (Tiger.pos option * string) list) result
-  (** Type-checks a given program. *)
+  (** Type-checks a program while translating it to [Tree]. *)
 end
 
 (** Functor interface. *)

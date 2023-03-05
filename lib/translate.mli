@@ -6,13 +6,9 @@
     Manages local variables and static function nesting for {!Semant}. *)
 
 module type S = sig
+  type exp
   (** Abstract type to stand as the interface between the Semant and Translate
       modules. *)
-  type exp =
-    | Ex of Tree.exp
-    | Nx of Tree.stm
-    | Cx of (t:Temp.label -> f:Temp.label -> Tree.stm)
-  [@@deriving show]
 
   type level
   (** For function static links. *)
@@ -29,7 +25,11 @@ module type S = sig
 
   val formals : level -> access list
   val alloc_local : level -> bool -> access
+
   val simple_var : access * level -> exp
+  (** Produce a chain of MEM and + nodes to fetch static links for all frames
+      between the level of use (the [level] passed to this function) and the
+      level of definition (the [level] within the variable's [access]). *)
 end
 
 (** Functor interface to abstract over machine-dependent Frame

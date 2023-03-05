@@ -5,8 +5,8 @@ module Make : Frame.S = struct
     | InFrame of int
         (** [InFrame x] indicates a memory location at offset [x] from the
             frame pointer. *)
-  (* | InReg of Temp.temp *)
-  (*     (\** [InReg r1] indicates that it will be held in "register" [r1]. *\) *)
+    | InReg of Temp.temp
+        (** [InReg r1] indicates that it will be held in "register" [r1]. *)
 
   type frame = { label : Temp.label; locals : int; formals : access list }
   (** [frame] is a data structure that holds:
@@ -15,6 +15,14 @@ module Make : Frame.S = struct
       - Number of locals allocated so far,
       - The [label] at which the function's machine code is to begin
         (page 140). *)
+
+  let fp = Temp.new_temp ()
+  let word_size = 32
+
+  let exp access exp =
+    match access with
+    | InFrame k -> Tree.Mem (Tree.Binop (Tree.Plus, exp, Tree.Const k))
+    | InReg r -> Tree.Temp r
 
   type framestbl = frame Symbol.table ref
 
