@@ -23,7 +23,8 @@ rule read =
   | white
     { read lexbuf }
   | newline
-    { next_line lexbuf; read lexbuf }
+    { next_line lexbuf;
+      read lexbuf }
   | int
     { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | "/*"
