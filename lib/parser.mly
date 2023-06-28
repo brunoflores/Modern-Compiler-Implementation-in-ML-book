@@ -1,5 +1,5 @@
 %{
-(* The AST. *)
+(* Tiger is the AST module. *)
 open Tiger
 
 let pos_of_lexing_position (pos : Lexing.position) : pos =
