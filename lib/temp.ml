@@ -1,25 +1,37 @@
-module Temp = struct
-  type t = int [@@deriving show]
+(* module Temp = struct *)
+(*   type t = int [@@deriving show] *)
 
-  let compare = Int.compare
-end
+(*   let compare = Int.compare *)
+(* end *)
 
-type temp = Temp.t [@@deriving show]
+(* module TempTable = Tablemap.Make (Temp) *)
 
-let compare = Temp.compare
-let new_temp (_ : unit) : temp = failwith "not implemented"
-let make_string (_ : temp) : string = failwith "not implemented"
+(* type 'a table = 'a TempTable.table *)
 
-type label = Symbol.symbol
+(* let empty = TempTable.empty *)
+(* let enter = TempTable.enter *)
+(* let look = TempTable.look *)
 
-let new_label (_ : unit) : label = failwith "not implemented"
-let named_label (_ : string) : label = failwith "not implemented"
+(* type temp = Temp.t [@@deriving show] *)
 
-module Table = Tablemap.Make (Temp)
+type temp = int [@@deriving show]
 
-type key = temp
-type 'a table = 'a Table.table
+let current_temp : temp ref = ref 0
 
-let empty = Table.empty
-let enter = Table.enter
-let look = Table.look
+let new_temp _ : temp =
+  let temp = !current_temp in
+  incr current_temp;
+  temp
+
+let make_string temp : string = Format.sprintf "r%d" temp
+
+type label = Symbol.symbol [@@deriving show]
+
+let current_label : int ref = ref 0
+
+let new_label _ : label =
+  let label = !current_label in
+  incr current_label;
+  Symbol.create @@ Format.sprintf "l%d" label
+
+let named_label s : label = Symbol.create s

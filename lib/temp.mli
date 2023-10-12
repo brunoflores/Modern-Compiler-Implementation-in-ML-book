@@ -8,14 +8,12 @@ type temp [@@deriving show]
 (** Abstract name for a local variable. It models a register when there is
     an infinite suppply of registers. *)
 
-val compare : temp -> temp -> int
-
 val new_temp : unit -> temp
 (** Returns a new temporary from an infinite set of temps. *)
 
 val make_string : temp -> string
 
-type label = Symbol.symbol
+type label = Symbol.symbol [@@deriving show]
 (** Abstract name for a static memory address. *)
 
 val new_label : unit -> label
@@ -25,5 +23,3 @@ val new_label : unit -> label
 
 val named_label : string -> label
 (** Returns a new label whose assembly-language name is {i string}. *)
-
-include Table.S with type key = temp

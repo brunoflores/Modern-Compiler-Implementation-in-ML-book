@@ -10,6 +10,11 @@ module type S = sig
   (** The [access] type describes formals and locals that may be in the
       frame or in registers. *)
 
+  type frag =
+    | Proc of { body : Tree.stm; frame : frame }
+    | String of Temp.label * string
+  [@@deriving show]
+
   val fp : Temp.temp
   (** Frame-pointer register. *)
 
@@ -43,6 +48,8 @@ module type S = sig
 
   val alloc_local : frame -> bool -> access
   (** To allocate a new local variable in a frame. *)
+
+  val procEntryExit1 : frame * Tree.stm -> Tree.stm
 end
 
 module Make : S

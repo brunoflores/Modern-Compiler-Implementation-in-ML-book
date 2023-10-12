@@ -18,7 +18,9 @@ module Make
 
   let find_record_field fields field pos =
     match List.find_opt (fun (x, _) -> x = field) fields with
-    | Some (_, ty) -> { exp = Translate.Ex (Tree.Const 0); ty }
+    | Some (_, _ty) ->
+        (* { exp = Translate.Ex (Tree.Const 0); ty } *)
+        failwith "not implemented"
     | None ->
         raise
         @@ SemantError [ (Some pos, "field is not a member of the record") ]
@@ -45,102 +47,103 @@ module Make
                      Format.sprintf "undefined type: %s" (Symbol.name id) );
                  ])
 
-  let rec trans_decs venv tenv level decs : venv * tenv =
-    match decs with
-    | [] -> (venv, tenv)
-    | dec :: decs' ->
-        let venv', tenv' = trans_dec venv tenv level dec in
-        trans_decs venv' tenv' level decs'
-
-  and trans_dec venv tenv level dec : venv * tenv =
-    match dec with
-    | Tiger.VarDec { name; init; typ; pos; _ } ->
-        let { ty; _ } = trans_exp venv tenv level init in
-        (match typ with
-        | Some (ty_assertion, pos) -> (
-            match Symbol.look (tenv, ty_assertion) with
-            | Some ty_assertion' -> (
-                match ty_eq (ty_assertion', ty) with
-                | true -> ()
-                | false ->
-                    raise
-                    @@ SemantError
-                         [ (Some pos, "type assertion does not hold") ])
-            | None -> raise @@ SemantError [ (Some pos, "undefined type") ])
-        | None -> ());
-        ( Symbol.enter
-            ( venv,
-              name,
-              Env.VarEntry
-                { access = Translate.alloc_local level true; ty; pos } ),
-          tenv )
-    | Tiger.FunctionDec decs ->
-        let trfundecs venv = function
-          | [] -> venv
-          | [ { Tiger.name; params; result; body; pos = decl_pos; _ } ] -> (
-              match result with
-              | Some (rt, rt_pos) -> (
-                  match Symbol.look (tenv, rt) with
-                  | Some rt ->
-                      let transparam acc { Tiger.field_name; typ; field_pos; _ }
-                          =
-                        match Symbol.look (tenv, typ) with
-                        | Some ty -> (field_name, ty) :: acc
-                        | None ->
-                            raise
-                            @@ SemantError
-                                 [ (Some field_pos, "undefined type") ]
-                      in
-                      let params' = List.fold_left transparam [] params in
-                      let label = Temp.new_label () in
-                      let venv' =
-                        Symbol.enter
-                          ( venv,
-                            name,
-                            Env.FunEntry
-                              {
-                                formals = List.map (fun (_, ty) -> ty) params';
-                                result = rt;
-                                level = Translate.new_level level label [ true ];
-                                label;
-                              } )
-                      in
-                      let enterparam venv (name, ty) =
-                        Symbol.enter
-                          ( venv,
-                            name,
-                            Env.VarEntry
-                              {
-                                access = Translate.alloc_local level true;
-                                ty;
-                                pos = decl_pos;
-                              } )
-                      in
-                      let venv'' = List.fold_left enterparam venv' params' in
-                      let _ = trans_exp venv'' tenv level body in
-                      venv'
-                  | None ->
+  let rec trans_decs venv tenv level decs : venv * tenv * Translate.exp list =
+    let trans_one venv tenv = function
+      | Tiger.VarDec { name; init; typ; pos; _ } ->
+          let { ty; exp = init } = trans_exp venv tenv level init in
+          (match typ with
+          | Some (ty_assertion, pos) -> (
+              match Symbol.look (tenv, ty_assertion) with
+              | Some ty_assertion' -> (
+                  match ty_eq (ty_assertion', ty) with
+                  | true -> ()
+                  | false ->
                       raise
                       @@ SemantError
-                           [
-                             ( Some rt_pos,
-                               Format.sprintf "undefined type: %s"
-                                 (Symbol.name rt) );
-                           ])
-              | None -> failwith "not implemented")
-          | _ -> failwith "not implemented"
-        in
-        let venv = trfundecs venv decs in
-        (venv, tenv)
-    | Tiger.TypeDec decs ->
-        let rec trtydecs tenv = function
-          | [] -> tenv
-          | { Tiger.tydec_name; ty; _ } :: more ->
-              let ty' = trans_ty tenv ty in
-              trtydecs (Symbol.enter (tenv, tydec_name, ty')) more
-        in
-        let tenv' = trtydecs tenv decs in
-        (venv, tenv')
+                           [ (Some pos, "type assertion does not hold") ])
+              | None -> raise @@ SemantError [ (Some pos, "undefined type") ])
+          | None -> ());
+          ( Symbol.enter
+              ( venv,
+                name,
+                Env.VarEntry
+                  { access = Translate.alloc_local level true; ty; pos } ),
+            tenv,
+            init )
+      | Tiger.FunctionDec decs ->
+          let trfundecs venv = function
+            | [] -> venv
+            | [ { Tiger.name; params; result; body; pos = decl_pos; _ } ] -> (
+                match result with
+                | Some (rt, rt_pos) -> (
+                    match Symbol.look (tenv, rt) with
+                    | Some rt ->
+                        let transparam acc
+                            { Tiger.field_name; typ; field_pos; _ } =
+                          match Symbol.look (tenv, typ) with
+                          | Some ty -> (field_name, ty) :: acc
+                          | None ->
+                              raise
+                              @@ SemantError
+                                   [ (Some field_pos, "undefined type") ]
+                        in
+                        let params' = List.fold_left transparam [] params in
+                        let label = Temp.new_label () in
+                        let venv' =
+                          Symbol.enter
+                            ( venv,
+                              name,
+                              Env.FunEntry
+                                {
+                                  formals = List.map (fun (_, ty) -> ty) params';
+                                  result = rt;
+                                  level =
+                                    Translate.new_level level label [ true ];
+                                  label;
+                                } )
+                        in
+                        let enterparam venv (name, ty) =
+                          Symbol.enter
+                            ( venv,
+                              name,
+                              Env.VarEntry
+                                {
+                                  access = Translate.alloc_local level true;
+                                  ty;
+                                  pos = decl_pos;
+                                } )
+                        in
+                        let venv'' = List.fold_left enterparam venv' params' in
+                        let _ = trans_exp venv'' tenv level body in
+                        venv'
+                    | None ->
+                        raise
+                        @@ SemantError
+                             [
+                               ( Some rt_pos,
+                                 Format.sprintf "undefined type: %s"
+                                   (Symbol.name rt) );
+                             ])
+                | None -> failwith "not implemented")
+            | _ -> failwith "not implemented"
+          in
+          let venv = trfundecs venv decs in
+          (venv, tenv, Translate.simple_int 0)
+      | Tiger.TypeDec decs ->
+          let rec trtydecs tenv = function
+            | [] -> tenv
+            | { Tiger.tydec_name; ty; _ } :: more ->
+                let ty' = trans_ty tenv ty in
+                trtydecs (Symbol.enter (tenv, tydec_name, ty')) more
+          in
+          let tenv' = trtydecs tenv decs in
+          (venv, tenv', Translate.simple_int 0)
+    in
+    let trans_all (venv, tenv, inits) dec =
+      let venv', tenv', init = trans_one venv tenv dec in
+      (venv', tenv', init :: inits)
+    in
+    List.fold_left trans_all (venv, tenv, []) decs
 
   and trans_ty tenv ty : Types.ty =
     match ty with
@@ -171,7 +174,9 @@ module Make
   and trans_exp venv tenv level exp : expty =
     let rec actual_seq_ty (exps : (Tiger.exp * Tiger.pos) list) : expty =
       match exps with
-      | [] -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Unit }
+      | [] ->
+          (* { exp = Translate.Ex (Tree.Const 0); ty = Types.Unit } *)
+          failwith "not implemented"
       | [ (exp, _pos) ] -> trexp exp
       | (exp, pos) :: exps' -> (
           match trexp exp with
@@ -185,30 +190,39 @@ module Make
                         expected unit" );
                    ])
     and trexp = function
-      | NilExp -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Nil }
+      | NilExp ->
+          (* { exp = Translate.Ex (Tree.Const 0); ty = Types.Nil } *)
+          failwith "not implented"
       | StringExp (_, _pos) ->
-          { exp = Translate.Ex (Tree.Const 0); ty = Types.String }
-      | IntExp _ -> { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+          (* { exp = Translate.Ex (Tree.Const 0); ty = Types.String } *)
+          failwith "not implemented"
+      | IntExp i -> { exp = Translate.simple_int i; ty = Types.Int }
       | SeqExp exps -> actual_seq_ty exps
       | VarExp var -> trvar var
       | LetExp { decs; body; _ } ->
-          let venv', tenv' = trans_decs venv tenv level decs in
-          trans_exp venv' tenv' level body
-      | OpExp { left; oper = PlusOp; right; pos }
-      | OpExp { left; oper = DivideOp; right; pos }
-      | OpExp { left; oper = TimesOp; right; pos }
-      | OpExp { left; oper = MinusOp; right; pos } -> (
+          let venv', tenv', inits = trans_decs venv tenv level decs in
+          let ({ exp = body; _ } as exp) = trans_exp venv' tenv' level body in
+          {
+            exp with
+            exp =
+              List.fold_left
+                (fun exp init -> Translate.sequence init exp)
+                body inits;
+          }
+      | OpExp { left; oper = PlusOp as op; right; pos }
+      | OpExp { left; oper = DivideOp as op; right; pos }
+      | OpExp { left; oper = TimesOp as op; right; pos }
+      | OpExp { left; oper = MinusOp as op; right; pos } -> (
           let trintexp e =
             match trexp e with
-            | { ty = Types.Int; _ } ->
-                { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+            | { ty = Types.Int; _ } as exp -> exp
             | _ -> raise @@ SemantError [ (None, "") ]
             (* TODO *)
           in
           try
-            let _ = trintexp left in
-            let _ = trintexp right in
-            { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+            let { exp = left; _ } = trintexp left in
+            let { exp = right; _ } = trintexp right in
+            { exp = Translate.simple_op op left right; ty = Types.Int }
           with SemantError _ ->
             raise
             @@ SemantError [ (Some pos, "this operation requires two ints") ])
@@ -220,9 +234,11 @@ module Make
       | OpExp { left; oper = EqOp; right; pos } -> (
           match (trexp left, trexp right) with
           | { ty = Types.String; _ }, { ty = Types.String; _ } ->
-              { exp = Translate.Ex (Tree.Const 0); ty = Types.String }
+              (* { exp = Translate.Ex (Tree.Const 0); ty = Types.String } *)
+              failwith "not implemented"
           | { ty = Types.Int; _ }, { ty = Types.Int; _ } ->
-              { exp = Translate.Ex (Tree.Const 0); ty = Types.Int }
+              (* { exp = Translate.Ex (Tree.Const 0); ty = Types.Int } *)
+              failwith "not implemented"
           | _ ->
               raise
               @@ SemantError [ (Some pos, "both sides must be string or int") ])
@@ -237,10 +253,11 @@ module Make
               let { ty; _ } = trexp init in
               match ty_eq (array_ty, ty) with
               | true ->
-                  {
-                    exp = Translate.Ex (Tree.Const 0);
-                    ty = Types.Array (ty, ref ());
-                  }
+                  (* { *)
+                  (*   exp = Translate.Ex (Tree.Const 0); *)
+                  (*   ty = Types.Array (ty, ref ()); *)
+                  (* } *)
+                  failwith "not implemented"
               | false ->
                   raise
                   @@ SemantError
@@ -296,15 +313,16 @@ module Make
                                  (Symbol.name sym) );
                            ]
                   | None ->
-                      let tys =
+                      let _tys =
                         List.map
                           (fun (_, sym, { ty; _ }, _pos) -> (sym, ty))
                           tests
                       in
-                      {
-                        exp = Translate.Ex (Tree.Const 0);
-                        ty = Types.Record (tys, ref ());
-                      }))
+                      (* { *)
+                      (*   exp = Translate.Ex (Tree.Const 0); *)
+                      (*   ty = Types.Record (tys, ref ()); *)
+                      (* } *)
+                      failwith "not implemented"))
           | _ ->
               raise
               @@ SemantError
@@ -322,7 +340,7 @@ module Make
               [] args
           in
           match Symbol.look (venv, func) with
-          | Some (Env.FunEntry { formals; result; level = _; label = _ }) ->
+          | Some (Env.FunEntry { formals; result = _; level = _; label = _ }) ->
               let _ =
                 List.iter2
                   (fun (arg, _) form ->
@@ -333,7 +351,8 @@ module Make
                         @@ SemantError [ (Some pos, "argument type mismatch") ])
                   args formals
               in
-              { exp = Translate.Ex (Tree.Const 0); ty = result }
+              (* { exp = Translate.Ex (Tree.Const 0); ty = result } *)
+              failwith "not implemented"
           | Some _ ->
               raise
               @@ SemantError [ (Some pos, "symbol not bound to a function") ]
@@ -362,9 +381,9 @@ module Make
       match var with
       | Tiger.SimpleVar (id, pos) -> (
           match Symbol.look (venv, id) with
-          | Some (Env.VarEntry { ty; _ }) ->
+          | Some (Env.VarEntry { ty; access; _ }) ->
               let ty = actual_ty pos ty in
-              { exp = Translate.Ex (Tree.Const 0); ty }
+              { exp = Translate.simple_var (access, level); ty }
           | Some (FunEntry _) -> raise @@ SemantError [ (Some pos, "function") ]
           | None ->
               raise
@@ -377,13 +396,14 @@ module Make
       | Tiger.FieldVar (var, field, pos) -> walk_record field pos var
       | Tiger.SubscriptVar (var, exp, pos) -> (
           match trvar var with
-          | { ty = Types.Array (arr_ty, _); _ } ->
+          | { ty = Types.Array (_arr_ty, _); _ } ->
               let _ =
                 match trexp exp with
                 | { ty = Types.Int; _ } -> ()
                 | _ -> raise @@ SemantError [ (Some pos, "integer required") ]
               in
-              { exp = Translate.Ex (Tree.Const 0); ty = arr_ty }
+              (* { exp = Translate.Ex (Tree.Const 0); ty = arr_ty } *)
+              failwith "not implemented"
           | { ty = _; _ } ->
               raise
               @@ SemantError
@@ -393,10 +413,17 @@ module Make
 
   let trans_prog exp =
     try
-      let { exp; _ } =
-        trans_exp Env.base_venv Env.base_tenv Translate.outermost exp
+      let level =
+        Translate.new_level Translate.outermost (Temp.new_label ())
+          [ true; true ]
       in
-      print_endline @@ Translate.show_exp exp;
+      let { exp = body; _ } = trans_exp Env.base_venv Env.base_tenv level exp in
+      let _ = Translate.procEntryExit (level, body) in
+      let frags = Translate.get_result () in
+      print_endline
+      @@ List.fold_left
+           (fun acc f -> Format.sprintf "%s\n\n%s" (Translate.show_frag f) acc)
+           "" frags;
       Ok ()
     with SemantError errs -> Error errs
 end

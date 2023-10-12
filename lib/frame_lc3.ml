@@ -5,10 +5,12 @@ module Make : Frame.S = struct
     | InFrame of int
         (** [InFrame x] indicates a memory location at offset [x] from the
             frame pointer. *)
-    | InReg of Temp.temp
-        (** [InReg r1] indicates that it will be held in "register" [r1]. *)
+  (* | InReg of Temp.temp *)
+  (*     (\** [InReg r1] indicates that it will be held in "register" [r1]. *\) *)
+  [@@deriving show]
 
   type frame = { label : Temp.label; locals : int; formals : access list }
+  [@@deriving show]
   (** [frame] is a data structure that holds:
       - Location of all the formals,
       - Instructions required to implement the "view shift",
@@ -16,13 +18,18 @@ module Make : Frame.S = struct
       - The [label] at which the function's machine code is to begin
         (page 140). *)
 
+  type frag =
+    | Proc of { body : Tree.stm; frame : frame }
+    | String of Temp.label * string
+  [@@deriving show]
+
   let fp = Temp.new_temp ()
   let word_size = 32
 
   let exp access exp =
     match access with
     | InFrame k -> Tree.Mem (Tree.Binop (Tree.Plus, exp, Tree.Const k))
-    | InReg r -> Tree.Temp r
+  (* | InReg r -> Tree.Temp r *)
 
   type framestbl = frame Symbol.table ref
 
@@ -54,11 +61,22 @@ module Make : Frame.S = struct
   let name { label; _ } : Temp.label = label
   let formals { formals; _ } : access list = formals
 
-  let alloc_local ({ locals; label; _ } as frame) escape : access =
+  let alloc_local ({ label; _ } as frame) escape : access =
     if escape then (
+      let { locals; _ } =
+        match Symbol.look (!frames, label) with
+        | Some frame -> frame
+        | None ->
+            failwith
+            @@ Format.sprintf
+                 "Frame.alloc_local: cannot find frame with label %s"
+                 (Symbol.show_symbol label)
+      in
       let locals' = locals + 1 in
       (* Really "overwrite" not "enter". *)
       frames := Symbol.enter (!frames, label, { frame with locals = locals' });
       InFrame (offset locals'))
-    else failwith "not implemented: alloc_local with escape = false"
+    else failwith "not implemented: Frame.alloc_local with escape = false"
+
+  let procEntryExit1 (_frame, body) = body
 end

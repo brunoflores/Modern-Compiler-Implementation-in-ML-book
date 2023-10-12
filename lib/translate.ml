@@ -1,16 +1,22 @@
 module type S = sig
-  type exp
+  type exp [@@deriving show]
   type level
   type access
+  type frag [@@deriving show]
 
   val outermost : level
   val new_level : level -> Temp.label -> bool list -> level
   val formals : level -> access list
   val alloc_local : level -> bool -> access
   val simple_var : access * level -> exp
+  val simple_int : int -> exp
+  val simple_op : Tiger.oper -> exp -> exp -> exp
+  val sequence : exp -> exp -> exp
+  val procEntryExit : level * exp -> unit
+  val get_result : unit -> frag list
 end
 
-module Make (Frame : Frame.S) : S = struct
+module Make (Frame : Frame.S) : S with type frag = Frame.frag = struct
   type exp =
     | Ex of Tree.exp  (** Stands for an "expression" *)
     | Nx of Tree.stm  (** Stands for "no result" *)
@@ -18,13 +24,26 @@ module Make (Frame : Frame.S) : S = struct
         (** Stands for "conditional".
           Given a true-destination and a false-destination, it will make a
           statement that evaluates some conditionals and then jumps to one
-          of the destinations (the statement will never "fall through"). *)
+            of the destinations (the statement will never "fall through"). *)
+  [@@deriving show]
+
+  type frag = Frame.frag [@@deriving show]
+
+  let frags : frag list ref = ref []
+  let _ = Nx (Tree.Seq [])
+
+  let _ =
+    Cx
+      (fun ~t ~f ->
+        let _ = t in
+        let _ = f in
+        Tree.Seq [])
 
   type level_id = unit ref
   type level = Bottom | Level of level * Frame.frame * level_id
   type access = level_id * Frame.access
 
-  let _unEx = function
+  let unEx = function
     | Ex e -> e
     | Nx s -> Tree.Eseq (s, Tree.Const 0)
     | Cx genstm ->
@@ -51,7 +70,7 @@ module Make (Frame : Frame.S) : S = struct
               ],
             Tree.Temp r )
 
-  let _unNx = function
+  let unNx = function
     | Ex e -> Tree.Exp e
     | Nx s -> s
     | Cx genstm ->
@@ -119,4 +138,24 @@ module Make (Frame : Frame.S) : S = struct
             (Frame.exp frame_access
                (Tree.Mem
                   (Tree.Binop (Tree.Plus, Tree.Const k, Tree.Temp Frame.fp))))
+
+  let simple_int i = Ex (Tree.Const i)
+
+  let simple_op op left right =
+    match op with
+    | Tiger.PlusOp -> Ex (Tree.Binop (Tree.Plus, unEx left, unEx right))
+    | _ -> failwith "not implemented"
+
+  let sequence (e1 : exp) (e2 : exp) : exp = Ex (Tree.Eseq (unNx e1, unEx e2))
+
+  let procEntryExit (level, body) =
+    match level with
+    | Bottom -> failwith "called Translate.procEntryExit on Bottom"
+    | Level (_parent, frame, _id) ->
+        let body = unNx body in
+        let body = Frame.procEntryExit1 (frame, body) in
+        frags := Frame.Proc { body; frame } :: !frags;
+        ()
+
+  let get_result () = !frags
 end
